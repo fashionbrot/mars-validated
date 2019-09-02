@@ -25,6 +25,7 @@ public class ValidatedConfigBeanDefinitionRegistrar implements ImportBeanDefinit
 
         AnnotationAttributes attributes = fromMap(metadata.getAnnotationAttributes(EnableValidatedConfig.class.getName()));
 
+
         BeanUtil.registerglobalValidatedProperties(attributes,registry,environment, GlobalValidatedProperties.BEAN_NAME);
 
         BeanUtil.registerValieator(registry);
