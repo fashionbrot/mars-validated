@@ -11,6 +11,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.SingletonBeanRegistry;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
@@ -109,9 +110,11 @@ public class ValidatorUtil implements BeanFactoryAware {
 
     public static void checkDefault(ParameterType parameterType, Object[] params, int index) {
         Default aDefault = parameterType.getAnnotationCustom().getDeclaredAnnotation(parameterType, Default.class);
-
         if (aDefault != null) {
-            parameterType.getAnnotationCustom().setDefault(parameterType, aDefault.value(), params, index);
+
+            if (StringUtils.isEmpty(params[index])) {
+                parameterType.getAnnotationCustom().setDefault(parameterType, aDefault.value(), params, index);
+            }
         }
     }
 
