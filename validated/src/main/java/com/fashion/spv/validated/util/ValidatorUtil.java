@@ -111,9 +111,14 @@ public class ValidatorUtil implements BeanFactoryAware {
     public static void checkDefault(ParameterType parameterType, Object[] params, int index) {
         Default aDefault = parameterType.getAnnotationCustom().getDeclaredAnnotation(parameterType, Default.class);
         if (aDefault != null) {
-
-            if (StringUtils.isEmpty(params[index])) {
-                parameterType.getAnnotationCustom().setDefault(parameterType, aDefault.value(), params, index);
+            if (parameterType.getField()!=null){
+                if (StringUtils.isEmpty(parameterType.getValue())){
+                    parameterType.getAnnotationCustom().setDefault(parameterType, aDefault.value(), params, index);
+                }
+            }else if (parameterType.getParameter()!=null){
+                if (StringUtils.isEmpty(params[index])) {
+                    parameterType.getAnnotationCustom().setDefault(parameterType, aDefault.value(), params, index);
+                }
             }
         }
     }
