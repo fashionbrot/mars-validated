@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Import(ValidatedConfigBeanDefinitionRegistrar.class)
 public @interface EnableValidatedConfig {
 
-    String DEFAULTFILENAME="validated_zh_CN";
+    String DEFAULTFILENAME="valid_zh_CN";
 
     String fileName()  default DEFAULTFILENAME;
 
