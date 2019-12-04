@@ -1,4 +1,4 @@
-# spv
+# mars-validated
 简单的参数验证，支持spring 、springboot
 validated 是 控制 springmvc  springboot 的验证框架。只对 Controller层接口参数验证。为少年们还在纠结验证参数应该放在 controller层 还是 Service 层 才开发此功能。
 此框架基于spring 开发。
@@ -12,7 +12,7 @@ validated 是 控制 springmvc  springboot 的验证框架。只对 Controller�
 ```bash
 
         <dependency>
-            <groupId>com.fashion.spv</groupId>
+            <groupId>com.fashion.mars</groupId>
             <artifactId>validated</artifactId>
             <version>1.0-RELEASE</version>
         </dependency>
@@ -24,7 +24,7 @@ validated 是 控制 springmvc  springboot 的验证框架。只对 Controller�
 ### 2.1 springboot 配置
 ```java
 @SpringBootApplication
-@EnableValidatedConfig(fileName = "valid_zh_CN")
+@EnableValidatedConfig(fileName = "valid_zh_CN") //valid_zh_CN.properties  需要自己创建
 public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
@@ -113,12 +113,14 @@ public class TestService{
 }
 
 
+
+
 ```
 
 
 ### 4 自定义实现全局异常处理
 
-拦截 com.fashion.spv.validated.exception.ValidatedException 
+拦截 ValidatedException 
 
 
 ```bash
@@ -164,6 +166,13 @@ jdk1.8    及以上
 |Size|int,long,short,Integer,Long,Short|验证大小值|
 
 
+
+## 支持 默认值设置   hibernate默认不支持
+    @Default("1")
+    private Integer pageNo;
+
+    @Default("20")
+    private Integer pageSize;
 
 
 

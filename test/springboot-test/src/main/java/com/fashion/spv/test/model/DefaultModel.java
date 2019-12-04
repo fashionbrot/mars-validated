@@ -1,6 +1,6 @@
 package com.fashion.spv.test.model;
 
-import com.fashion.spv.validated.annotation.Default;
+import com.fashion.mars.validated.annotation.Default;
 import lombok.Data;
 
 @Data

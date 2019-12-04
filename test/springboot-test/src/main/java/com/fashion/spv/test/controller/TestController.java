@@ -2,9 +2,8 @@ package com.fashion.spv.test.controller;
 
 
 import com.fashion.spv.test.model.DefaultModel;
-import com.fashion.spv.validated.annotation.Default;
-import com.fashion.spv.validated.annotation.Validated;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fashion.mars.validated.annotation.Default;
+import com.fashion.mars.validated.annotation.Validated;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

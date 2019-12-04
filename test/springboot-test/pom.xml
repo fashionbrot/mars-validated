@@ -30,7 +30,7 @@
     </dependency>
 
     <dependency>
-        <groupId>com.fashion.spv</groupId>
+        <groupId>com.fashion.mars</groupId>
         <artifactId>validated</artifactId>
         <version>1.0-SNAPSHOT</version>
     </dependency>
