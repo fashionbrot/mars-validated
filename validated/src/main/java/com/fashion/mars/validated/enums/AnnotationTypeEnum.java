@@ -24,7 +24,9 @@ public enum  AnnotationTypeEnum {
     EMAIL("Email"),
     PHONE("Phone"),
     IDCARD("IdCard"),
-    DIGITS("Digits");
+    DIGITS("Digits"),
+    NOT_EMPTY("NotEmpty"),
+    NOT_EQUAL_SIZE("NotEqualSize");
 
     private String name;
 

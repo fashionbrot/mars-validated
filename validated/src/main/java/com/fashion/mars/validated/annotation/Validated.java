@@ -9,5 +9,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Validated {
 
+    /**
+     * 默认 全部校验
+     * @return
+     */
+    Class<?>[] validClass() default {};
 
 }

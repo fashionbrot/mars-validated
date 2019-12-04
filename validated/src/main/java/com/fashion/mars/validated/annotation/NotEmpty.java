@@ -1,6 +1,5 @@
 package com.fashion.mars.validated.annotation;
 
-
 import java.lang.annotation.*;
 
 /**
@@ -9,11 +8,10 @@ import java.lang.annotation.*;
  * String 类型
  */
 @Documented
-@Target({ElementType.FIELD,  ElementType.PARAMETER})
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Mars
-public @interface NotBlank {
+public @interface NotEmpty {
 
-    String  msg() default "com.spv.valid.NotBlank.msg";
-
+    String msg() default  "com.spv.valid.NotEmpty.msg";
 }

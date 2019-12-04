@@ -29,6 +29,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target({  FIELD,PARAMETER })
 @Retention(RUNTIME)
+@Mars
 public @interface Length {
 
     int min() default 0;

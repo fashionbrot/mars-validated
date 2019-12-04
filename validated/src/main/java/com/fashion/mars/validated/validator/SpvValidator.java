@@ -1,5 +1,7 @@
 package com.fashion.mars.validated.validator;
 
+import com.fashion.mars.validated.annotation.Mars;
+import com.fashion.mars.validated.annotation.Validated;
 import com.fashion.mars.validated.constraint.Constraint;
 import com.fashion.mars.validated.constraint.ConstraintValidator;
 import com.fashion.mars.validated.enums.AnnotationTypeEnum;
@@ -9,7 +11,6 @@ import com.fashion.mars.validated.validator.support.AnnotationCustom;
 import com.fashion.mars.validated.validator.support.AnnotationFieldCustom;
 import com.fashion.mars.validated.validator.support.AnnotationParameterCustom;
 import com.fashion.mars.validated.validator.support.ParameterType;
-import com.fashion.spv.validated.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ReflectionUtils;
 
@@ -17,6 +18,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 
 @Slf4j
 public class SpvValidator implements Validator {
@@ -92,6 +94,11 @@ public class SpvValidator implements Validator {
                 case DIGITS:
                     ValidatorUtil.checkDigits(parameterType);
                     break;
+                case NOT_EMPTY:
+                    ValidatorUtil.checkNotEmpty(parameterType);
+                    break;
+                case NOT_EQUAL_SIZE:
+                    ValidatorUtil.checkNotEqualSize(parameterType);
                 default:
                     break;
             }
@@ -103,12 +110,21 @@ public class SpvValidator implements Validator {
 
 
     @Override
-    public void entityFieldsAnnotationValid(String valueTypeName, Class<?> clazz, Object[] params, int index) {
+    public void entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] params, int index) {
 
         if (!IgnoreClassUtil.checkIgnorePackage(valueTypeName)) {
 
             // 判断是否 有继承类
-            checkClassSuper(clazz, params, index);
+            checkClassSuper(validated,clazz, params, index);
+
+            /**
+             * 如果填写 validClass
+             */
+            Class<?>[] validClass = validated.validClass();
+            if (!isValidClass(validClass,clazz)){
+                return;
+            }
+
 
             Field[] fields = clazz.getDeclaredFields();
 
@@ -119,23 +135,29 @@ public class SpvValidator implements Validator {
                     field.setAccessible(true);
 
                     for (Annotation annotation : annotations) {
-                        String annotationName = annotation.annotationType().getSimpleName();
-                        String annotationPackagePath = annotation.annotationType().getTypeName();
-                        AnnotationTypeEnum annotationTypeEnum = AnnotationUtil.getAnnotationName(annotationName, annotationPackagePath);
-                        String fieldTypeName = field.getType().getName();
+
+
+                        Mars  mars = annotation.annotationType().getDeclaredAnnotation(Mars.class);
                         String fileName = field.getName();
                         Object valueObject = MethodUtil.getMethod(clazz, field, params[index], fileName);
 
-                        if (annotationTypeEnum != null) {
+                        if (mars != null) {
 
+                            String annotationName = annotation.annotationType().getSimpleName();
+                            AnnotationTypeEnum annotationTypeEnum = AnnotationTypeEnum.getValue(annotationName);
                             ParameterType parameterType = new ParameterType(valueObject, field, annotationFieldCustom);
+
                             if (annotationTypeEnum == AnnotationTypeEnum.DEFAULT) {
                                 validEntityFields(annotationTypeEnum, parameterType, params, index);
                             } else {
                                 validEntityFields(annotationTypeEnum, parameterType, null, 0);
                             }
+
                         } else {
+
+                            String fieldTypeName = field.getType().getName();
                             checkCustomValid(annotation, valueObject, fieldTypeName, fileName);
+
                         }
                     }
 
@@ -145,14 +167,22 @@ public class SpvValidator implements Validator {
     }
 
 
-    private void checkClassSuper(Class clazz,Object[] params, int index){
+    private boolean isValidClass(Class<?>[] validClass,Class<?> clazz){
+        if (validClass.length==0){
+            return true;
+        }
+        return Arrays.asList(validClass).contains(clazz);
+    }
+
+
+    private void checkClassSuper(Validated validated,Class clazz,Object[] params, int index){
         //获取 superclass 是否是 appClassloader 加载的
         Class superclass = clazz.getSuperclass();
         if (superclass != null) {
             String superValueTypeName = superclass.getName();
             ClassTypeEnum classTypeEnum = ClassTypeUtil.getClassTypeEnum(superValueTypeName);
             if (classTypeEnum == null) {
-                entityFieldsAnnotationValid(superValueTypeName, superclass, params, index);
+                entityFieldsAnnotationValid(validated,superValueTypeName, superclass, params, index);
             }
         }
     }
@@ -162,6 +192,9 @@ public class SpvValidator implements Validator {
     @Override
     public void parameterAnnotationValid(Method method, Object[] params) {
         Parameter[] parameters = method.getParameters();
+
+        Validated validated = method.getDeclaredAnnotation(Validated.class);
+
         if (parameters != null && parameters.length > 0) {
 
             String[] methodParameters =null;
@@ -180,28 +213,35 @@ public class SpvValidator implements Validator {
                 ClassTypeEnum classTypeEnum = ClassTypeUtil.getClassTypeEnum(parameterTypeName);
                 if (classTypeEnum == null) {
                     //获取 class 的Field[]  验证码field 值
-                    entityFieldsAnnotationValid(parameterTypeName, parameter.getType(), params, j);
+                    entityFieldsAnnotationValid(validated,parameterTypeName, parameter.getType(), params, j);
                 } else {
                     Annotation[] annotations = parameter.getDeclaredAnnotations();
 
                     if (annotations != null && annotations.length > 0) {
 
                         for (Annotation annotation : annotations) {
-                            String annotationName = annotation.annotationType().getSimpleName();
-                            String annotationPackagePath = annotation.annotationType().getTypeName();
-                            AnnotationTypeEnum annotationTypeEnum = AnnotationUtil.getAnnotationName(annotationName, annotationPackagePath);
+
+                            Mars mars = annotation.annotationType().getDeclaredAnnotation(Mars.class);
                             Object valueObject = params[j];
                             String methodParameter = methodParameters[j];
-                            if (annotationTypeEnum != null) {
+
+                            if (mars != null) {
+
+                                String annotationName = annotation.annotationType().getSimpleName();
+                                AnnotationTypeEnum annotationTypeEnum = AnnotationTypeEnum.getValue(annotationName);
                                 ParameterType parameterType = new ParameterType(methodParameter, valueObject, parameter, annotationParameterCustom);
+
                                 //验证 基础 参数
                                 if (annotationTypeEnum == AnnotationTypeEnum.DEFAULT) {
                                     validParameter(annotationTypeEnum, parameterType, params, j);
                                 } else {
                                     validParameter(annotationTypeEnum, parameterType, null, 0);
                                 }
+
                             } else {
+
                                 checkCustomValid(annotation, valueObject, classTypeEnum, methodParameter);
+
                             }
                         }
                     }

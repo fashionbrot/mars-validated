@@ -1,5 +1,6 @@
 package com.fashion.mars.validated.validator;
 
+import com.fashion.mars.validated.annotation.Validated;
 import com.fashion.mars.validated.enums.AnnotationTypeEnum;
 import com.fashion.mars.validated.enums.ClassTypeEnum;
 import com.fashion.mars.validated.validator.support.ParameterType;
@@ -42,12 +43,13 @@ public interface Validator {
 
     /**
      * 验证 entity fields 是否包含注解
+     * @param validated      validated
      * @param valueTypeName  valueTypeName
      * @param clazz          clazz
      * @param objectValue    objectValue
      * @param index          filed index
      */
-    void entityFieldsAnnotationValid( String valueTypeName,Class<?> clazz,Object[] objectValue,int index);
+    void entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] objectValue, int index);
 
 
     /**

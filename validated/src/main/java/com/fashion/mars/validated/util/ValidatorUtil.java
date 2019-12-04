@@ -2,7 +2,6 @@ package com.fashion.mars.validated.util;
 
 import com.fashion.mars.validated.annotation.*;
 import com.fashion.mars.validated.config.GlobalValidatedProperties;
-import com.fashion.spv.validated.annotation.*;
 import com.fashion.mars.validated.validator.support.ParameterType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -356,6 +355,31 @@ public class ValidatorUtil implements BeanFactoryAware {
                 }
             }
 
+        }
+    }
+
+
+    public static void checkNotEmpty(ParameterType parameterType) {
+        Object value = parameterType.getValue();
+        NotEmpty notEmpty = parameterType.getAnnotationCustom().getDeclaredAnnotation(parameterType, NotEmpty.class);
+        if (value == null || "".equals(value.toString())) {
+            ExceptionUtil.throwException(notEmpty.msg(), parameterType.getFieldName());
+        }
+    }
+
+    public static void checkNotEqualSize (ParameterType parameterType) {
+        Object value = parameterType.getValue();
+        NotEqualSize notEqualSize = parameterType.getAnnotationCustom().getDeclaredAnnotation(parameterType
+                , NotEqualSize.class);
+        if (notEqualSize != null) {
+            int valueLength = 0;
+            int size = notEqualSize.size();
+            if (value != null) {
+                valueLength = value.toString().length();
+            }
+            if (value == null || valueLength != size) {
+                ExceptionUtil.throwException(notEqualSize.msg(), parameterType.getFieldName());
+            }
         }
     }
 
