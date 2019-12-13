@@ -248,3 +248,4 @@ public class CustomConstraintValidator implements ConstraintValidator<Custom,Str
 #### 6、可通过 test项目中的 https://github.com/fashionbrot/mars-validated/tree/master/test/springboot-test 参考使用demo 
 #### 7、如有问题请通过 https://github.com/fashionbrot/mars-validated/issues 提出 告诉我们。我们非常认真地对待错误和缺陷，在产品面前没有不重要的问题。不过在创建错误报告之前，请检查是否存在报告相同问题的issues。
 
+##如果有问题请联系官网qq群：52842583
