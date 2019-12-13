@@ -12,7 +12,7 @@ validated 是 控制 springmvc  springboot 的验证框架。只对 Controller�
 ```bash
 
         <dependency>
-            <groupId>com.github.fashion</groupId>
+            <groupId>com.github.fashionbrot</groupId>
             <artifactId>mars-validated</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
