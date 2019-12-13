@@ -1,5 +1,5 @@
-# mars-validated
-简单的参数验证，支持spring 、springboot
+# mars-validated springmvc springboot springcloud dubbo  参数校验
+简单好用的 springmvc springboot springcloud dubbo  参数校验
 validated 是 控制 springmvc  springboot 的验证框架。只对 Controller层接口参数验证。为少年们还在纠结验证参数应该放在 controller层 还是 Service 层 才开发此功能。
 此框架基于spring 开发。
 
@@ -12,9 +12,9 @@ validated 是 控制 springmvc  springboot 的验证框架。只对 Controller�
 ```bash
 
         <dependency>
-            <groupId>com.fashion.mars</groupId>
-            <artifactId>validated</artifactId>
-            <version>1.0-RELEASE</version>
+            <groupId>com.github.fashion</groupId>
+            <artifactId>mars-validated</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
 ```
@@ -99,21 +99,15 @@ public class IdCardModel extends BaseModel{
     public void setIdCardModel(String idCardModel) {
         this.idCardModel = idCardModel;
     }
-
 }
 
 @Service
 public class TestService{
-
     @Validated
     public void test2(@IdCard String abc){
 
     }
-
 }
-
-
-
 
 ```
 
@@ -127,16 +121,47 @@ public class TestService{
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-     
     @ExceptionHandler(ValidatedException.class)
     @ResponseStatus(HttpStatus.OK)
     public RespMessage ValidationException(ValidatedException e){
 
         return new RespMessage(-100,e.getMsg());
     }
-
 }
 
+```
+
+## 支持 默认值设置   hibernate默认不支持
+```java
+import com.github.fashionbrot.validated.annotation.Default;
+
+@Data
+public class BaseModel {
+
+    @Default("1")
+    private Integer pageNo;
+
+    @Default("20")
+    private Integer pageSize;
+}
+
+```
+
+## 支持 dubbo 接口、实现类上方法上添加 @Validated ,设置 dubbo DubboProviderFilter 拦截器做统一处理
+
+```java
+
+public class DubboProviderFilter implements Filter {
+
+    @Override
+    public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        Result result =  invoker.invoke(invocation);
+        if(result.hasException() && result.getException() instanceof com.sgr.common.valid.exception.ValidationException){
+            throw new CustomException(result.getException()); //自定义异常，全局拦截控制,或抛出 RpcException 自行拦截
+        }
+        return result;
+    }
+}
 ```
 
 
@@ -152,6 +177,7 @@ jdk1.8    及以上
 |---|--------|---|
 |NotBlank|String|验证String 字符串是否为空|
 |NotNull|String,Object,Integer,Long,Double,Short,Float,BigDecimal, BigInteger| 验证对象是否为空|
+|NotEmpty|String |验证字符串不能为空|
 |AssertFalse|Boolean,boolean,String|只能为false|
 |AssertTrue|Boolean,boolean,String|只能为true|
 |BankCard|String|验证银行卡|
@@ -164,19 +190,14 @@ jdk1.8    及以上
 |Pattern|String|正则表达式验证|
 |Phone|String|验证手机号是否正确|
 |Size|int,long,short,Integer,Long,Short|验证大小值|
-
-
-
-## 支持 默认值设置   hibernate默认不支持
-    @Default("1")
-    private Integer pageNo;
-
-    @Default("20")
-    private Integer pageSize;
+|NotEqualSize|String|验证长度|
 
 
 
 
+
+
+```
 
 
 ### 支持自定义注解 如下：
@@ -222,4 +243,7 @@ public class CustomConstraintValidator implements ConstraintValidator<Custom,Str
 
 ```
 
+
+#### 6、可通过 test项目中的 https://github.com/fashionbrot/mars-validated/tree/master/test/springboot-test 参考使用demo 
+#### 7、如有问题请通过 https://github.com/fashionbrot/mars-validated/issues 提出 告诉我们。我们非常认真地对待错误和缺陷，在产品面前没有不重要的问题。不过在创建错误报告之前，请检查是否存在报告相同问题的issues。
 

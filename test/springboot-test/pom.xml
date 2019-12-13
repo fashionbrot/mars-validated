@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.fashion.spv.test</groupId>
+    <groupId>com.github.fashionbrot</groupId>
     <artifactId>springboot-test</artifactId>
 
 
@@ -30,9 +30,9 @@
     </dependency>
 
     <dependency>
-        <groupId>com.fashion.mars</groupId>
-        <artifactId>validated</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>com.github.fashionbrot</groupId>
+        <artifactId>mars-validated</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
