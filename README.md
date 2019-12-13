@@ -22,9 +22,10 @@ validated 是 控制 springmvc  springboot 的验证框架。只对 Controller�
 ## 2、使用注解
 
 ### 2.1 springboot 配置
+fileName 如果不填默认jar 包自带提示，如果需要批量自定义请按照jar 包下的valid_zh_CN.properties 修改提示语内容
 ```java
 @SpringBootApplication
-@EnableValidatedConfig(fileName = "valid_zh_CN") //valid_zh_CN.properties  需要自己创建
+@EnableValidatedConfig(fileName = "test")    // fileName 默认中文jar包自带 如需要批量自定义请自己创建 test.properties  放在自己项目中的resources 下
 public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
