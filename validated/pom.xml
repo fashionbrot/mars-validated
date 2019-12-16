@@ -6,10 +6,49 @@
 
     <groupId>com.github.fashionbrot</groupId>
     <artifactId>mars-validated</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-
+    <version>1.0.0</version>
+    <description>mars-validated api</description>
     <name>validated</name>
     <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+    <url>https://github.com/fashionbrot/mars-validated</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <tag>master</tag>
+        <url>scm:git:https://github.com/fashionbrot/mars-validated.git</url>
+        <connection>scm:git:https://github.com/fashionbrot/mars-validated.git</connection>
+        <developerConnection>https://github.com/fashionbrot/mars-validated</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <name>fashionbrot</name>
+            <email>fashionbrot@163.com</email>
+            <organization>github</organization>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>release</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 
 
     <dependencies>
@@ -50,6 +89,7 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -60,9 +100,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -71,6 +109,53 @@
                             <goal>jar-no-fork</goal>
                         </goals>
                     </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <excludePackageNames>com.facebook.thrift:com.facebook.thrift.*</excludePackageNames>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <doclint>none</doclint>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                    <!-- -Dgpg.passphrase='秘钥密码'或者-Darguments='gpg.passphrase=秘钥密码' -->
                 </executions>
             </plugin>
         </plugins>

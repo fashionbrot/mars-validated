@@ -53,7 +53,7 @@ public interface Validator {
 
 
     /**
-     * 验证基本参数
+     * Verify basic parameters
      * @param parameterType parameterType
      * @param params        params
      * @param index         index
@@ -62,7 +62,7 @@ public interface Validator {
 
 
     /**
-     * 验证 entityBean fields
+     * valid entityBean fields
      * @param parameterType parameterType
      * @param params        params
      * @param index         index
