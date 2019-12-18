@@ -1,7 +1,6 @@
 # mars-validated springmvc springboot springcloud dubbo  参数校验
 简单好用的 springmvc springboot springcloud dubbo  参数校验
-validated 是 控制 springmvc  springboot 的验证框架。只对 Controller层接口参数验证。为少年们还在纠结验证参数应该放在 controller层 还是 Service 层 才开发此功能。
-此框架基于spring 开发。
+validated 是 控制 springmvc  springboot 的验证框架。此框架基于spring 开发。
 
 
 # 使用4步配置
