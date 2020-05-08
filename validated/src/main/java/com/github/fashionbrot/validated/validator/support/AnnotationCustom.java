@@ -8,7 +8,7 @@ public interface AnnotationCustom {
      * 根据 parmaeter 获取 参数
      * 或者跟 field 获取属性
      *
-     * @param annotationClass annotationClass
+     * @param parameterType parameterType
      * @param <T>   annotationClass
      * @return  Annotation
      */

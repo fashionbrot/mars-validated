@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
+import java.util.Collection;
 
 @Slf4j
 public class SpvValidator implements Validator {
@@ -27,7 +28,8 @@ public class SpvValidator implements Validator {
 
 
 
-    private static final String METHOD_NAME = "isValid";
+    private static final String METHOD_NAME_IS_VALID = "isValid";
+    private static final String METHOD_NAME_MODIFY = "modify";
     private static final String ANNOTATION_MSG = "msg";
 
 
@@ -156,7 +158,7 @@ public class SpvValidator implements Validator {
                         } else {
 
                             String fieldTypeName = field.getType().getName();
-                            checkCustomValid(annotation, valueObject, fieldTypeName, fileName);
+                            checkCustomValid(annotation, valueObject, fieldTypeName, fileName,params,index,field);
 
                         }
                     }
@@ -240,7 +242,7 @@ public class SpvValidator implements Validator {
 
                             } else {
 
-                                checkCustomValid(annotation, valueObject, classTypeEnum, methodParameter);
+                                checkCustomValid(annotation,params[j],params,j, classTypeEnum, methodParameter,false,null);
 
                             }
                         }
@@ -253,7 +255,7 @@ public class SpvValidator implements Validator {
 
 
     @Override
-    public void checkCustomValid(Annotation annotation, Object value, ClassTypeEnum fieldType, String fieldName) {
+    public void checkCustomValid(Annotation annotation,Object value,Object[] params,int index, ClassTypeEnum fieldType, String fieldName,boolean isField,Field field) {
         Class<? extends Annotation> annotationType = annotation.annotationType();
         Constraint constraint = annotationType.getDeclaredAnnotation(Constraint.class);
         if (constraint != null) {
@@ -263,21 +265,44 @@ public class SpvValidator implements Validator {
             }
             for (Class clazz : classes) {
                 Class<?>[] interfaces = clazz.getInterfaces();
-                if (interfaces != null && interfaces.length == 1 && interfaces[0].isAssignableFrom(ConstraintValidator.class)) {
+                if (interfaces != null && interfaces.length > 0 && interfaces[0].isAssignableFrom(ConstraintValidator.class)) {
 
                     Object instanceObject = MethodUtil.getInstance(clazz);
+
                     if (instanceObject != null) {
 
-                        Method method = MethodUtil.getMethod(clazz, METHOD_NAME, Annotation.class, Object.class);
+                        Method method = MethodUtil.getMethod(clazz, METHOD_NAME_IS_VALID, Annotation.class, Object.class);
                         if (method != null) {
                             boolean isValid = (boolean) ReflectionUtils.invokeMethod(method, instanceObject, annotation, value);
 
-                            if (!isValid) {
+                            if (!isValid && getMethod(clazz,ANNOTATION_MSG)!=null) {
 
                                 Method annotationMethod = MethodUtil.getAnnotationTypeMethod(annotationType, ANNOTATION_MSG, (Class<?>) null);
-                                Object object = ReflectionUtils.invokeMethod(annotationMethod, annotation, (Object) null);
+                                if (annotationMethod!=null){
+                                    Object object = ReflectionUtils.invokeMethod(annotationMethod, annotation, (Object) null);
+                                    ExceptionUtil.throwException(object, fieldName);
+                                }
+                            }
+                        }
 
-                                ExceptionUtil.throwException(object, fieldName);
+                        Method modifyMethod = getMethod(clazz,METHOD_NAME_MODIFY);
+                        if (modifyMethod!=null){
+                            try {
+                                Object newValue = ReflectionUtils.invokeMethod(modifyMethod, instanceObject, annotation, value);
+                                if (log.isDebugEnabled()){
+                                    log.debug("newValue:"+newValue+" oldValue:"+value);
+                                }
+                                if (newValue!=null){
+                                    //field 字段
+                                    if (isField){
+                                        field.set(params[index],newValue);
+                                    }else{//param 字段
+                                        params[index] = newValue;
+                                    }
+                                    value = newValue;
+                                }
+                            }catch (Exception e){
+                                log.error("invoke method error",e);
                             }
                         }
                     }
@@ -288,13 +313,26 @@ public class SpvValidator implements Validator {
 
 
     @Override
-    public void checkCustomValid(Annotation annotation, Object value, String fieldType, String fieldName) {
+    public void checkCustomValid(Annotation annotation, Object value, String fieldType, String fieldName,Object[] params,int index, Field field) {
 
         //判断是否是 数据类型，还是 bean
         ClassTypeEnum classTypeEnum = ClassTypeUtil.getClassTypeEnum(fieldType);
         if (classTypeEnum!=null){
-            checkCustomValid(annotation,value,classTypeEnum,fieldName);
+            checkCustomValid(annotation,value,params,index,classTypeEnum,fieldName,true,field);
         }
+    }
+
+
+    public Method getMethod(Class clazz,String methodName){
+        Method[] methods = clazz.getDeclaredMethods();
+        if (methods!=null && methods.length>0){
+            for (Method method :methods){
+                if (method.getName().equals(methodName)){
+                    return method;
+                }
+            }
+        }
+        return null;
     }
 
 }

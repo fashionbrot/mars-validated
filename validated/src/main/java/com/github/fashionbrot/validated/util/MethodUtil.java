@@ -1,6 +1,5 @@
 package com.github.fashionbrot.validated.util;
 
-import com.github.fashionbrot.validated.enums.ClassTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.annotation.Annotation;
@@ -91,20 +90,6 @@ public class MethodUtil {
         return null;
     }
 
-    public static boolean invokeMethod(Method method, Object object, Annotation annotation, Object paramValue, ClassTypeEnum classTypeEnum){
-        try {
-            if (method!=null){
-                return (boolean) method.invoke(object,annotation,paramValue,classTypeEnum);
-            }
-        } catch (IllegalAccessException e) {
-            log.error(" IllegalAccessException invokeMethod method:"+method.getName() +" annotationType:"+annotation.annotationType().getTypeName(),e);
-            return true;
-        } catch (InvocationTargetException e) {
-            log.error(" InvocationTargetException invokeMethod method:"+method.getName() +" annotationType:"+annotation.annotationType().getTypeName(),e);
-            return true;
-        }
-        return true;
-    }
 
     public static  Method getAnnotationTypeMethod(Class<? extends Annotation> annotationType,String methodName,Class<?>... parameterTypes){
         Method method=null;
@@ -118,17 +103,6 @@ public class MethodUtil {
         return method;
     }
 
-    public static Object invokeMethod(Method method,Annotation annotation,Class<?>... parameterTypes){
-        try {
-            if (method!=null) {
-                return method.invoke(annotation, parameterTypes);
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+
 
 }

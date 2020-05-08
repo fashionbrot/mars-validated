@@ -15,9 +15,16 @@ public class CustomConstraintValidator implements ConstraintValidator<Custom, Ob
          * valud
          */
         System.out.println(var1);
+        var1="567";
         /**
          * return true 则验证成功 false 验证失败
           */
         return true;
+    }
+
+    @Override
+    public Object modify(Custom annotation, Object var) {
+        System.out.println("CustomConstraintValidator:"+var);
+        return var+"1";
     }
 }

@@ -193,7 +193,21 @@ jdk1.8    及以上
 |NotEqualSize|String|验证长度|
 
 
+### ConstraintValidator 接口新增方法
+```java
+package com.github.fashionbrot.validated.constraint;
+import java.lang.annotation.Annotation;
+public  interface ConstraintValidator<A extends Annotation, T> {
 
+    boolean isValid(A annotation, T var1);
+    
+    //实现类可实现可不实现,使用场景如 ajax传入 base64字符,可以在自己逻辑中实现自定义逻辑
+    default T modify(A annotation,T var){
+        return var;
+    }
+}
+
+```
 
 
 

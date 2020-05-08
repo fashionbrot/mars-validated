@@ -3,9 +3,11 @@ package com.github.fashionbrot.validated.validator;
 import com.github.fashionbrot.validated.annotation.Validated;
 import com.github.fashionbrot.validated.enums.AnnotationTypeEnum;
 import com.github.fashionbrot.validated.enums.ClassTypeEnum;
+import com.github.fashionbrot.validated.validator.support.AnnotationCustom;
 import com.github.fashionbrot.validated.validator.support.ParameterType;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public interface Validator {
@@ -20,23 +22,30 @@ public interface Validator {
 
 
     /**
-     * 验证自定义注解
+     * 验证自定义注解 params
      * @param annotation annotation
-     * @param value      value
+     * @param fieldValue fieldValue
+     * @param params     params
+     * @param index      index
      * @param fieldType  fieldType
      * @param fieldName  fieldName
+     * @param isField   isField
+     * @param field     field
      */
-    void checkCustomValid(Annotation annotation, Object value, ClassTypeEnum fieldType, String fieldName);
+    void checkCustomValid(Annotation annotation,Object fieldValue, Object[] params, int index, ClassTypeEnum fieldType, String fieldName, boolean isField, Field field);
 
 
     /**
      * 验证自定义注解
      * @param annotation annotation impl {com.fashion.spv.validated.constraintConstraintValidator}
-     * @param value      value
+     * @param fieldValue      value
      * @param fieldType  field type
      * @param fieldName  field name
+     * @param params     params
+     * @param index      index
+     * @param field      field
      */
-    void checkCustomValid(Annotation annotation, Object value, String fieldType, String fieldName);
+    void checkCustomValid(Annotation annotation, Object fieldValue, String fieldType, String fieldName,Object[] params,int index,Field field);
 
 
 
@@ -54,6 +63,7 @@ public interface Validator {
 
     /**
      * Verify basic parameters
+     * @param annotationTypeEnum annotationTypeEnum
      * @param parameterType parameterType
      * @param params        params
      * @param index         index
@@ -63,8 +73,9 @@ public interface Validator {
 
     /**
      * valid entityBean fields
-     * @param parameterType parameterType
-     * @param params        params
+     * @param annotationTypeEnum annotationTypeEnum
+     * @param parameterType      parameterType
+     * @param params            params
      * @param index         index
      */
     void validEntityFields(AnnotationTypeEnum annotationTypeEnum, ParameterType parameterType, Object[] params, int index);

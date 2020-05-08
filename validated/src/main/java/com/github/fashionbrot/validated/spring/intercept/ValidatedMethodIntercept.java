@@ -2,6 +2,7 @@ package com.github.fashionbrot.validated.spring.intercept;
 
 import com.github.fashionbrot.validated.annotation.Validated;
 import com.github.fashionbrot.validated.validator.SpvValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.BeansException;
@@ -11,6 +12,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.reflect.Method;
 
+@Slf4j
 public class ValidatedMethodIntercept implements MethodInterceptor, BeanFactoryAware {
 
     public static final String BEAN_NAME = "validatedMethodIntercept";
@@ -19,11 +21,15 @@ public class ValidatedMethodIntercept implements MethodInterceptor, BeanFactoryA
 
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+        long start = System.currentTimeMillis();
         Object[] params=methodInvocation.getArguments();
         Method method=methodInvocation.getMethod();
         Validated validated =AnnotationUtils.findAnnotation(methodInvocation.getMethod(),Validated.class);
         if (validated!=null) {
             validator.parameterAnnotationValid(method, params);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("valid time:" , (System.currentTimeMillis() - start));
         }
         return methodInvocation.proceed();
     }
