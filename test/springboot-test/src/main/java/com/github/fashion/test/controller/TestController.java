@@ -1,6 +1,7 @@
 package com.github.fashion.test.controller;
 
 
+import com.github.fashion.test.customAnnotation.CustomAnnotationTest;
 import com.github.fashion.test.model.DefaultModel;
 import com.github.fashionbrot.validated.annotation.Default;
 import com.github.fashionbrot.validated.annotation.NotBlank;
@@ -17,8 +18,8 @@ public class TestController {
     @RequestMapping("/test")
     @ResponseBody
     @Validated
-    public String test(@Custom(min = 1) String abc){
-        return abc+"";
+    public String test( String abc,@Custom(min = 1) String abc1){
+        return abc+"："+abc1;
     }
 
 
@@ -37,4 +38,11 @@ public class TestController {
         return defaultModel.getPageNo()+":"+defaultModel.getPageSize();
     }
 
+
+    @RequestMapping("/test4")
+    @ResponseBody
+    @Validated
+    public String test(@CustomAnnotationTest String abc){
+        return abc;
+    }
 }
