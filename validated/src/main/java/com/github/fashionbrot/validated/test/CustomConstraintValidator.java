@@ -19,7 +19,7 @@ public class CustomConstraintValidator implements ConstraintValidator<Custom, Ob
         /**
          * return true 则验证成功 false 验证失败
           */
-        return true;
+        return false;
     }
 
     @Override
