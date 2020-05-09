@@ -211,15 +211,11 @@ public  interface ConstraintValidator<A extends Annotation, T> {
 
 
 
-```
-
 
 ### 支持自定义注解 如下：
-
-```bash
 1、实现  ConstraintValidator 此接口
 2、自定义注解如下：  CustomConstraintValidator.class,CustomConstraintValidator2.class 实现类可多个，至少有一个
-
+```java
     @Documented
     @Target({ElementType.FIELD,  ElementType.PARAMETER})
     @Retention(RetentionPolicy.RUNTIME)
@@ -230,12 +226,12 @@ public  interface ConstraintValidator<A extends Annotation, T> {
     
         int min();
     }
-
+```
 
 3、代码实现
 
 
-
+```java
 public class CustomConstraintValidator implements ConstraintValidator<Custom,String> {
 
     @Override
