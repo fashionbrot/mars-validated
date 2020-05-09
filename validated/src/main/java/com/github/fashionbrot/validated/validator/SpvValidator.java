@@ -275,7 +275,7 @@ public class SpvValidator implements Validator {
                         if (method != null) {
                             boolean isValid = (boolean) ReflectionUtils.invokeMethod(method, instanceObject, annotation, value);
 
-                            if (!isValid && getMethod(clazz,ANNOTATION_MSG)!=null) {
+                            if (!isValid ) {
 
                                 Method annotationMethod = MethodUtil.getAnnotationTypeMethod(annotationType, ANNOTATION_MSG, (Class<?>) null);
                                 if (annotationMethod!=null){

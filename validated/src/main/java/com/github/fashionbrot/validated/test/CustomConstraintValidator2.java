@@ -9,12 +9,7 @@ public class CustomConstraintValidator2 implements ConstraintValidator<Custom, O
 
     @Override
     public boolean isValid(Custom annotation, Object var1) {
-        return true;
+        return false;
     }
 
-    @Override
-    public Object modify(Custom annotation, Object var) {
-        System.out.println("CustomConstraintValidator2:"+var);
-        return var+"2";
-    }
 }

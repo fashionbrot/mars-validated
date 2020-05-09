@@ -3,6 +3,7 @@ package com.github.fashion.test.controller;
 
 import com.github.fashion.test.model.DefaultModel;
 import com.github.fashionbrot.validated.annotation.Default;
+import com.github.fashionbrot.validated.annotation.NotBlank;
 import com.github.fashionbrot.validated.annotation.Validated;
 import com.github.fashionbrot.validated.test.Custom;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,7 @@ public class TestController {
     @RequestMapping("/test")
     @ResponseBody
     @Validated
-    public String test(@Custom(min=1) String abc){
+    public String test(@Custom(min = 1) String abc){
         return abc+"";
     }
 
