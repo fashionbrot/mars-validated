@@ -23,4 +23,5 @@ public @interface Email {
 
     String msg() default "com.spv.valid.Email.msg";
 
+    Class<?>[] groups() default  {};
 }

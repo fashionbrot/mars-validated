@@ -14,4 +14,6 @@ import java.lang.annotation.*;
 public @interface NotEmpty {
 
     String msg() default  "com.spv.valid.NotEmpty.msg";
+
+    Class<?>[] groups() default  {};
 }

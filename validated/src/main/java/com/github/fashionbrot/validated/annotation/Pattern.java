@@ -17,4 +17,5 @@ public @interface Pattern {
 
     String msg();
 
+    Class<?>[] groups() default  {};
 }

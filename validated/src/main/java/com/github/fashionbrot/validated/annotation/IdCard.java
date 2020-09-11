@@ -23,4 +23,5 @@ public @interface IdCard {
 
     String below18Msg() default "com.spv.valid.IdCard.below18.msg";
 
+    Class<?>[] groups() default  {};
 }

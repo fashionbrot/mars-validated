@@ -15,4 +15,5 @@ public @interface AssertFalse {
 
     String msg() default "com.spv.valid.AssertFalse.msg";
 
+    Class<?>[] groups() default  {};
 }

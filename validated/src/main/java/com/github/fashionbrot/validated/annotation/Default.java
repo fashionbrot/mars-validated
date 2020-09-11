@@ -22,4 +22,5 @@ public @interface Default {
 
     String  value() ;
 
+    Class<?>[] groups() default  {};
 }

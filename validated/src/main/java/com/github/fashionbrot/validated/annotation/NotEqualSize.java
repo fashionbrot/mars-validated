@@ -11,4 +11,6 @@ public @interface NotEqualSize {
     int size() default 0;
 
     String msg() default "com.spv.valid.NotEqualSize.msg";
+
+    Class<?>[] groups() default  {};
 }

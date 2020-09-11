@@ -28,4 +28,6 @@ public @interface Size {
     long max() default Long.MAX_VALUE;
 
     String msg() default "com.spv.valid.Size.msg";
+
+    Class<?>[] groups() default  {};
 }

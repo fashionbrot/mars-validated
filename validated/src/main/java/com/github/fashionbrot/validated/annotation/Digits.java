@@ -22,4 +22,5 @@ public @interface Digits {
 
     String msg() default "com.spv.valid.Digits.msg";
 
+    Class<?>[] groups() default  {};
 }

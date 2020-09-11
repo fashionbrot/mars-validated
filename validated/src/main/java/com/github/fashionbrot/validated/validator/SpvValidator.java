@@ -18,11 +18,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.List;
 
 @Slf4j
 public class SpvValidator implements Validator {
@@ -129,10 +127,13 @@ public class SpvValidator implements Validator {
             if (!isValidClass(validClass,clazz)){
                 return;
             }
-            Class<?>[] groups = validated.groups();
+
 
             Field[] fields = clazz.getDeclaredFields();
-
+            if (fields==null || fields.length<=0){
+                return;
+            }
+            Class<?>[] vGroupClass = validated.groups();
             for (Field field : fields) {
 
                 Annotation[] annotations = field.getDeclaredAnnotations();
@@ -141,6 +142,9 @@ public class SpvValidator implements Validator {
 
                     for (Annotation annotation : annotations) {
 
+                        if (checkGroup(vGroupClass, annotation)){
+                            continue;
+                        }
 
                         Mars mars = annotation.annotationType().getDeclaredAnnotation(Mars.class);
                         String fileName = field.getName();
@@ -208,7 +212,7 @@ public class SpvValidator implements Validator {
         Validated validated = method.getDeclaredAnnotation(Validated.class);
 
         if (parameters != null && parameters.length > 0) {
-            Class<?>[] vGroupClass=validated.groups();
+            Class<?>[] vGroupClass=validated!=null?validated.groups():null;
             String[] methodParameters =null;
             for (int j = 0; j < parameters.length; j++) {
 
@@ -233,13 +237,8 @@ public class SpvValidator implements Validator {
 
                         for (Annotation annotation : annotations) {
 
-                            //TODO 需要实现
-                            if (vGroupClass.length>0){
-                                Method groups = MethodUtil.getAnnotationTypeMethod(annotation.annotationType(), "groups", null);
-                                if(groups!=null) {
-                                    Class<?>[] groupClass= (Class<?>[]) ReflectionUtils.invokeMethod(groups,annotation);
-                                    System.out.println(groups.getName());
-                                }
+                            if (checkGroup(vGroupClass, annotation)){
+                                continue;
                             }
 
 
@@ -273,13 +272,50 @@ public class SpvValidator implements Validator {
         }
     }
 
-    private boolean checkGroup(Class<?>[] vGroup,Class<?>[] aGroup){
-        List<Class<?>>  list1= Stream.of(vGroup).collect(Collectors.toList());
-        List<Class<?>>  list2= Stream.of(aGroup).collect(Collectors.toList());
-        int count = (int) list1.stream().filter(list2::contains).count();
-        return true;
+    /**
+     * check groups matches
+     * @param vGroupClass
+     * @param annotation
+     * @return
+     */
+    private boolean checkGroup(Class<?>[] vGroupClass, Annotation annotation) {
+        //groups==null ,则不验证groups
+        if (vGroupClass==null || vGroupClass.length<=0) {
+            return false;
+        }
+        //检测groups 是否匹配
+        Method groups = MethodUtil.getAnnotationTypeMethod(annotation.annotationType(), "groups", null);
+        if(groups!=null) {
+            Class<?>[] groupClass= (Class<?>[]) ReflectionUtils.invokeMethod(groups,annotation);
+            if (!checkGroup(vGroupClass,groupClass)){
+                return true;
+            }
+        }
+        return false;
     }
 
+    private boolean checkGroup(Class<?>[] vGroup,Class<?>[] aGroup){
+        if (aGroup!=null && aGroup.length>0){
+            if (log.isDebugEnabled()){
+                log.debug("@Validated groups:{}  annotation groups:{}",vGroup,aGroup);
+            }
+            for(Class v :vGroup){
+                if (checkGroup(v,aGroup)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkGroup(Class clazz,Class<?>[] aGroup){
+        for(Class c: aGroup){
+            if (clazz.equals(c)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public void checkCustomValid(Annotation annotation,Object value,Object[] params,int index, String fieldName,Field field) {

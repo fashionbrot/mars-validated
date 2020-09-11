@@ -20,8 +20,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Phone {
 
 
-    String regexp() default "^(((13[0-9])|(14[579])|(15[^4,\\D])|(18[0-9])|(17[0-9]))|(19[8,9])|166)\\d{8}$";
+    String regexp() default "^1(3([0-35-9]\\d|4[1-8])|4[14-9]\\d|5([0125689]\\d|7[1-79])|66\\d|7[2-35-8]\\d|8\\d{2}|9[89]\\d)\\d{7}$";
 
     String msg() default "com.spv.valid.Phone.msg";
 
+    Class<?>[] groups() default  {};
 }

@@ -3,7 +3,43 @@
 validated 是 控制 springmvc  springboot 的验证框架。此框架基于spring 开发。
 
 
+|版本|新增功能|
+|---|--------|
+|1.0.0|1、参数验证基本功能上线|
+|1.0.1|1、新增验证注解 <br>2、Validated 注解增加validClass方法，可以选择性验证自己想要的参数。 <br> 3、新增Default 注解|
+|1.0.2|1、代码逻辑优化。<br>2、新增groups 功能，可以根据groups 选择性验证|
+
+
+# validated 参数验证
+
+## 使用环境
+
+spring4.0 及以上  
+jdk1.8    及以上
+
+
+|Annotation|Supported data types|作用
+|---|--------|---|
+|NotBlank|String|验证String 字符串是否为空|
+|NotNull|String,Object,Integer,Long,Double,Short,Float,BigDecimal, BigInteger| 验证对象是否为空|
+|NotEmpty|String |验证字符串不能为空|
+|AssertFalse|Boolean,boolean,String|只能为false|
+|AssertTrue|Boolean,boolean,String|只能为true|
+|BankCard|String|验证银行卡|
+|CreditCard|String|验证信用卡|
+|Default|Integer,Double,Long,Short,Float,BigDecimal,String|设置默认值|
+|Digits|String|验证是否是数字|
+|Email|String|验证是否是邮箱|
+|IdCard|String|验证是否是身份证，验证18岁|
+|Length|int,long,short,double,Integer,Long,Float,Double,Short,String|验证长度|
+|Pattern|String|正则表达式验证|
+|Phone|String|验证手机号是否正确|
+|Size|int,long,short,Integer,Long,Short|验证大小值|
+|NotEqualSize|String|验证长度|
+
+
 # 使用4步配置
+
 
 
 ## 1、导入jar
@@ -13,12 +49,13 @@ validated 是 控制 springmvc  springboot 的验证框架。此框架基于spri
         <dependency>
             <groupId>com.github.fashionbrot</groupId>
             <artifactId>mars-validated</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
         </dependency>
 
 ```
 
-## 2、使用注解
+# validated 的三种使用方式
+## 1、第一种springboot通过注解开启
 
 ### 2.1 springboot 配置
 fileName 如果不填默认jar 包自带提示，如果需要批量自定义请按照jar 包下的valid_zh_CN.properties 修改提示语内容
@@ -31,19 +68,56 @@ public class DemoApplication {
     }
 }
 ```
-### 2.2 spring配置
+## 2、第二种通过类文件配置
 
 ```java
 @Component
 @Configuration
 @EnableValidatedConfig(fileName = "valid_zh_CN")
-public class Config {
+public class ValidConfig {
+}
+```
 
+##  3、第三种 通过aop 自定义拦截
+```java
+@Component
+@Aspect
+public class ValidAspect {
+
+    @Pointcut("execution(* com.github.fashion.test.service.*.*(..))")
+    private void pointcut() {}
+
+    @Autowired
+    private SpvValidator spvValidator;
+
+    @Around(value = "pointcut()")
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("---------------aop begin");
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        //打印request参数
+        Enumeration<?> temp = request.getParameterNames();
+        if (null != temp) {
+            while (temp.hasMoreElements()) {
+                String en = (String) temp.nextElement();
+                String value = request.getParameter(en);
+                System.out.println("[aop] request parameter name:"+en+";value:"+value);
+            }
+        }
+        //打印方法的信息
+        Object[] args = joinPoint.getArgs();
+        Signature signature = joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature)signature;
+        //自定义参数验证
+        spvValidator.parameterAnnotationValid(methodSignature.getMethod(),args);
+
+        return joinPoint.proceed();
+    }
 
 }
 
 ```
-## 3使用 @Validated 开启接口验证 @Email验证邮箱格式
+
+##  使用 @Validated 开启接口验证 @Email验证邮箱格式
 
 ```bash
 
@@ -71,7 +145,7 @@ public class DemoController {
     
     @RequestMapping("/idcardCheck")
     @ResponseBody
-    @Validated
+    @Validated //注意此处
     public String demo(IdCardModel idCardModel){
         return testService.test("ac");
     }
@@ -82,8 +156,22 @@ public class DemoController {
         return testService.test2("ac");
     }
 
+    @RequestMapping("/test1")
+    @ResponseBody
+    @Validated(groups = {EditGroup.class})
+    public String test1( @Custom(min = 1,groups = {EditGroup.class,AddGroup.class}) String abc1){
+        return abc1;
+    }
 
+
+    @RequestMapping("/test2")
+    @ResponseBody
+    @Validated(groups = AddGroup.class)
+    public String test2(GroupModel groupModel){
+        return groupModel.getAbc();
+    }
 }
+
 
 **此处支持多继承验证*** 
 
@@ -112,10 +200,9 @@ public class TestService{
 ```
 
 
-### 4 自定义实现全局异常处理
+# 自定义实现全局异常处理
 
 拦截 ValidatedException 
-
 
 ```bash
 @RestControllerAdvice
@@ -165,32 +252,6 @@ public class DubboProviderFilter implements Filter {
 ```
 
 
-# validated 参数验证
-
-## 使用环境
-
-spring4.0 及以上  
-jdk1.8    及以上
-
-
-|Annotation|Supported data types|作用
-|---|--------|---|
-|NotBlank|String|验证String 字符串是否为空|
-|NotNull|String,Object,Integer,Long,Double,Short,Float,BigDecimal, BigInteger| 验证对象是否为空|
-|NotEmpty|String |验证字符串不能为空|
-|AssertFalse|Boolean,boolean,String|只能为false|
-|AssertTrue|Boolean,boolean,String|只能为true|
-|BankCard|String|验证银行卡|
-|CreditCard|String|验证信用卡|
-|Default|Integer,Double,Long,Short,Float,BigDecimal,String|设置默认值|
-|Digits|String|验证是否是数字|
-|Email|String|验证是否是邮箱|
-|IdCard|String|验证是否是身份证，验证18岁|
-|Length|int,long,short,double,Integer,Long,Float,Double,Short,String|验证长度|
-|Pattern|String|正则表达式验证|
-|Phone|String|验证手机号是否正确|
-|Size|int,long,short,Integer,Long,Short|验证大小值|
-|NotEqualSize|String|验证长度|
 
 
 ### ConstraintValidator 接口新增方法

@@ -38,4 +38,5 @@ public @interface Length {
 
     String msg() default "com.spv.valid.Length.msg";
 
+    Class<?>[] groups() default  {};
 }

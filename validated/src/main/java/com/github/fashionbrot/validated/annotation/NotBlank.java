@@ -16,4 +16,5 @@ public @interface NotBlank {
 
     String  msg() default "com.spv.valid.NotBlank.msg";
 
+    Class<?>[] groups() default  {};
 }
