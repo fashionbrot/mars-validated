@@ -2,6 +2,7 @@ package com.github.fashion.test.controller;
 
 
 import com.github.fashion.test.customAnnotation.CustomAnnotationTest;
+import com.github.fashion.test.groups.AddGroup;
 import com.github.fashion.test.model.DefaultModel;
 import com.github.fashionbrot.validated.annotation.Default;
 import com.github.fashionbrot.validated.annotation.NotBlank;
@@ -20,6 +21,13 @@ public class TestController {
     @Validated
     public String test( String abc,@Custom(min = 1) String abc1){
         return abc+"："+abc1;
+    }
+
+    @RequestMapping("/test1")
+    @ResponseBody
+    @Validated
+    public String test1( @Custom(min = 1,groups = {AddGroup.class}) String abc1){
+        return abc1;
     }
 
 

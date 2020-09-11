@@ -20,6 +20,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.List;
 
 @Slf4j
 public class SpvValidator implements Validator {
@@ -54,7 +57,7 @@ public class SpvValidator implements Validator {
 
         if (annotationTypeEnum != null) {
             switch (annotationTypeEnum) {
-                case NOTBLANK:
+                case NOT_BLANK:
                     ValidatorUtil.checkNotBlank(parameterType);
                     break;
                 case LENGTH:
@@ -63,16 +66,16 @@ public class SpvValidator implements Validator {
                 case DEFAULT:
                     ValidatorUtil.checkDefault(parameterType, params, index);
                     break;
-                case ASSERTTRUE:
+                case ASSERT_TRUE:
                     ValidatorUtil.checkAssertTrue(parameterType);
                     break;
-                case ASSERTFALSE:
+                case ASSERT_FALSE:
                     ValidatorUtil.checkAssertFalse(parameterType);
                     break;
                 case BANKCARD:
                     ValidatorUtil.checkBankCard(parameterType);
                     break;
-                case CREDITCARD:
+                case CREDIT_CARD:
                     ValidatorUtil.checkCreditCard(parameterType);
                     break;
                 case SIZE:
@@ -90,7 +93,7 @@ public class SpvValidator implements Validator {
                 case PHONE:
                     ValidatorUtil.checkPhone(parameterType);
                     break;
-                case IDCARD:
+                case ID_CARD:
                     ValidatorUtil.checkIdCard(parameterType);
                     break;
                 case DIGITS:
@@ -126,7 +129,7 @@ public class SpvValidator implements Validator {
             if (!isValidClass(validClass,clazz)){
                 return;
             }
-
+            Class<?>[] groups = validated.groups();
 
             Field[] fields = clazz.getDeclaredFields();
 
@@ -177,14 +180,21 @@ public class SpvValidator implements Validator {
     }
 
 
+    /**
+     * Check to see if the class has a parent
+     * @param validated
+     * @param clazz
+     * @param params
+     * @param index
+     */
     private void checkClassSuper(Validated validated,Class clazz,Object[] params, int index){
         //获取 superclass 是否是 appClassloader 加载的
         Class superclass = clazz.getSuperclass();
         if (superclass != null) {
-            String superValueTypeName = superclass.getName();
-            ClassTypeEnum classTypeEnum = ClassTypeUtil.getClassTypeEnum(superValueTypeName);
-            if (classTypeEnum == null) {
-                entityFieldsAnnotationValid(validated,superValueTypeName, superclass, params, index);
+            //如果不是定义的类型，则把 class 当做bean 进行校验 field
+            boolean exist = ClassTypeEnum.checkClass(superclass.getName());
+            if (!exist) {
+                entityFieldsAnnotationValid(validated,superclass.getName(), superclass, params, index);
             }
         }
     }
@@ -198,7 +208,7 @@ public class SpvValidator implements Validator {
         Validated validated = method.getDeclaredAnnotation(Validated.class);
 
         if (parameters != null && parameters.length > 0) {
-
+            Class<?>[] vGroupClass=validated.groups();
             String[] methodParameters =null;
             for (int j = 0; j < parameters.length; j++) {
 
@@ -212,8 +222,8 @@ public class SpvValidator implements Validator {
                 Class<?> classType = parameter.getType();
                 String parameterTypeName = classType.getTypeName();
                 //判断是否是 数据类型，还是 bean
-                ClassTypeEnum classTypeEnum = ClassTypeUtil.getClassTypeEnum(parameterTypeName);
-                if (classTypeEnum == null) {
+                boolean exist = ClassTypeEnum.checkClass(parameterTypeName);
+                if (!exist) {
                     //获取 class 的Field[]  验证码field 值
                     entityFieldsAnnotationValid(validated,parameterTypeName, parameter.getType(), params, j);
                 } else {
@@ -222,6 +232,16 @@ public class SpvValidator implements Validator {
                     if (annotations != null && annotations.length > 0) {
 
                         for (Annotation annotation : annotations) {
+
+                            //TODO 需要实现
+                            if (vGroupClass.length>0){
+                                Method groups = MethodUtil.getAnnotationTypeMethod(annotation.annotationType(), "groups", null);
+                                if(groups!=null) {
+                                    Class<?>[] groupClass= (Class<?>[]) ReflectionUtils.invokeMethod(groups,annotation);
+                                    System.out.println(groups.getName());
+                                }
+                            }
+
 
                             Mars mars = annotation.annotationType().getDeclaredAnnotation(Mars.class);
                             Object valueObject = params[j];
@@ -242,7 +262,7 @@ public class SpvValidator implements Validator {
 
                             } else {
 
-                                checkCustomValid(annotation,params[j],params,j, classTypeEnum, methodParameter,null);
+                                checkCustomValid(annotation,params[j],params,j, methodParameter,null);
 
                             }
                         }
@@ -253,10 +273,16 @@ public class SpvValidator implements Validator {
         }
     }
 
+    private boolean checkGroup(Class<?>[] vGroup,Class<?>[] aGroup){
+        List<Class<?>>  list1= Stream.of(vGroup).collect(Collectors.toList());
+        List<Class<?>>  list2= Stream.of(aGroup).collect(Collectors.toList());
+        int count = (int) list1.stream().filter(list2::contains).count();
+        return true;
+    }
+
 
     @Override
-    public void checkCustomValid(Annotation annotation,Object value,Object[] params,int index,
-                                 ClassTypeEnum fieldType, String fieldName,Field field) {
+    public void checkCustomValid(Annotation annotation,Object value,Object[] params,int index, String fieldName,Field field) {
         Class<? extends Annotation> annotationType = annotation.annotationType();
         Constraint constraint = annotationType.getDeclaredAnnotation(Constraint.class);
         if (constraint != null) {
@@ -320,9 +346,9 @@ public class SpvValidator implements Validator {
     public void checkCustomValid(Annotation annotation, Object value, String fieldType, String fieldName,Object[] params,int index, Field field) {
 
         //判断是否是 数据类型，还是 bean
-        ClassTypeEnum classTypeEnum = ClassTypeUtil.getClassTypeEnum(fieldType);
-        if (classTypeEnum!=null){
-            checkCustomValid(annotation,value,params,index,classTypeEnum,fieldName,field);
+        boolean exist = ClassTypeEnum.checkClass(fieldType);
+        if (exist){
+            checkCustomValid(annotation,value,params,index,fieldName,field);
         }
     }
 

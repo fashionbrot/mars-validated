@@ -27,11 +27,10 @@ public interface Validator {
      * @param fieldValue fieldValue
      * @param params     params
      * @param index      index
-     * @param fieldType  fieldType
      * @param fieldName  fieldName
      * @param field     field
      */
-    void checkCustomValid(Annotation annotation,Object fieldValue, Object[] params, int index, ClassTypeEnum fieldType, String fieldName, Field field);
+    void checkCustomValid(Annotation annotation,Object fieldValue, Object[] params, int index, String fieldName, Field field);
 
 
     /**

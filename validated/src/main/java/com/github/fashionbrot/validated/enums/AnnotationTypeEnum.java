@@ -11,19 +11,19 @@ import java.util.Map;
 @AllArgsConstructor
 public enum  AnnotationTypeEnum {
 
-    NOTBLANK("NotBlank"),
+    NOT_BLANK("NotBlank"),
     LENGTH("Length"),
     DEFAULT("Default"),
-    ASSERTTRUE("AssertTrue"),
-    ASSERTFALSE("AssertFalse"),
-    CREDITCARD("CreditCard"),
+    ASSERT_TRUE("AssertTrue"),
+    ASSERT_FALSE("AssertFalse"),
+    CREDIT_CARD("CreditCard"),
     BANKCARD("BankCard"),
     SIZE("Size"),
     NOTNULL("NotNull"),
     PATTERN("Pattern"),
     EMAIL("Email"),
     PHONE("Phone"),
-    IDCARD("IdCard"),
+    ID_CARD("IdCard"),
     DIGITS("Digits"),
     NOT_EMPTY("NotEmpty"),
     NOT_EQUAL_SIZE("NotEqualSize");

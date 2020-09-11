@@ -10,9 +10,15 @@ import java.lang.annotation.*;
 public @interface Validated {
 
     /**
+     * 需要校验的 class
      * 默认 全部校验
-     * @return
      */
     Class<?>[] validClass() default {};
+
+    /**
+     * 校验组
+     * @return
+     */
+    Class<?>[] groups() default { };
 
 }

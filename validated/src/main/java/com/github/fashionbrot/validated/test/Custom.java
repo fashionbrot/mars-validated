@@ -13,4 +13,6 @@ public @interface Custom {
     String msg() default "com.sgr.valid.Custom.msg";
 
     int min();
+
+    Class<?>[] groups() default  {};
 }

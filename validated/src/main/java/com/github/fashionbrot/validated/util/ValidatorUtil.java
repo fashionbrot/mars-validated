@@ -82,6 +82,12 @@ public class ValidatorUtil implements BeanFactoryAware {
     public static void checkNotBlank(ParameterType parameterType) {
         Object value = parameterType.getValue();
         NotBlank notBlank = parameterType.getAnnotationCustom().getDeclaredAnnotation(parameterType, NotBlank.class);
+        try {
+            notBlank.getClass().getDeclaredField("groups");
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
         if (value == null || StringUtil.isBlank(value.toString())) {
             ExceptionUtil.throwException(notBlank.msg(), parameterType.getFieldName());
         }

@@ -4,8 +4,7 @@ package com.github.fashionbrot.validated.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @AllArgsConstructor
@@ -32,29 +31,41 @@ public enum ClassTypeEnum {
     STRING(17,"java.lang.String"),
     BIGDECIMAL(18,"java.math.BigDecimal"),
     BIGIINTEGER(19,"java.math.BigInteger"),
-    //DATE(20,"java.util.Date"),
-    OBJECT(21,"java.lang.Object");
+    DATE(20,"java.util.Date"),
+    OBJECT(21,"java.lang.Object"),
+    MULTI_PART_FILE(22,"org.springframework.web.multipart.MultipartFile");
 
 
     private static  Map<String,ClassTypeEnum> map=new HashMap<>(ClassTypeEnum.values().length);
+
+    private static Set<String> set = new HashSet<>();
     static {
 
-        ClassTypeEnum[] values= ClassTypeEnum.values();
-        for (ClassTypeEnum classTypeEnum : values) {
-            map.put(classTypeEnum.getName(), classTypeEnum);
-        }
+        Arrays.stream(ClassTypeEnum.values()).forEach(e->{
+            set.add(e.getName());
+            map.put(e.getName(), e);
+        });
     }
 
-    public static ClassTypeEnum getValue(String str){
-       if (!map.containsKey(str)){
-           return null;
-       }
-       return map.get(str);
+    public static boolean checkClass(String str){
+        return set.contains(str);
+    }
+
+    public static void addClassPath(String classPath){
+        if (!set.contains(classPath)){
+            set.add(classPath);
+        }
     }
 
     private int type;
     private String name;
 
 
+    public static ClassTypeEnum getValue(String str){
+        if (!map.containsKey(str)){
+            return null;
+        }
+        return map.get(str);
+    }
 
 }
