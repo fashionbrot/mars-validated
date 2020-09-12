@@ -64,7 +64,14 @@ public class TestController {
     @RequestMapping("/test5")
     @ResponseBody
     public String test5(String abc){
-        validService.test5(abc);
+        validService.test5(abc,new GroupModel());
         return "test5";
+    }
+
+    @RequestMapping("/test6")
+    @ResponseBody
+    public String test6(GroupModel abc){
+        validService.test6(abc);
+        return "test6";
     }
 }

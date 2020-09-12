@@ -123,7 +123,7 @@ public class SpvValidator implements Validator {
             /**
              * 如果填写 validClass
              */
-            Class<?>[] validClass = validated.validClass();
+            Class<?>[] validClass =validated!=null ? validated.validClass():null;
             if (!isValidClass(validClass,clazz)){
                 return;
             }
@@ -133,7 +133,7 @@ public class SpvValidator implements Validator {
             if (fields==null || fields.length<=0){
                 return;
             }
-            Class<?>[] vGroupClass = validated.groups();
+            Class<?>[] vGroupClass=validated!=null?validated.groups():null;
             for (Field field : fields) {
 
                 Annotation[] annotations = field.getDeclaredAnnotations();
@@ -177,7 +177,7 @@ public class SpvValidator implements Validator {
 
 
     private boolean isValidClass(Class<?>[] validClass,Class<?> clazz){
-        if (validClass.length==0){
+        if (validClass==null || validClass.length<=0){
             return true;
         }
         return Arrays.asList(validClass).contains(clazz);

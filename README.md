@@ -54,7 +54,7 @@ jdk1.8    及以上
 
 ```
 
-# validated 的三种使用方式
+# validated 的两种使用方式
 ## 1、第一种springboot通过注解开启
 
 ### 2.1 springboot 配置
@@ -78,7 +78,22 @@ public class ValidConfig {
 }
 ```
 
-##  3、第三种 通过aop 自定义拦截
+
+# 自定义实现全局异常处理
+拦截 ValidatedException异常类
+```bash
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(ValidatedException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public RespMessage ValidationException(ValidatedException e){
+        return new RespMessage(-100,e.getMsg());
+    }
+}
+```
+
+
+###  通过aop 自定义拦截
 ```java
 @Component
 @Aspect
@@ -156,20 +171,6 @@ public class DemoController {
         return testService.test2("ac");
     }
 
-    @RequestMapping("/test1")
-    @ResponseBody
-    @Validated(groups = {EditGroup.class})
-    public String test1( @Custom(min = 1,groups = {EditGroup.class,AddGroup.class}) String abc1){
-        return abc1;
-    }
-
-
-    @RequestMapping("/test2")
-    @ResponseBody
-    @Validated(groups = AddGroup.class)
-    public String test2(GroupModel groupModel){
-        return groupModel.getAbc();
-    }
 }
 
 
@@ -199,24 +200,27 @@ public class TestService{
 
 ```
 
-
-# 自定义实现全局异常处理
-
-拦截 ValidatedException 
-
-```bash
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(ValidatedException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public RespMessage ValidationException(ValidatedException e){
-
-        return new RespMessage(-100,e.getMsg());
-    }
+### 按照addGroup editGroup valid 校验
+```java
+@Controller
+public class DemoController {
+     @RequestMapping("/test1")
+     @ResponseBody
+     @Validated(groups = {EditGroup.class})
+     public String test1( @Custom(min = 1,groups = {EditGroup.class,AddGroup.class}) String abc1){
+         return abc1;
+     }
+ 
+ 
+     @RequestMapping("/test2")
+     @ResponseBody
+     @Validated(groups = AddGroup.class)
+     public String test2(GroupModel groupModel){
+         return groupModel.getAbc();
+     } 
 }
-
 ```
+
 
 ## 支持 默认值设置   hibernate默认不支持
 ```java
