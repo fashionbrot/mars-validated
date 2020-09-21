@@ -33,9 +33,14 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-    <dependency>
+    <!--<dependency>
         <groupId>com.github.fashionbrot</groupId>
         <artifactId>mars-validated</artifactId>
+        <version>1.0.2</version>
+    </dependency>-->
+    <dependency>
+        <groupId>com.github.fashionbrot</groupId>
+        <artifactId>validated-springboot-starter</artifactId>
         <version>1.0.2</version>
     </dependency>
 
