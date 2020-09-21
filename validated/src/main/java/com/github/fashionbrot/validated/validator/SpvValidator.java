@@ -4,6 +4,7 @@ import com.github.fashionbrot.validated.annotation.Mars;
 import com.github.fashionbrot.validated.annotation.Validated;
 import com.github.fashionbrot.validated.constraint.Constraint;
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
+import com.github.fashionbrot.validated.constraint.ConstraintValidatorBean;
 import com.github.fashionbrot.validated.enums.AnnotationTypeEnum;
 import com.github.fashionbrot.validated.enums.ClassTypeEnum;
 import com.github.fashionbrot.validated.util.*;
@@ -223,12 +224,16 @@ public class SpvValidator implements Validator {
                 Parameter parameter = parameters[j];
 
 
+
                 Class<?> classType = parameter.getType();
                 String parameterTypeName = classType.getTypeName();
                 //判断是否是 数据类型，还是 bean
                 boolean exist = ClassTypeEnum.checkClass(parameterTypeName);
                 if (!exist) {
-                    //获取 class 的Field[]  验证码field 值
+                    //验证 bean 是否实现了 ConstraintValidatorBean 接口
+                    validatedByBean(parameter,params, j);
+
+                    //获取 class 的Field[]  验证field 值
                     entityFieldsAnnotationValid(validated,parameterTypeName, parameter.getType(), params, j);
                 } else {
                     Annotation[] annotations = parameter.getDeclaredAnnotations();
@@ -267,6 +272,62 @@ public class SpvValidator implements Validator {
                         }
                     }
 
+                }
+            }
+        }
+    }
+
+    private void validatedByBean(Parameter parameter, Object[] params,int index) {
+
+        Annotation[] annotations = parameter.getDeclaredAnnotations();
+        if (annotations!=null && annotations.length>0){
+            for(Annotation annotation : annotations){
+                Class<? extends Annotation> annotationType = annotation.annotationType();
+                Constraint constraint = annotationType.getDeclaredAnnotation(Constraint.class);
+                if (constraint != null) {
+                    Class<? extends ConstraintValidatorBean<? extends Annotation, ?>>[] classes = constraint.validatedByBean();
+                    if (classes == null || classes.length <= 0) {
+                        return ;
+                    }
+                    for (Class clazz : classes) {
+                        Class<?>[] interfaces = clazz.getInterfaces();
+                        if (interfaces != null && interfaces.length > 0 && interfaces[0].isAssignableFrom(ConstraintValidatorBean.class)) {
+
+                            Object instanceObject = MethodUtil.getInstance(clazz);
+
+                            if (instanceObject != null) {
+                                Object value = params[index];
+                                /**
+                                 * 判断是否实现ConstraintValidator isValid 方法
+                                 */
+                                Method method = MethodUtil.getMethod(clazz, METHOD_NAME_IS_VALID, Annotation.class, Object.class);
+                                if (method != null) {
+                                    Object isValid = ReflectionUtils.invokeMethod(method, instanceObject, annotation, value);
+                                    if (isValid!=null && !"".equals(isValid)) {
+                                        ExceptionUtil.throwException(isValid);
+                                    }
+                                }
+
+                                /**
+                                 * 判断是否实现 ConstraintValidator 中的 modify 方法
+                                 */
+                                Method modifyMethod = getMethod(clazz,METHOD_NAME_MODIFY);
+                                if (modifyMethod!=null){
+                                    try {
+                                        //执行 modify 方法
+                                        Object newValue = ReflectionUtils.invokeMethod(modifyMethod, instanceObject, annotation, value);
+                                        if (log.isDebugEnabled()){
+                                            log.debug("newValue:"+newValue+" oldValue:"+value);
+                                        }
+                                        params[index] = newValue;
+                                    }catch (Exception e){
+                                        log.error("invoke method error",e);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
                 }
             }
         }

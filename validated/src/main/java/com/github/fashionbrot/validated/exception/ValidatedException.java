@@ -15,4 +15,9 @@ public class ValidatedException extends RuntimeException  {
         this.fieldName=fieldName;
     }
 
+    public ValidatedException(String msg) {
+        super(msg);
+        this.msg=msg;
+    }
+
 }

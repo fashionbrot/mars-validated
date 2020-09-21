@@ -12,6 +12,7 @@
     <modules>
     	<module>validated</module>
         <module>test</module>
+        <module>springboot-start</module>
     </modules>
 
 

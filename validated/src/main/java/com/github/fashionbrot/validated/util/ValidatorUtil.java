@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
@@ -414,6 +415,8 @@ public class ValidatorUtil implements BeanFactoryAware {
         if (resourceBundle.containsKey(msg)) {
             msg = resourceBundle.getString(msg);
         } else {
+//            ResourceBundle resourceBundle1 = ResourceBundle.getBundle("my", Locale.getDefault());
+            //TODO 实现国际化
             MissingResourceException exception = new MissingResourceException(" is not key", fileName, msg);
             log.error("fileName:" + fileName + " is not key:" + msg, exception);
         }
