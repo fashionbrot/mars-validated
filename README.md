@@ -8,6 +8,8 @@ validated 是 控制 springmvc  springboot 的验证框架。此框架基于spri
 |1.0.0|1、参数验证基本功能上线|
 |1.0.1|1、新增验证注解 <br>2、Validated 注解增加validClass方法，可以选择性验证自己想要的参数。 <br> 3、新增Default 注解|
 |1.0.2|1、代码逻辑优化。<br>2、新增groups 功能，可以根据groups 选择性验证|
+|1.0.3|1、Constraint 接口增加  validatedByBean 方法，用来自定义注解实现 <br/>2、新增国际化支持 EnableValidatedConfig 中增加了 language方法、localeParamName方法用来实现消息内容国际化支持，目前支持中英文两种。其他语言请自行添加 <br/> 3、增加1.0.3 的validated-springboot-starter 支持 |
+       
 
 
 # validated 参数验证
@@ -45,23 +47,33 @@ jdk1.8    及以上
 ## 1、导入jar
 
 ```bash
-
+        <!-- springmvc 依赖-->
         <dependency>
             <groupId>com.github.fashionbrot</groupId>
             <artifactId>mars-validated</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
+        </dependency>
+        <!-- springboot 依赖-->
+        <dependency>
+               <groupId>com.github.fashionbrot</groupId>
+               <artifactId>validated-springboot-starter</artifactId>
+               <version>1.0.3</version>
         </dependency>
 
 ```
 
-# validated 的两种使用方式
-## 1、第一种springboot通过注解开启
-
+# validated spring 的使用方式 (springboot 引入jar包直接开启)
+```properties
+mars.validated.file-name=valid
+mars.validated.language=zh_CN
+mars.validated.locale-param-name=lang
+```
+## 1、第一种spring通过注解开启
 ### 2.1 springboot 配置
 fileName 如果不填默认jar 包自带提示，如果需要批量自定义请按照jar 包下的valid_zh_CN.properties 修改提示语内容
 ```java
 @SpringBootApplication
-@EnableValidatedConfig(fileName = "test")    // fileName 默认中文jar包自带 如需要批量自定义请自己创建 test.properties  放在自己项目中的resources 下
+@EnableValidatedConfig(fileName = "valid",language="zh_CN",localeParamName="lang")    // fileName 默认中文jar包自带 如需要批量自定义请自己创建 valid_zh_CN.properties  放在自己项目中的resources 下
 public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
@@ -69,14 +81,14 @@ public class DemoApplication {
 }
 ```
 ## 2、第二种通过类文件配置
-
 ```java
 @Component
 @Configuration
-@EnableValidatedConfig(fileName = "valid_zh_CN")
+@EnableValidatedConfig(fileName = "valid",language="zh_CN",localeParamName="lang") 
 public class ValidConfig {
 }
 ```
+
 
 
 # 自定义实现全局异常处理
@@ -237,6 +249,84 @@ public class BaseModel {
 }
 
 ```
+
+
+## 支持对 bean 对象的直接验证
+```java
+@RequestMapping("/valid/bean")
+@Controller
+public class ValidBeanController {
+
+
+    @RequestMapping("/test")
+    @ResponseBody
+    @Validated
+    public String test(@CustomBean ValidBeanModel validBeanModel){
+        return validBeanModel.getA1()+validBeanModel.getA2();
+    }
+}
+@Documented
+@Target({ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedByBean = {CustomBeanConstraintValidatorBean.class})
+public @interface CustomBean {
+    //没有任何参数
+
+}
+
+public class CustomBeanConstraintValidatorBean implements ConstraintValidatorBean<CustomBean, Object> {
+
+    @Override
+    public String isValid(CustomBean custom, Object var) {
+
+        if (var instanceof ValidBeanModel){
+            ValidBeanModel beanModel= (ValidBeanModel) var;
+            if (beanModel!=null && (beanModel.getA1()==null || beanModel.getA2()==null)){
+                return "a1 或者 a2 为空";
+            }
+        }
+        /**
+         * return null 则验证成功 其他验证失败
+          */
+        return null;
+    }
+    @Override
+    public Object modify(CustomBean annotation, Object var) {
+        System.out.println("CustomConstraintValidator:"+var);
+        if (var instanceof ValidBeanModel){
+            ValidBeanModel beanModel= (ValidBeanModel) var;
+            beanModel.setA1("1");
+            beanModel.setA2("2");
+            return beanModel;
+        }
+        return var;
+    }
+}
+```
+
+## 支持 国际化消息提示（现支持中英文两种）
+```html
+请求：http://localhost:8080/l18n/test?lang=en_us
+提示：must not be empty
+请求:http://localhost:8080/l18n/test?lang=zh_CN
+提示：不能为空
+```
+```java
+
+@RequestMapping("/l18n")
+@Controller
+public class I18nController {
+
+    @RequestMapping("/test")
+    @ResponseBody
+    @Validated
+    public String test(@NotEmpty() String abc){
+        return abc;
+    }
+
+}
+```
+
 
 ## 支持 dubbo 接口、实现类上方法上添加 @Validated ,设置 dubbo DubboProviderFilter 拦截器做统一处理
 

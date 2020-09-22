@@ -19,15 +19,11 @@ public class CustomBeanConstraintValidatorBean implements ConstraintValidatorBea
                 return "a1 或者 a2 为空";
             }
         }
-
         /**
          * return null 则验证成功 其他验证失败
           */
         return null;
     }
-
-
-
     @Override
     public Object modify(CustomBean annotation, Object var) {
         System.out.println("CustomConstraintValidator:"+var);

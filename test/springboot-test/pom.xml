@@ -33,28 +33,78 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-    <dependency>
-        <groupId>com.github.fashionbrot</groupId>
-        <artifactId>mars-validated</artifactId>
-        <version>1.0.3</version>
-    </dependency>
-    <!--<dependency>
-        <groupId>com.github.fashionbrot</groupId>
-        <artifactId>validated-springboot-starter</artifactId>
-        <version>1.0.2</version>
-    </dependency>-->
-
-    <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>3.1.0</version>
-    </dependency>
+        <!--<dependency>
+            <groupId>com.github.fashionbrot</groupId>
+            <artifactId>mars-validated</artifactId>
+            <version>1.0.3</version>
+        </dependency> -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.6</version>
+            <groupId>com.github.fashionbrot</groupId>
+            <artifactId>validated-springboot-starter</artifactId>
+            <version>1.0.3</version>
         </dependency>
 
-    </dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.6</version>
+            </dependency>
+
+        </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <addResources>true</addResources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*Mapper.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+
+    </build>
+
+
+
+
+
+
 
 </project>

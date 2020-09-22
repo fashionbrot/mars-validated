@@ -46,11 +46,22 @@ public class BeanUtil {
                                                      String beanName) {
         Properties properties = resolveProperties(globalProperties,propertyResolver);
         if (properties!=null) {
-            registerSingleton(registry, beanName, GlobalValidatedProperties.builder()
+            GlobalValidatedProperties validatedProperties = GlobalValidatedProperties.builder()
                     .fileName(properties.getProperty(GlobalValidatedProperties.FILENAME,"valid"))
                     .localeParamName(properties.getProperty(GlobalValidatedProperties.LOCALE_PARAM_NAME,"lang"))
                     .language(properties.getProperty("language","zh_CN"))
-                    .build());
+                    .build();
+            if(propertyResolver.containsProperty("mars.validated.file-name")){
+                validatedProperties.setFileName(propertyResolver.getProperty("mars.validated.file-name","valid"));
+            }
+            if(propertyResolver.containsProperty("mars.validated.language")){
+                validatedProperties.setLanguage(propertyResolver.getProperty("mars.validated.language","zh_CN"));
+            }
+            if(propertyResolver.containsProperty("mars.validated.locale-param-name")){
+                validatedProperties.setLocaleParamName(propertyResolver.getProperty("mars.validated.locale-param-name","lang"));
+            }
+
+            registerSingleton(registry, beanName,validatedProperties );
         }
     }
 

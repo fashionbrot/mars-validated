@@ -11,8 +11,5 @@ import java.lang.annotation.*;
 @Constraint(validatedByBean = {CustomBeanConstraintValidatorBean.class})
 public @interface CustomBean {
 
-    String msg() default "com.sgr.valid.Custom.msg";
-
-    Class<?>[] groups() default  {};
-
+    //没有任何参数
 }

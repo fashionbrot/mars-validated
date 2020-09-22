@@ -1,0 +1,33 @@
+{
+  "groups": [
+    {
+      "name": "mars.validated",
+      "type": "com.github.fashionbrot.config.ValidatedConfigurationProperties",
+      "sourceType": "com.github.fashionbrot.config.ValidatedConfigurationProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "mars.validated.file-name",
+      "type": "java.lang.String",
+      "description": "properties file name",
+      "sourceType": "com.github.fashionbrot.config.ValidatedConfigurationProperties",
+      "defaultValue": "valid"
+    },
+    {
+      "name": "mars.validated.language",
+      "type": "java.lang.String",
+      "description": "language",
+      "sourceType": "com.github.fashionbrot.config.ValidatedConfigurationProperties",
+      "defaultValue": "zh_CN"
+    },
+    {
+      "name": "mars.validated.locale-param-name",
+      "type": "java.lang.String",
+      "description": "request locale param name",
+      "sourceType": "com.github.fashionbrot.config.ValidatedConfigurationProperties",
+      "defaultValue": "lang"
+    }
+  ],
+  "hints": []
+}
