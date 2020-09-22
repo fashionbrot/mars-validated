@@ -9,15 +9,18 @@ public class ValidatedException extends RuntimeException  {
 
     private String msg;
 
+    private Object value;
+
     public ValidatedException(String msg,String fieldName) {
         super(msg);
         this.msg=msg;
         this.fieldName=fieldName;
     }
 
-    public ValidatedException(String msg) {
+    public ValidatedException(String msg,Object value) {
         super(msg);
         this.msg=msg;
+        this.value = value;
     }
 
 }

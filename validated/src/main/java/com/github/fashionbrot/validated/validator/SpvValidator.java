@@ -304,7 +304,7 @@ public class SpvValidator implements Validator {
                                 if (method != null) {
                                     Object isValid = ReflectionUtils.invokeMethod(method, instanceObject, annotation, value);
                                     if (isValid!=null && !"".equals(isValid)) {
-                                        ExceptionUtil.throwException(isValid);
+                                        ExceptionUtil.throwException(isValid,value);
                                     }
                                 }
 

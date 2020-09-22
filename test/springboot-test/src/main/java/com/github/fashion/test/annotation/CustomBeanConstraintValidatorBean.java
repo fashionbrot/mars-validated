@@ -11,12 +11,15 @@ public class CustomBeanConstraintValidatorBean implements ConstraintValidatorBea
 
 
     @Override
-    public String isValid(CustomBean custom, Object var1) {
+    public String isValid(CustomBean custom, Object var) {
 
-        /**
-         * valud
-         */
-        System.out.println(var1);
+        if (var instanceof ValidBeanModel){
+            ValidBeanModel beanModel= (ValidBeanModel) var;
+            if (beanModel!=null && (beanModel.getA1()==null || beanModel.getA2()==null)){
+                return "a1 或者 a2 为空";
+            }
+        }
+
         /**
          * return null 则验证成功 其他验证失败
           */

@@ -47,7 +47,9 @@ public class BeanUtil {
         Properties properties = resolveProperties(globalProperties,propertyResolver);
         if (properties!=null) {
             registerSingleton(registry, beanName, GlobalValidatedProperties.builder()
-                    .fileName(properties.getProperty(GlobalValidatedProperties.FILENAME))
+                    .fileName(properties.getProperty(GlobalValidatedProperties.FILENAME,"valid"))
+                    .localeParamName(properties.getProperty(GlobalValidatedProperties.LOCALE_PARAM_NAME,"lang"))
+                    .language(properties.getProperty("language","zh_CN"))
                     .build());
         }
     }

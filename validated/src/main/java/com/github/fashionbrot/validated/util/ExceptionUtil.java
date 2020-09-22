@@ -15,11 +15,11 @@ public class ExceptionUtil {
         }
     }
 
-    public static void throwException(Object message){
+    public static void throwException(Object message,Object value){
         if (message!=null) {
             String msg = ValidatorUtil.filterMsg(message.toString());
             if (StringUtil.isNotBlank(msg)) {
-                throw new ValidatedException(msg);
+                throw new ValidatedException(msg,value);
             }
         }
     }

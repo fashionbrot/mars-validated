@@ -1,6 +1,7 @@
 package com.github.fashionbrot.validated.util;
 
 import com.github.fashionbrot.validated.config.GlobalValidatedProperties;
+import com.github.fashionbrot.validated.config.annotation.EnableValidatedConfig;
 import com.github.fashionbrot.validated.validator.support.ParameterType;
 import com.github.fashionbrot.validated.annotation.*;
 import lombok.extern.slf4j.Slf4j;
@@ -8,10 +9,15 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.SingletonBeanRegistry;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Locale;
@@ -25,13 +31,11 @@ public class ValidatorUtil implements BeanFactoryAware {
 
     public static final String BEAN_NAME = "spvValidatorUtil";
 
-
     private final static LocalVariableTableParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
 
+    private static GlobalValidatedProperties globalValidatedProperties;
 
-    private static ResourceBundle resourceBundle;
-
-    private static String fileName;
+    private static String defaultFileName;
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
@@ -46,8 +50,9 @@ public class ValidatorUtil implements BeanFactoryAware {
         if (beanFactory.containsBean(GlobalValidatedProperties.BEAN_NAME)) {
             GlobalValidatedProperties properties = (GlobalValidatedProperties) beanRegistry.getSingleton(GlobalValidatedProperties.BEAN_NAME);
             if (properties != null) {
-                fileName = properties.getFileName();
-                resourceBundle = ResourceBundle.getBundle(fileName);
+                globalValidatedProperties = properties;
+                defaultFileName = globalValidatedProperties.getFileName()+"_"+globalValidatedProperties.getLanguage();
+                log.info("Validator fileName:{} localeParamName:{} language:{}",globalValidatedProperties.getFileName(),globalValidatedProperties.getLocaleParamName(),globalValidatedProperties.getLanguage());
             }
         }
     }
@@ -406,20 +411,34 @@ public class ValidatorUtil implements BeanFactoryAware {
         boolean isDefaultMsg = pattern.matcher(msg).lookingAt();
         if (isDefaultMsg) {
             msg = getMsg(msg);
-
         }
         return msg;
     }
 
     private static String getMsg(String msg) {
-        if (resourceBundle.containsKey(msg)) {
-            msg = resourceBundle.getString(msg);
-        } else {
-//            ResourceBundle resourceBundle1 = ResourceBundle.getBundle("my", Locale.getDefault());
-            //TODO 实现国际化
-            MissingResourceException exception = new MissingResourceException(" is not key", fileName, msg);
-            log.error("fileName:" + fileName + " is not key:" + msg, exception);
+
+        String language = null;
+        RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+        if (requestAttributes!=null){
+            HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
+            if (request!=null){
+                language = request.getParameter(globalValidatedProperties.getLocaleParamName());
+            }
         }
+        ResourceBundle resourceBundleOther =null;
+        if (StringUtil.isEmpty(language)){
+            resourceBundleOther = ResourceBundle.getBundle(defaultFileName);
+        }else{
+            String fileName = globalValidatedProperties.getFileName()+"_"+language;
+            resourceBundleOther = ResourceBundle.getBundle(fileName);
+        }
+        if (resourceBundleOther==null){
+            throw new MissingResourceException(globalValidatedProperties.getFileName()+"_"+language+" does not exist", "EnableValidatedConfig","language");
+        }
+        if (resourceBundleOther.containsKey(msg)){
+            msg = resourceBundleOther.getString(msg);
+        }
+
         return msg;
     }
 

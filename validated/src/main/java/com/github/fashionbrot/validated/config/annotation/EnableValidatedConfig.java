@@ -12,10 +12,21 @@ import java.lang.annotation.*;
 @Import(ValidatedConfigBeanDefinitionRegistrar.class)
 public @interface EnableValidatedConfig {
 
-    String DEFAULTFILENAME="valid_zh_CN";
+    /**
+     * properties file name
+     * @return
+     */
+    String fileName()  default "valid";
 
-    String fileName()  default DEFAULTFILENAME;
-
-
+    /**
+     * language
+     * @return
+     */
+    String language() default "zh_CN";
+    /**
+     * request locale param name
+     * @return
+     */
+    String localeParamName() default "lang";
 
 }
