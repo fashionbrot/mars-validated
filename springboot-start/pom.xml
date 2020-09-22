@@ -7,7 +7,7 @@
 
     <groupId>com.github.fashionbrot</groupId>
     <artifactId>validated-springboot-starter</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <description>mars-validated  validated-springboot-starter api</description>
     <name>validated-springboot-starter</name>
     <packaging>jar</packaging>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>com.github.fashionbrot</groupId>
             <artifactId>mars-validated</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
