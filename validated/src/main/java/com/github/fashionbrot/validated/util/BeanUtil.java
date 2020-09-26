@@ -17,6 +17,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -33,9 +34,7 @@ public class BeanUtil {
 
 
     public static void registerglobalValidatedProperties(AnnotationAttributes attributes, BeanDefinitionRegistry registry, PropertyResolver propertyResolver, String beanName) {
-        if (attributes == null) {
-            return; // Compatible with null
-        }
+
         registerGlobalProperties(attributes, registry, propertyResolver,beanName);
     }
 
@@ -44,13 +43,27 @@ public class BeanUtil {
                                                      BeanDefinitionRegistry registry,
                                                      PropertyResolver propertyResolver,
                                                      String beanName) {
-        Properties properties = resolveProperties(globalProperties,propertyResolver);
-        if (properties!=null) {
-            GlobalValidatedProperties validatedProperties = GlobalValidatedProperties.builder()
-                    .fileName(properties.getProperty(GlobalValidatedProperties.FILENAME,"valid"))
-                    .localeParamName(properties.getProperty(GlobalValidatedProperties.LOCALE_PARAM_NAME,"lang"))
-                    .language(properties.getProperty("language","zh_CN"))
-                    .build();
+        if (!CollectionUtils.isEmpty(globalProperties)){
+            Properties properties = resolveProperties(globalProperties,propertyResolver);
+            if (properties!=null) {
+                GlobalValidatedProperties validatedProperties = GlobalValidatedProperties.builder()
+                        .fileName(properties.getProperty(GlobalValidatedProperties.FILENAME,"valid"))
+                        .localeParamName(properties.getProperty(GlobalValidatedProperties.LOCALE_PARAM_NAME,"lang"))
+                        .language(properties.getProperty("language","zh_CN"))
+                        .build();
+                if(propertyResolver.containsProperty("mars.validated.file-name")){
+                    validatedProperties.setFileName(propertyResolver.getProperty("mars.validated.file-name","valid"));
+                }
+                if(propertyResolver.containsProperty("mars.validated.language")){
+                    validatedProperties.setLanguage(propertyResolver.getProperty("mars.validated.language","zh_CN"));
+                }
+                if(propertyResolver.containsProperty("mars.validated.locale-param-name")){
+                    validatedProperties.setLocaleParamName(propertyResolver.getProperty("mars.validated.locale-param-name","lang"));
+                }
+                registerSingleton(registry, beanName,validatedProperties );
+            }
+        }else{
+            GlobalValidatedProperties validatedProperties = GlobalValidatedProperties.builder().build();
             if(propertyResolver.containsProperty("mars.validated.file-name")){
                 validatedProperties.setFileName(propertyResolver.getProperty("mars.validated.file-name","valid"));
             }
@@ -60,9 +73,9 @@ public class BeanUtil {
             if(propertyResolver.containsProperty("mars.validated.locale-param-name")){
                 validatedProperties.setLocaleParamName(propertyResolver.getProperty("mars.validated.locale-param-name","lang"));
             }
-
             registerSingleton(registry, beanName,validatedProperties );
         }
+
     }
 
 
