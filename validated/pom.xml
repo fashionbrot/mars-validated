@@ -7,7 +7,7 @@
     <groupId>com.github.fashionbrot</groupId>
     <artifactId>mars-validated</artifactId>
     <version>1.0.3</version>
-    <description>mars-validated api</description>
+    <description>mars-validated api 参数验证api https://github.com/fashionbrot/mars-validated</description>
     <name>validated</name>
     <packaging>jar</packaging>
 
