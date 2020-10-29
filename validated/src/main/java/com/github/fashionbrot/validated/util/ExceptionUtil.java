@@ -25,7 +25,8 @@ public class ExceptionUtil {
     }
 
     public static void throwException(String message,String fieldName){
-        if (StringUtil.isNotBlank(message)) {
+        throw new ValidatedException(message, fieldName);
+        /*if (StringUtil.isNotBlank(message)) {
             String msg = ValidatorUtil.filterMsg(message);
             if (StringUtil.isNotBlank(msg)) {
                 if (log.isDebugEnabled()) {
@@ -33,7 +34,7 @@ public class ExceptionUtil {
                 }
                 throw new ValidatedException(msg, fieldName);
             }
-        }
+        }*/
     }
 
     public static void throwExceptionNotCheckMsg(String message,String fieldName){

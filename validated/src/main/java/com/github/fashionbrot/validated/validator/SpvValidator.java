@@ -3,6 +3,7 @@ package com.github.fashionbrot.validated.validator;
 import com.github.fashionbrot.validated.annotation.Mars;
 import com.github.fashionbrot.validated.annotation.Validated;
 import com.github.fashionbrot.validated.constraint.Constraint;
+import com.github.fashionbrot.validated.constraint.ConstraintHelper;
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
 import com.github.fashionbrot.validated.constraint.ConstraintValidatorBean;
 import com.github.fashionbrot.validated.enums.AnnotationTypeEnum;
@@ -13,12 +14,11 @@ import com.github.fashionbrot.validated.validator.support.AnnotationFieldCustom;
 import com.github.fashionbrot.validated.validator.support.AnnotationParameterCustom;
 import com.github.fashionbrot.validated.validator.support.ParameterType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -208,19 +208,65 @@ public class SpvValidator implements Validator {
 
     @Override
     public void parameterAnnotationValid(Method method, Object[] params) {
+        long a=System.currentTimeMillis();
         Parameter[] parameters = method.getParameters();
-
-        Validated validated = method.getDeclaredAnnotation(Validated.class);
+        System.out.println("-----------1:"+(System.currentTimeMillis()-a));
+        //Validated validated = method.getDeclaredAnnotation(Validated.class);
         ValidatedMethod validatedMethod = null;
         if (parameters != null && parameters.length > 0) {
-            Class<?>[] vGroupClass=validated!=null?validated.groups():null;
+            Class<?>[] vGroupClass=null;//validated!=null?validated.groups():null;
             String[] methodParameters =null;
+            long aa=System.currentTimeMillis();
+            List<ParameterAnnotation> parameterAnnotations=new ArrayList<>(params.length);
+            validatedMethod = ValidatorUtil.getMethod(method);
+            System.out.println("-----------2:"+(System.currentTimeMillis()-aa));
+            if (validatedMethod==null){
+                long aaa=System.currentTimeMillis();
+                validatedMethod = ValidatedMethod.builder()
+                        .parameterAnnotations(parameterAnnotations)
+                        .build();
+                ValidatorUtil.setMethod(method,validatedMethod);
+                System.out.println("-----------3:"+(System.currentTimeMillis()-aaa));
+            }else{
+                long aaa=System.currentTimeMillis();
+                List<ParameterAnnotation> parameterAnnotationList = validatedMethod.getParameterAnnotations();
+                if (!CollectionUtils.isEmpty(parameterAnnotationList)){
+                    for(int p=0;p<parameterAnnotationList.size();p++){
+
+                        ParameterAnnotation parameterAnnotation = parameterAnnotationList.get(p);
+
+                        List<AnnotationModel> annotationModelList = parameterAnnotation.getAnnotationModelList();
+                        if (!CollectionUtils.isEmpty(annotationModelList)){
+                            for(int c=0;c<annotationModelList.size();c++){
+                                AnnotationModel annotationModel=annotationModelList.get(c);
+
+                                ConstraintValidator constraintValidator = annotationModel.getConstraintValidator();
+                                boolean isValid = constraintValidator.isValid(annotationModel.getAnnotation(),params[parameterAnnotation.getIndex()]);
+                                if (!isValid){
+                                    System.out.println("-----------3:"+(System.currentTimeMillis()-aaa));
+                                    ExceptionUtil.throwException(annotationModel.getMsg(),parameterAnnotation.getParamName());
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return;
+            }
+
             for (int j = 0; j < parameters.length; j++) {
 
 
 
                 Parameter parameter = parameters[j];
-
+                int annotationCount = parameter.getAnnotations().length;
+                List<AnnotationModel> annotationModelList=new ArrayList<>(annotationCount);
+                ParameterAnnotation parameterAnnotation = ParameterAnnotation.builder()
+                        .paramName(parameter.getName())
+                        .annotationModelList(annotationModelList)
+                        .index(j)
+                        .build();
+                parameterAnnotations.add(parameterAnnotation);
 
 
                 Class<?> classType = parameter.getType();
@@ -232,34 +278,58 @@ public class SpvValidator implements Validator {
                     validatedByBean(parameter,params, j);
 
                     //获取 class 的Field[]  验证field 值
-                    entityFieldsAnnotationValid(validated,parameterTypeName, parameter.getType(), params, j);
+                    entityFieldsAnnotationValid(null,parameterTypeName, parameter.getType(), params, j);
+                    //entityFieldsAnnotationValid(validated,parameterTypeName, parameter.getType(), params, j);
                 } else {
                     Annotation[] annotations = parameter.getDeclaredAnnotations();
 
                     if (annotations != null && annotations.length > 0) {
 
 
-                        List<ConstraintValidator> constraintValidatorList=new ArrayList<>(6);
-                        ParameterAnnotation parameterAnnotation = ParameterAnnotation.builder().build();
+
+
 
                         for (Annotation annotation : annotations) {
 
                             if (checkGroup(vGroupClass, annotation)){
                                 continue;
                             }
+                            Class<? extends ConstraintValidator<? extends Annotation, ?>> constraint = ConstraintHelper.getConstraint(annotation.annotationType());
+                            if (constraint!=null){
+
+                                ConstraintValidator constraintValidator =MethodUtil.newInstance(constraint);
+                                if (constraintValidator!=null){
+
+
+
+                                    boolean isValid = constraintValidator.isValid(annotation, params[j]);
+                                    String msg = (String) AnnotationUtil.getAnnotationValue(annotation,"msg");
+                                    annotationModelList.add(AnnotationModel.builder()
+                                            .annotation(annotation)
+                                            .constraintValidator(constraintValidator)
+                                            .msg(msg)
+                                            .build());
+                                    if (!isValid){
+                                        ExceptionUtil.throwException(msg,parameter.getName());
+                                    }
+                                }
+                            }
+
+
+                            if (methodParameters==null){
+                                validatedMethod = ValidatorUtil.getMethodParameter(method);
+                                if (validatedMethod==null){
+                                    log.error("getMethodParameter error");
+                                    return;
+                                }
+                                methodParameters=validatedMethod.getParameterNames();
+                            }
 
 
                             Mars mars = annotation.annotationType().getDeclaredAnnotation(Mars.class);
                             Object valueObject = params[j];
 
-                            if (methodParameters==null){
-                                 validatedMethod = ValidatorUtil.getMethodParameter(method);
-                                 if (validatedMethod==null){
-                                     log.error("getMethodParameter error");
-                                     return;
-                                 }
-                                 methodParameters=validatedMethod.getParameterNames();
-                            }
+
 
                             String methodParameter = methodParameters[j];
 
@@ -287,6 +357,7 @@ public class SpvValidator implements Validator {
 
                             }
                         }
+
                     }
 
                 }

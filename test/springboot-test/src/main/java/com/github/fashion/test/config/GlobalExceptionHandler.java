@@ -31,7 +31,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ValidatedException.class)
     @ResponseStatus(HttpStatus.OK)
     public Object ValidatedException(ValidatedException e) {
-        log.error("exception error:",e);
         return e.getMessage();
     }
 

@@ -14,14 +14,15 @@ import java.util.Map;
 public class ConstraintHelper {
 
 
-    private final Map<Class<? extends Annotation>,  Class<? extends ConstraintValidator >> builtinConstraints;
+    private static final Map<Class<? extends Annotation>,  Class<? extends ConstraintValidator >> builtinConstraints;
 
-    public ConstraintHelper() {
+    static {
         Map< Class<? extends Annotation>, Class<? extends ConstraintValidator >> temp=new HashMap<>();
         putTemp(temp, NotNull.class, NotNullValid.class);
-
-        this.builtinConstraints = temp;
+        builtinConstraints = temp;
     }
+
+
 
 
     private static <A extends Annotation> void putTemp(
@@ -31,5 +32,12 @@ public class ConstraintHelper {
         temp.put(constraintType,validatorType);
     }
 
+
+    public static <A extends Annotation> Class<? extends ConstraintValidator<A,?> > getConstraint(Class<A> constraintType){
+        if (builtinConstraints.containsKey(constraintType)){
+            return (Class<? extends ConstraintValidator<A, ?>>) builtinConstraints.get(constraintType);
+        }
+        return null;
+    }
 
 }

@@ -80,6 +80,11 @@ public class ValidatorUtil implements BeanFactoryAware {
         }
         return null;
     }
+    public static void setMethod(Method method,ValidatedMethod validatedMethod) {
+        if (!methodMap.containsKey(method)){
+            methodMap.putIfAbsent(method,validatedMethod);
+        }
+    }
     /**
      * 根据 method 获取参数名称
      *

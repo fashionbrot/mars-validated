@@ -1,5 +1,6 @@
 package com.github.fashionbrot.validated.util;
 
+import com.github.fashionbrot.validated.constraint.ConstraintValidator;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.annotation.Annotation;
@@ -26,6 +27,17 @@ public class MethodUtil {
     public static Object getInstance(Class clazz){
         try {
             return clazz.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ConstraintValidator newInstance(Class<? extends ConstraintValidator<? extends Annotation, ?>> constraint){
+        try {
+            return constraint.newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
