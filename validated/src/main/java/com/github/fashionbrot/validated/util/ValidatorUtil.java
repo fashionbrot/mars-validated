@@ -2,6 +2,7 @@ package com.github.fashionbrot.validated.util;
 
 import com.github.fashionbrot.validated.config.GlobalValidatedProperties;
 import com.github.fashionbrot.validated.config.annotation.EnableValidatedConfig;
+import com.github.fashionbrot.validated.validator.ValidatedMethod;
 import com.github.fashionbrot.validated.validator.support.ParameterType;
 import com.github.fashionbrot.validated.annotation.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +20,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 
@@ -73,26 +72,34 @@ public class ValidatorUtil implements BeanFactoryAware {
     private static final Pattern PHONE_PATTERN = Pattern.compile(PatternSts.PHONE_REGEXP);
     private static final Pattern ID_CARD_PATTERN = Pattern.compile(PatternSts.IDCARD_REGEXP);
 
+    private static Map<Method, ValidatedMethod> methodMap =new ConcurrentHashMap<>();
 
+    public static ValidatedMethod getMethod(Method method) {
+        if (methodMap.containsKey(method)){
+            return methodMap.get(method);
+        }
+        return null;
+    }
     /**
      * 根据 method 获取参数名称
      *
      * @param method get method parameter
      * @return String[]
      */
-    public static String[] getMethodParameter(Method method) {
-        return discoverer.getParameterNames(method);
+    public static ValidatedMethod getMethodParameter(Method method) {
+        if (methodMap.containsKey(method)){
+            return methodMap.get(method);
+        }
+        String[] param= discoverer.getParameterNames(method);
+        ValidatedMethod build = ValidatedMethod.builder().parameterNames(param).build();
+        methodMap.put(method,build);
+        return build;
     }
 
 
     public static void checkNotBlank(ParameterType parameterType) {
         Object value = parameterType.getValue();
         NotBlank notBlank = parameterType.getAnnotationCustom().getDeclaredAnnotation(parameterType, NotBlank.class);
-        try {
-            notBlank.getClass().getDeclaredField("groups");
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
 
         if (value == null || StringUtil.isBlank(value.toString())) {
             ExceptionUtil.throwException(notBlank.msg(), parameterType.getFieldName());

@@ -211,15 +211,13 @@ public class SpvValidator implements Validator {
         Parameter[] parameters = method.getParameters();
 
         Validated validated = method.getDeclaredAnnotation(Validated.class);
-
+        ValidatedMethod validatedMethod = null;
         if (parameters != null && parameters.length > 0) {
             Class<?>[] vGroupClass=validated!=null?validated.groups():null;
             String[] methodParameters =null;
             for (int j = 0; j < parameters.length; j++) {
 
-                if (methodParameters==null){
-                    methodParameters=ValidatorUtil.getMethodParameter(method);
-                }
+
 
                 Parameter parameter = parameters[j];
 
@@ -240,6 +238,10 @@ public class SpvValidator implements Validator {
 
                     if (annotations != null && annotations.length > 0) {
 
+
+                        List<ConstraintValidator> constraintValidatorList=new ArrayList<>(6);
+                        ParameterAnnotation parameterAnnotation = ParameterAnnotation.builder().build();
+
                         for (Annotation annotation : annotations) {
 
                             if (checkGroup(vGroupClass, annotation)){
@@ -249,9 +251,24 @@ public class SpvValidator implements Validator {
 
                             Mars mars = annotation.annotationType().getDeclaredAnnotation(Mars.class);
                             Object valueObject = params[j];
+
+                            if (methodParameters==null){
+                                 validatedMethod = ValidatorUtil.getMethodParameter(method);
+                                 if (validatedMethod==null){
+                                     log.error("getMethodParameter error");
+                                     return;
+                                 }
+                                 methodParameters=validatedMethod.getParameterNames();
+                            }
+
                             String methodParameter = methodParameters[j];
 
                             if (mars != null) {
+                                Class<? extends Annotation> aClass = annotation.annotationType();
+
+                                //constraintValidatorList.add()
+                                //validatedMethod.setParameterAnnotations();
+
 
                                 String annotationName = annotation.annotationType().getSimpleName();
                                 AnnotationTypeEnum annotationTypeEnum = AnnotationTypeEnum.getValue(annotationName);

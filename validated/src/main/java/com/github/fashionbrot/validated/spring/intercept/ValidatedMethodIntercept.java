@@ -1,6 +1,7 @@
 package com.github.fashionbrot.validated.spring.intercept;
 
 import com.github.fashionbrot.validated.annotation.Validated;
+import com.github.fashionbrot.validated.util.ValidatorUtil;
 import com.github.fashionbrot.validated.validator.SpvValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -11,6 +12,10 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 @Slf4j
 public class ValidatedMethodIntercept implements MethodInterceptor, BeanFactoryAware {
@@ -24,9 +29,14 @@ public class ValidatedMethodIntercept implements MethodInterceptor, BeanFactoryA
         long start = System.currentTimeMillis();
         Object[] params=methodInvocation.getArguments();
         Method method=methodInvocation.getMethod();
-        Validated validated =AnnotationUtils.findAnnotation(method,Validated.class);
-        if (validated!=null) {
+
+        if (ValidatorUtil.getMethod(method)!=null){
             validator.parameterAnnotationValid(method, params);
+        }else {
+            Validated validated= AnnotationUtils.findAnnotation(method,Validated.class);
+            if (validated!=null) {
+                validator.parameterAnnotationValid(method, params);
+            }
         }
         if (log.isDebugEnabled()) {
             log.debug("valid time:" , (System.currentTimeMillis() - start));
