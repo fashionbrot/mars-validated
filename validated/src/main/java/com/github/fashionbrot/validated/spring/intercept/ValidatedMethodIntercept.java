@@ -30,14 +30,15 @@ public class ValidatedMethodIntercept implements MethodInterceptor, BeanFactoryA
         Object[] params=methodInvocation.getArguments();
         Method method=methodInvocation.getMethod();
 
-        if (ValidatorUtil.getMethod(method)!=null){
+        Validated validated=method.getDeclaredAnnotation(Validated.class);// AnnotationUtils.findAnnotation(method,Validated.class);
+        if (validated!=null) {
+            validator.parameterAnnotationValid(method, params);
+        }
+        /*if (ValidatorUtil.getMethod(method)!=null){
             validator.parameterAnnotationValid(method, params);
         }else {
-            Validated validated= AnnotationUtils.findAnnotation(method,Validated.class);
-            if (validated!=null) {
-                validator.parameterAnnotationValid(method, params);
-            }
-        }
+
+        }*/
         if (log.isDebugEnabled()) {
             log.debug("valid time:" , (System.currentTimeMillis() - start));
         }

@@ -1,6 +1,7 @@
 package com.github.fashionbrot.validated.validator;
 
 import com.github.fashionbrot.validated.annotation.Validated;
+import com.github.fashionbrot.validated.constraint.MarsViolation;
 import com.github.fashionbrot.validated.enums.AnnotationTypeEnum;
 import com.github.fashionbrot.validated.enums.ClassTypeEnum;
 import com.github.fashionbrot.validated.validator.support.AnnotationCustom;
@@ -9,6 +10,8 @@ import com.github.fashionbrot.validated.validator.support.ParameterType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Set;
 
 public interface Validator {
 
@@ -56,7 +59,7 @@ public interface Validator {
      * @param objectValue    objectValue
      * @param index          filed index
      */
-    void entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] objectValue, int index);
+    void entityFieldsAnnotationValid(Validated validated, List<MarsViolation> violationSet, String valueTypeName, Class<?> clazz, Object[] objectValue, int index);
 
 
     /**

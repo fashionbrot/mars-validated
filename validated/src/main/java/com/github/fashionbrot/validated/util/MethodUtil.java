@@ -7,6 +7,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 @Slf4j
 public class MethodUtil {
@@ -24,6 +25,19 @@ public class MethodUtil {
         return new String(items);
     }
 
+    public static Object getFieldValue(Field field,Object object){
+        if (field!=null && !Modifier.isStatic(field.getModifiers())){
+            //打开私有访问
+            field.setAccessible(true);
+            try {
+                return field.get(object);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     public static Object getInstance(Class clazz){
         try {
             return clazz.newInstance();
@@ -35,7 +49,7 @@ public class MethodUtil {
         return null;
     }
 
-    public static ConstraintValidator newInstance(Class<? extends ConstraintValidator<? extends Annotation, ?>> constraint){
+    public static ConstraintValidator newInstance(Class<? extends ConstraintValidator> constraint){
         try {
             return constraint.newInstance();
         } catch (InstantiationException e) {

@@ -21,4 +21,10 @@ public @interface Validated {
      */
     Class<?>[] groups() default { };
 
+    /**
+     * true 快速失败
+     * @return
+     */
+    boolean failFast() default true;
+
 }

@@ -11,5 +11,4 @@ public  interface ConstraintValidator<A extends Annotation, T> {
     default T modify(A annotation,T var){
         return var;
     }
-
 }

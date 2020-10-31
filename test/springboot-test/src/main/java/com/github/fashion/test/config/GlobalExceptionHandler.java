@@ -1,11 +1,16 @@
 package com.github.fashion.test.config;
 
+import com.github.fashionbrot.validated.constraint.MarsViolation;
 import com.github.fashionbrot.validated.exception.ValidatedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RestControllerAdvice
@@ -31,7 +36,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ValidatedException.class)
     @ResponseStatus(HttpStatus.OK)
     public Object ValidatedException(ValidatedException e) {
-        return e.getMessage();
+        List<MarsViolation> violations = e.getViolations();
+        String msg =String.join(",",violations.stream().map(m-> m.getMsg()).collect(Collectors.toList()));
+        return msg;
     }
 
 

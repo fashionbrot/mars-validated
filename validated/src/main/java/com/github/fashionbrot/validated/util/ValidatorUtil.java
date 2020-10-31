@@ -72,37 +72,9 @@ public class ValidatorUtil implements BeanFactoryAware {
     private static final Pattern PHONE_PATTERN = Pattern.compile(PatternSts.PHONE_REGEXP);
     private static final Pattern ID_CARD_PATTERN = Pattern.compile(PatternSts.IDCARD_REGEXP);
 
-    private static Map<Method, ValidatedMethod> methodMap =new ConcurrentHashMap<>();
-
-    public static ValidatedMethod getMethod(Method method) {
-        if (methodMap.containsKey(method)){
-            return methodMap.get(method);
-        }
-        return null;
-    }
-    public static void setMethod(Method method,ValidatedMethod validatedMethod) {
-        if (!methodMap.containsKey(method)){
-            methodMap.putIfAbsent(method,validatedMethod);
-        }
-    }
-    /**
-     * 根据 method 获取参数名称
-     *
-     * @param method get method parameter
-     * @return String[]
-     */
-    public static ValidatedMethod getMethodParameter(Method method) {
-        if (methodMap.containsKey(method)){
-            return methodMap.get(method);
-        }
-        String[] param= discoverer.getParameterNames(method);
-        ValidatedMethod build = ValidatedMethod.builder().parameterNames(param).build();
-        methodMap.put(method,build);
-        return build;
-    }
 
 
-    public static void checkNotBlank(ParameterType parameterType) {
+    /*public static void checkNotBlank(ParameterType parameterType) {
         Object value = parameterType.getValue();
         NotBlank notBlank = parameterType.getAnnotationCustom().getDeclaredAnnotation(parameterType, NotBlank.class);
 
@@ -416,10 +388,13 @@ public class ValidatorUtil implements BeanFactoryAware {
                 ExceptionUtil.throwException(msg, parameterType.getFieldName());
             }
         }
-    }
+    }*/
 
 
     public static String filterMsg(String msg) {
+        if (msg==null){
+            return null;
+        }
         boolean isDefaultMsg = pattern.matcher(msg).lookingAt();
         if (isDefaultMsg) {
             msg = getMsg(msg);

@@ -1,49 +1,19 @@
 package com.github.fashionbrot.validated.util;
 
+import com.github.fashionbrot.validated.constraint.MarsViolation;
 import com.github.fashionbrot.validated.exception.ValidatedException;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class ExceptionUtil {
 
-    public static void throwException(Object message,String fieldName){
-        if (message!=null) {
-            String msg = ValidatorUtil.filterMsg(message.toString());
-            if (StringUtil.isNotBlank(msg)) {
-                throw new ValidatedException(msg, fieldName);
-            }
-        }
+
+    public static void throwException(List<MarsViolation> violationSet){
+        throw new ValidatedException(violationSet);
     }
 
-    public static void throwException(Object message,Object value){
-        if (message!=null) {
-            String msg = ValidatorUtil.filterMsg(message.toString());
-            if (StringUtil.isNotBlank(msg)) {
-                throw new ValidatedException(msg,value);
-            }
-        }
-    }
-
-    public static void throwException(String message,String fieldName){
-        throw new ValidatedException(message, fieldName);
-        /*if (StringUtil.isNotBlank(message)) {
-            String msg = ValidatorUtil.filterMsg(message);
-            if (StringUtil.isNotBlank(msg)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("ExceptionUtil msg:" + message +" fieldName:" + fieldName);
-                }
-                throw new ValidatedException(msg, fieldName);
-            }
-        }*/
-    }
-
-    public static void throwExceptionNotCheckMsg(String message,String fieldName){
-        if (StringUtil.isNotBlank(message)) {
-            if (log.isDebugEnabled()) {
-                log.debug("ExceptionUtil msg:" + message +" fieldName:" + fieldName);
-            }
-            throw new ValidatedException(message, fieldName);
-        }
-    }
 
 }

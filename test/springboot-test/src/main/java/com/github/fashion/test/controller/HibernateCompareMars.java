@@ -1,6 +1,7 @@
 package com.github.fashion.test.controller;
 
 
+import com.github.fashion.test.model.NotNullModel2;
 import com.github.fashion.test.util.HttpClientUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,14 @@ public class HibernateCompareMars {
         return abc;
     }
 
+    @RequestMapping("/demo12")
+    @ResponseBody
+    public String demo12(@Valid @Validated NotNullModel2 m){
+
+        return m.getAbc();
+    }
+
+
 
     @RequestMapping("/demo2")
     @ResponseBody
@@ -33,10 +42,10 @@ public class HibernateCompareMars {
 
     @RequestMapping("/demo3")
     @ResponseBody
-    public String demo3(Integer count){
+    public String demo3(Integer count,String method){
         long start = System.currentTimeMillis();
         for(int i=0;i<count;i++){
-            HttpClientUtil.httpGet("http://localhost:8080/compare/demo1?i"+i,null,null,false);
+            HttpClientUtil.httpGet("http://localhost:8080/compare/"+method+"?i"+i,null,null,false);
         }
         long end = System.currentTimeMillis();
 
@@ -54,10 +63,10 @@ public class HibernateCompareMars {
 
     @RequestMapping("/demo4")
     @ResponseBody
-    public String demo4(Integer count){
+    public String demo4(Integer count,String method){
         long start = System.currentTimeMillis();
         for(int i=0;i<count;i++){
-            HttpClientUtil.httpGet("http://localhost:8080/compare/demo2?i"+i,null,null,false);
+            HttpClientUtil.httpGet("http://localhost:8080/compare/"+method+"?i"+i,null,null,false);
         }
         long end = System.currentTimeMillis();
 

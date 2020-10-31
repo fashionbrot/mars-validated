@@ -14,5 +14,4 @@ public class AnnotationModel {
 
     private ConstraintValidator constraintValidator;
 
-    private String msg;
 }

@@ -45,7 +45,9 @@ public class IgnoreClassUtil {
     }
 
     public static void main(String[] args) {
+        long start=System.currentTimeMillis();
         System.out.println(pattern.matcher("javax.servlet.").lookingAt());
+        System.out.println(System.currentTimeMillis()-start);
     }
 
 }

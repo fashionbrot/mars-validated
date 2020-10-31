@@ -2,6 +2,7 @@ package com.github.fashion.test.controller;
 
 
 
+import com.github.fashion.test.model.NotNullModel;
 import com.github.fashionbrot.validated.annotation.NotNull;
 import com.github.fashionbrot.validated.annotation.Validated;
 import org.springframework.stereotype.Controller;
@@ -20,5 +21,11 @@ public class NotNullController {
         return abc;
     }
 
+    @RequestMapping("/notnullBean")
+    @ResponseBody
+    @Validated
+    public String test(NotNullModel notNullModel){
+        return notNullModel.getAbc();
+    }
 
 }

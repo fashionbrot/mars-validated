@@ -2,10 +2,7 @@ package com.github.fashionbrot.validated.validator;
 
 import com.github.fashionbrot.validated.annotation.Mars;
 import com.github.fashionbrot.validated.annotation.Validated;
-import com.github.fashionbrot.validated.constraint.Constraint;
-import com.github.fashionbrot.validated.constraint.ConstraintHelper;
-import com.github.fashionbrot.validated.constraint.ConstraintValidator;
-import com.github.fashionbrot.validated.constraint.ConstraintValidatorBean;
+import com.github.fashionbrot.validated.constraint.*;
 import com.github.fashionbrot.validated.enums.AnnotationTypeEnum;
 import com.github.fashionbrot.validated.enums.ClassTypeEnum;
 import com.github.fashionbrot.validated.util.*;
@@ -14,8 +11,12 @@ import com.github.fashionbrot.validated.validator.support.AnnotationFieldCustom;
 import com.github.fashionbrot.validated.validator.support.AnnotationParameterCustom;
 import com.github.fashionbrot.validated.validator.support.ParameterType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.annotation.AnnotationBeanUtils;
+import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
+import sun.reflect.misc.FieldUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -54,7 +55,7 @@ public class SpvValidator implements Validator {
     private void validParameterAndEntityFields(AnnotationTypeEnum annotationTypeEnum, ParameterType parameterType, Object[] params, int index) {
 
 
-        if (annotationTypeEnum != null) {
+       /* if (annotationTypeEnum != null) {
             switch (annotationTypeEnum) {
                 case NOT_BLANK:
                     ValidatorUtil.checkNotBlank(parameterType);
@@ -106,7 +107,7 @@ public class SpvValidator implements Validator {
                 default:
                     break;
             }
-        }
+        }*/
     }
 
 
@@ -114,8 +115,8 @@ public class SpvValidator implements Validator {
 
 
     @Override
-    public void entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] params, int index) {
-
+    public void entityFieldsAnnotationValid(Validated validated,List<MarsViolation> violationSet, String valueTypeName, Class<?> clazz, Object[] params, int index) {
+        long start=System.currentTimeMillis();
         if (!IgnoreClassUtil.checkIgnorePackage(valueTypeName)) {
 
             // 判断是否 有继承类
@@ -134,6 +135,7 @@ public class SpvValidator implements Validator {
             if (fields==null || fields.length<=0){
                 return;
             }
+            System.out.println("----------------2000:"+(System.currentTimeMillis()-start));
             Class<?>[] vGroupClass=validated!=null?validated.groups():null;
             for (Field field : fields) {
 
@@ -143,12 +145,22 @@ public class SpvValidator implements Validator {
 
                     for (Annotation annotation : annotations) {
 
-                        if (checkGroup(vGroupClass, annotation)){
+                        Map<String, Object> annotationAttributes = AnnotationUtils.getAnnotationAttributes(annotation);
+                        if (checkGroup(vGroupClass, annotationAttributes)){
+                            continue;
+                        }
+                        System.out.println("----------------2:"+(System.currentTimeMillis()-start));
+                        long start2=System.currentTimeMillis();
+                        String fileName = field.getName();
+                        Object value = MethodUtil.getFieldValue(field,params[index]);
+                        System.out.println("----------------3:"+(System.currentTimeMillis()-start2));
+                        validated(validated,value,violationSet,fileName,annotation);
+                        if (true){
                             continue;
                         }
 
                         Mars mars = annotation.annotationType().getDeclaredAnnotation(Mars.class);
-                        String fileName = field.getName();
+
                         Object valueObject = MethodUtil.getMethod(clazz, field, params[index], fileName);
 
                         if (mars != null) {
@@ -199,7 +211,7 @@ public class SpvValidator implements Validator {
             //如果不是定义的类型，则把 class 当做bean 进行校验 field
             boolean exist = ClassTypeEnum.checkClass(superclass.getName());
             if (!exist) {
-                entityFieldsAnnotationValid(validated,superclass.getName(), superclass, params, index);
+                //entityFieldsAnnotationValid(validated,superclass.getName(), superclass, params, index);
             }
         }
     }
@@ -208,161 +220,81 @@ public class SpvValidator implements Validator {
 
     @Override
     public void parameterAnnotationValid(Method method, Object[] params) {
-        long a=System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         Parameter[] parameters = method.getParameters();
-        System.out.println("-----------1:"+(System.currentTimeMillis()-a));
-        //Validated validated = method.getDeclaredAnnotation(Validated.class);
-        ValidatedMethod validatedMethod = null;
+        Validated validated = method.getDeclaredAnnotation(Validated.class);
+
         if (parameters != null && parameters.length > 0) {
-            Class<?>[] vGroupClass=null;//validated!=null?validated.groups():null;
-            String[] methodParameters =null;
-            long aa=System.currentTimeMillis();
-            List<ParameterAnnotation> parameterAnnotations=new ArrayList<>(params.length);
-            validatedMethod = ValidatorUtil.getMethod(method);
-            System.out.println("-----------2:"+(System.currentTimeMillis()-aa));
-            if (validatedMethod==null){
-                long aaa=System.currentTimeMillis();
-                validatedMethod = ValidatedMethod.builder()
-                        .parameterAnnotations(parameterAnnotations)
-                        .build();
-                ValidatorUtil.setMethod(method,validatedMethod);
-                System.out.println("-----------3:"+(System.currentTimeMillis()-aaa));
-            }else{
-                long aaa=System.currentTimeMillis();
-                List<ParameterAnnotation> parameterAnnotationList = validatedMethod.getParameterAnnotations();
-                if (!CollectionUtils.isEmpty(parameterAnnotationList)){
-                    for(int p=0;p<parameterAnnotationList.size();p++){
 
-                        ParameterAnnotation parameterAnnotation = parameterAnnotationList.get(p);
-
-                        List<AnnotationModel> annotationModelList = parameterAnnotation.getAnnotationModelList();
-                        if (!CollectionUtils.isEmpty(annotationModelList)){
-                            for(int c=0;c<annotationModelList.size();c++){
-                                AnnotationModel annotationModel=annotationModelList.get(c);
-
-                                ConstraintValidator constraintValidator = annotationModel.getConstraintValidator();
-                                boolean isValid = constraintValidator.isValid(annotationModel.getAnnotation(),params[parameterAnnotation.getIndex()]);
-                                if (!isValid){
-                                    System.out.println("-----------3:"+(System.currentTimeMillis()-aaa));
-                                    ExceptionUtil.throwException(annotationModel.getMsg(),parameterAnnotation.getParamName());
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return;
-            }
+            List<MarsViolation> violationSet=null;
 
             for (int j = 0; j < parameters.length; j++) {
 
-
-
                 Parameter parameter = parameters[j];
-                int annotationCount = parameter.getAnnotations().length;
-                List<AnnotationModel> annotationModelList=new ArrayList<>(annotationCount);
-                ParameterAnnotation parameterAnnotation = ParameterAnnotation.builder()
-                        .paramName(parameter.getName())
-                        .annotationModelList(annotationModelList)
-                        .index(j)
-                        .build();
-                parameterAnnotations.add(parameterAnnotation);
-
-
                 Class<?> classType = parameter.getType();
                 String parameterTypeName = classType.getTypeName();
                 //判断是否是 数据类型，还是 bean
                 boolean exist = ClassTypeEnum.checkClass(parameterTypeName);
                 if (!exist) {
                     //验证 bean 是否实现了 ConstraintValidatorBean 接口
-                    validatedByBean(parameter,params, j);
+                    //validatedByBean(parameter,params, j);
 
                     //获取 class 的Field[]  验证field 值
-                    entityFieldsAnnotationValid(null,parameterTypeName, parameter.getType(), params, j);
-                    //entityFieldsAnnotationValid(validated,parameterTypeName, parameter.getType(), params, j);
+                    System.out.println("-------------1:"+(System.currentTimeMillis()-start));
+                    entityFieldsAnnotationValid(validated,violationSet,parameterTypeName, classType, params, j);
+                    if (!CollectionUtils.isEmpty(violationSet)){
+                        ExceptionUtil.throwException(violationSet);
+                    }
                 } else {
                     Annotation[] annotations = parameter.getDeclaredAnnotations();
-
                     if (annotations != null && annotations.length > 0) {
-
-
-
-
-
                         for (Annotation annotation : annotations) {
 
-                            if (checkGroup(vGroupClass, annotation)){
-                                continue;
-                            }
-                            Class<? extends ConstraintValidator<? extends Annotation, ?>> constraint = ConstraintHelper.getConstraint(annotation.annotationType());
-                            if (constraint!=null){
-
-                                ConstraintValidator constraintValidator =MethodUtil.newInstance(constraint);
-                                if (constraintValidator!=null){
-
-
-
-                                    boolean isValid = constraintValidator.isValid(annotation, params[j]);
-                                    String msg = (String) AnnotationUtil.getAnnotationValue(annotation,"msg");
-                                    annotationModelList.add(AnnotationModel.builder()
-                                            .annotation(annotation)
-                                            .constraintValidator(constraintValidator)
-                                            .msg(msg)
-                                            .build());
-                                    if (!isValid){
-                                        ExceptionUtil.throwException(msg,parameter.getName());
-                                    }
-                                }
-                            }
-
-
-                            if (methodParameters==null){
-                                validatedMethod = ValidatorUtil.getMethodParameter(method);
-                                if (validatedMethod==null){
-                                    log.error("getMethodParameter error");
-                                    return;
-                                }
-                                methodParameters=validatedMethod.getParameterNames();
-                            }
-
-
-                            Mars mars = annotation.annotationType().getDeclaredAnnotation(Mars.class);
-                            Object valueObject = params[j];
-
-
-
-                            String methodParameter = methodParameters[j];
-
-                            if (mars != null) {
-                                Class<? extends Annotation> aClass = annotation.annotationType();
-
-                                //constraintValidatorList.add()
-                                //validatedMethod.setParameterAnnotations();
-
-
-                                String annotationName = annotation.annotationType().getSimpleName();
-                                AnnotationTypeEnum annotationTypeEnum = AnnotationTypeEnum.getValue(annotationName);
-                                ParameterType parameterType = new ParameterType(methodParameter, valueObject, parameter, annotationParameterCustom);
-
-                                //验证 基础 参数
-                                if (annotationTypeEnum == AnnotationTypeEnum.DEFAULT) {
-                                    validParameter(annotationTypeEnum, parameterType, params, j);
-                                } else {
-                                    validParameter(annotationTypeEnum, parameterType, null, 0);
-                                }
-
-                            } else {
-
-                                checkCustomValid(annotation,params[j],params,j, methodParameter,null);
-
+                            String paramName = parameter.getName();
+                            validated(validated,params[j], violationSet, paramName, annotation);
+                            if (!CollectionUtils.isEmpty(violationSet)){
+                                ExceptionUtil.throwException(violationSet);
                             }
                         }
-
                     }
-
                 }
             }
         }
+    }
+
+    private void validated(Validated validated,Object value, List<MarsViolation> violationSet,String paramName, Annotation annotation) {
+        boolean failFast = validated.failFast();
+        Class<?>[] vGroupClass = validated!=null ? validated.groups():null;
+        Map<String, Object> annotationAttributes = AnnotationUtils.getAnnotationAttributes(annotation);
+        if (checkGroup(vGroupClass, annotationAttributes)){
+            return;
+        }
+        ConstraintValidator constraint = ConstraintHelper.getConstraint(annotation.annotationType());
+        if (constraint!=null){
+            boolean isValid = constraint.isValid(annotation, value);
+            if (!isValid){
+                String msg = (String) annotationAttributes.get(ValidMethod.MSG.getMethod());
+                if (violationSet==null){
+                    violationSet = new ArrayList<>();
+                }
+                violationSet.add(MarsViolation.builder()
+                        .annotationName(annotation.annotationType().getName())
+                        .fieldName(paramName)
+                        .msg(msg)
+                        .value(value)
+                        .build());
+                if (failFast){
+                    ExceptionUtil.throwException(violationSet);
+                }
+            }
+        }
+    }
+
+    private void setMarsViolation(List<MarsViolation> violationSet ,MarsViolation violation){
+        if (violationSet==null){
+            violationSet = new ArrayList<>();
+        }
+        violationSet.add(violation);
     }
 
     private void validatedByBean(Parameter parameter, Object[] params,int index) {
@@ -392,7 +324,7 @@ public class SpvValidator implements Validator {
                                 if (method != null) {
                                     Object isValid = ReflectionUtils.invokeMethod(method, instanceObject, annotation, value);
                                     if (isValid!=null && !"".equals(isValid)) {
-                                        ExceptionUtil.throwException(isValid,value);
+                                        //ExceptionUtil.throwException(isValid,value);
                                     }
                                 }
 
@@ -424,22 +356,22 @@ public class SpvValidator implements Validator {
     /**
      * check groups matches
      * @param vGroupClass
-     * @param annotation
+     * @param attributes
      * @return
      */
-    private boolean checkGroup(Class<?>[] vGroupClass, Annotation annotation) {
+    private boolean checkGroup(Class<?>[] vGroupClass, Map<String, Object> attributes) {
         //groups==null ,则不验证groups
         if (vGroupClass==null || vGroupClass.length<=0) {
             return false;
         }
         //检测groups 是否匹配
-        Method groups = MethodUtil.getAnnotationTypeMethod(annotation.annotationType(), "groups", null);
-        if(groups!=null) {
-            Class<?>[] groupClass= (Class<?>[]) ReflectionUtils.invokeMethod(groups,annotation);
-            if (!checkGroup(vGroupClass,groupClass)){
+        if(attributes.containsKey(ValidMethod.GROUPS.getMethod())){
+            Class[] groups = (Class[]) attributes.get(ValidMethod.GROUPS.getMethod());
+            if (!checkGroup(vGroupClass,groups)){
                 return true;
             }
         }
+
         return false;
     }
 
@@ -493,7 +425,7 @@ public class SpvValidator implements Validator {
                                 Method annotationMethod = MethodUtil.getAnnotationTypeMethod(annotationType, ANNOTATION_MSG);
                                 if (annotationMethod!=null){
                                     Object msgValue = ReflectionUtils.invokeMethod(annotationMethod, annotation);
-                                    ExceptionUtil.throwException(msgValue, fieldName);
+                                    //ExceptionUtil.throwException(msgValue, fieldName);
                                 }
                             }
                         }

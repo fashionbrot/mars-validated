@@ -1,26 +1,17 @@
 package com.github.fashionbrot.validated.exception;
 
+import com.github.fashionbrot.validated.constraint.MarsViolation;
 import lombok.Data;
+import java.util.List;
 
 @Data
 public class ValidatedException extends RuntimeException  {
 
-    private String fieldName;
 
-    private String msg;
+    private List<MarsViolation> violations;
 
-    private Object value;
-
-    public ValidatedException(String msg,String fieldName) {
-        super(msg);
-        this.msg=msg;
-        this.fieldName=fieldName;
+    public ValidatedException(List<MarsViolation> violations) {
+        super();
+        this.violations = violations;
     }
-
-    public ValidatedException(String msg,Object value) {
-        super(msg);
-        this.msg=msg;
-        this.value = value;
-    }
-
 }

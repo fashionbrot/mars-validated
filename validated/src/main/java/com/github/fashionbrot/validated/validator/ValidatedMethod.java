@@ -15,5 +15,4 @@ public class ValidatedMethod {
 
     private List<ParameterAnnotation> parameterAnnotations;
 
-    private String[] parameterNames;
 }
