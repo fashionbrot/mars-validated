@@ -8,4 +8,7 @@ public class NotNullModel {
 
     @NotNull(msg = "notNullModel abc=null")
     private String abc;
+
+    @NotNull(msg = "notNullModel bbb=null")
+    private String bbb;
 }

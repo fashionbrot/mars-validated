@@ -16,14 +16,14 @@ public class NotNullController {
 
     @RequestMapping("/notnull")
     @ResponseBody
-    @Validated
-    public String test(@NotNull(msg = "null了") String abc){
+    @Validated(failFast = false)
+    public String test(@NotNull(msg = "abc is null") String abc){
         return abc;
     }
 
     @RequestMapping("/notnullBean")
     @ResponseBody
-    @Validated
+    @Validated(failFast = false)
     public String test(NotNullModel notNullModel){
         return notNullModel.getAbc();
     }

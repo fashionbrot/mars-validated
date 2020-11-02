@@ -1,8 +1,14 @@
 package com.github.fashionbrot.validated.util;
 
 
-import java.math.BigDecimal;
+import com.github.fashionbrot.validated.enums.ClassTypeEnum;
+import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Map;
+
+@Slf4j
 public final class StringUtil {
 
     private static final String EMPTY = "";
@@ -29,6 +35,32 @@ public final class StringUtil {
 
     public static boolean isEmpty(CharSequence str) {
         return str == null || str.length() == 0;
+    }
+
+    public static boolean isNotEmpty(Collection<?> collection) {
+        return !isEmpty(collection);
+    }
+    /**
+     * Return {@code true} if the supplied Collection is {@code null} or empty.
+     * Otherwise, return {@code false}.
+     * @param collection the Collection to check
+     * @return whether the given Collection is empty
+     */
+    public static boolean isEmpty(Collection<?> collection) {
+        return (collection == null || collection.isEmpty());
+    }
+
+    public static boolean isNotEmpty(Map<?, ?> map) {
+        return !isEmpty(map);
+    }
+    /**
+     * Return {@code true} if the supplied Map is {@code null} or empty.
+     * Otherwise, return {@code false}.
+     * @param map the Map to check
+     * @return whether the given Map is empty
+     */
+    public static boolean isEmpty(Map<?, ?> map) {
+        return (map == null || map.isEmpty());
     }
 
     public static boolean isNotEmpty(String str) {
@@ -228,6 +260,37 @@ public final class StringUtil {
                 return false;
             }
         }
+    }
+
+    public static Object formatObject(Object defaultValue,Class type){
+        ClassTypeEnum classTypeEnum = ClassTypeEnum.getValue(type.getTypeName());
+        try {
+            if (classTypeEnum != null) {
+                switch (classTypeEnum) {
+                    case PACK_BOOLEAN:
+                        return StringUtil.formatBoolean(defaultValue);
+                    case PACK_INT:
+                        return StringUtil.getIntValue(defaultValue);
+                    case PACK_LONG:
+                        return  StringUtil.getLongValue(defaultValue);
+                    case PACK_DOUBLE:
+                        return StringUtil.getDoubleValue(defaultValue);
+                    case PACK_FLOAT:
+                        return StringUtil.getFloatValue(defaultValue);
+                    case PACK_SHORT:
+                        return StringUtil.getShortValue(defaultValue);
+                    case BIGDECIMAL:
+                        return StringUtil.getBigDecimalValue(defaultValue);
+                    default:
+                        return defaultValue;
+                }
+            }else{
+                return defaultValue;
+            }
+        } catch (Exception e){
+            log.error("formatObject classType:{} value:{} error:",type,defaultValue,e);
+        }
+        return null;
     }
 
     public static void main(String[] args) {

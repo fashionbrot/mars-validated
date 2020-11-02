@@ -12,4 +12,7 @@ public class DefaultModel extends BaseModel{
 
     @Default("wang")
     private String wang;
+
+    @Default("abc")
+    private String test;
 }

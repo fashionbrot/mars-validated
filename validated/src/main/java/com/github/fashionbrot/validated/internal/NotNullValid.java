@@ -8,11 +8,8 @@ public class NotNullValid implements ConstraintValidator<NotNull,Object> {
 
 
     @Override
-    public boolean isValid(NotNull annotation, Object object) {
+    public boolean isValid(NotNull annotation, Object object,Class<?> valueType) {
         return object != null;
     }
-
-
-
 
 }

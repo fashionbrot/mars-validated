@@ -1,35 +1,17 @@
 package com.github.fashion.test.controller;
 
 
-import com.github.fashion.test.model.NotNullModel2;
 import com.github.fashion.test.util.HttpClientUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 @Controller
 @RequestMapping("/compare")
-@Validated
 public class HibernateCompareMars {
 
 
-    @RequestMapping("/demo1")
-    @ResponseBody
-    public String demo1(@Valid @Validated @NotNull(message = "验证码长度应该在4-6位之间") String abc){
-
-        return abc;
-    }
-
-    @RequestMapping("/demo12")
-    @ResponseBody
-    public String demo12(@Valid @Validated NotNullModel2 m){
-
-        return m.getAbc();
-    }
 
 
 
@@ -79,6 +61,19 @@ public class HibernateCompareMars {
         System.out.println(" 一共耗时："+(end-start));
         System.out.println("mars      一共耗时："+(start3-start2));
 
+        return "ok"+(end-start);
+    }
+
+
+    @RequestMapping("/demo5")
+    @ResponseBody
+    public String demo5(Integer count,String method){
+        long start = System.currentTimeMillis();
+        for(int i=0;i<count;i++){
+            HttpClientUtil.httpGet("http://localhost:8080/"+method+"?i"+i,null,null,false);
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(" 一共耗时："+(end-start));
         return "ok"+(end-start);
     }
 

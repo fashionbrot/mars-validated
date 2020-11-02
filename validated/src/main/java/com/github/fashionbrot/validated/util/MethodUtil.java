@@ -8,6 +8,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class MethodUtil {
@@ -130,5 +132,18 @@ public class MethodUtil {
     }
 
 
+    public static boolean checkMethod(Class<?> clazz,String method){
+        if (clazz!=null){
+            Method[] methods = clazz.getMethods();
+            if (methods!=null && methods.length>0){
+                for(int i=0;i<methods.length;i++){
+                    if (methods[i].getName().equals(method)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 }

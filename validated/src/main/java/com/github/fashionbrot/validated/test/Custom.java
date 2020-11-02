@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = {CustomConstraintValidator.class,CustomConstraintValidator2.class})
 public @interface Custom {
 
-    String msg() default "com.sgr.valid.Custom.msg";
+    String msg() default "com.spv.valid.Custom.msg";
 
     int min();
 

@@ -59,7 +59,7 @@ public interface Validator {
      * @param objectValue    objectValue
      * @param index          filed index
      */
-    void entityFieldsAnnotationValid(Validated validated, List<MarsViolation> violationSet, String valueTypeName, Class<?> clazz, Object[] objectValue, int index);
+    List<MarsViolation> entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] objectValue, int index);
 
 
     /**
