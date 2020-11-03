@@ -10,8 +10,8 @@ public class DefaultConstraint implements ConstraintValidator<Default,Object> {
         return true;
     }
 
-
-    public Object defaultValue(Default annotation, Object var, Class valueType) {
+    @Override
+    public Object modify(Default annotation, Object value, Class<?> valueType) {
         return annotation.value();
     }
 }
