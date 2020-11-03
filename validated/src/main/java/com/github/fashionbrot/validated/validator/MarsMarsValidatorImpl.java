@@ -227,6 +227,9 @@ public class MarsMarsValidatorImpl implements MarsValidator {
         List<MarsViolation> violationSet = null;
         if (StringUtil.isNotEmpty(constraintValidatorList)){
             Object value = params[index];
+            if (field!=null){
+                value = MethodUtil.getFieldValue(field,params[index]);
+            }
             for(int i=0;i<constraintValidatorList.size();i++){
                 ConstraintValidator constraintValidator = constraintValidatorList.get(i);
                 boolean isValid = constraintValidator.isValid(annotation,value,valueType);

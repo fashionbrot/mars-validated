@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 @Slf4j
 public class ValidatedMethodIntercept implements MethodInterceptor, BeanFactoryAware {
 
-    public static final String BEAN_NAME = "validatedMethodIntercept";
+    public static final String BEAN_NAME = "marsValidatedMethodIntercept";
 
     private MarsMarsValidatorImpl validator;
 
