@@ -18,8 +18,8 @@ public interface MarsValidator {
     /**
      * 入口
      * 验证返回值
-     * @param validated
-     * @param object
+     * @param validated validated
+     * @param object validated
      */
     void returnValueAnnotationValid(Validated validated,Object object);
 
