@@ -1,5 +1,7 @@
 package com.github.fashionbrot.validated.util;
 
+import java.util.regex.Pattern;
+
 public class PatternSts {
 
     public static final String BANKCARD_REGEXP="^([1-9]{1})(\\d{14}|\\d{18})$";
@@ -12,6 +14,15 @@ public class PatternSts {
 
     public static final String IDCARD_REGEXP="(^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx])|([1−9]\\d5\\d2((0[1−9])|(10|11|12))(([0−2][1−9])|10|20|30|31)\\d2[0−9Xx])";
 
+
+    public static final Pattern BANKCARD_PATTERN = Pattern.compile(PatternSts.BANKCARD_REGEXP);
+
+    public static final Pattern CREDIT_CARD_PATTERN = Pattern.compile(PatternSts.CREDITCARD_REGEXP);
+
+    public static final Pattern EMAIL_PATTERN = Pattern.compile(PatternSts.EMAIL_REGEXP);
+
+    public static final Pattern PHONE_PATTERN = Pattern.compile(PatternSts.PHONE_REGEXP);
+    public static final Pattern ID_CARD_PATTERN = Pattern.compile(PatternSts.IDCARD_REGEXP);
 
 }
 

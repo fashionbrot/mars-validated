@@ -5,12 +5,11 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.TYPE, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Mars
 public @interface NotEqualSize {
 
     int size() default 0;
 
-    String msg() default "com.spv.valid.NotEqualSize.msg";
+    String msg() default "com.mars.valid.NotEqualSize.msg";
 
     Class<?>[] groups() default  {};
 }

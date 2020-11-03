@@ -17,7 +17,6 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.FIELD,  ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Mars
 public @interface Default {
 
     String  value() ;

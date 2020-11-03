@@ -10,10 +10,9 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.FIELD,  ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Mars
 public @interface CreditCard {
 
-    String msg() default "com.spv.valid.CreditCard.msg";
+    String msg() default "com.mars.valid.CreditCard.msg";
 
     /**
      * 正则表达式

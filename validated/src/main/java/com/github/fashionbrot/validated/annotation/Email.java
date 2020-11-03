@@ -15,13 +15,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target({  FIELD,PARAMETER })
 @Retention(RUNTIME)
-@Mars
 public @interface Email {
 
 
     String regexp() default "^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
 
-    String msg() default "com.spv.valid.Email.msg";
+    String msg() default "com.mars.valid.Email.msg";
 
     Class<?>[] groups() default  {};
 }

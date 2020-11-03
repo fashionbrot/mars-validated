@@ -1,29 +1,46 @@
 package com.github.fashionbrot.validated.constraint;
 
-import com.github.fashionbrot.validated.annotation.Default;
-
 import java.lang.annotation.Annotation;
 
-
+/**
+ *  自定义注解实现接口，调用顺序 isValid,modify,validObject
+ * @param <A>
+ * @param <T>
+ */
 public  interface ConstraintValidator<A extends Annotation, T> {
 
     /**
      * annotation all
      * @param annotation
-     * @param var1
+     * @param value
      * @param valueType
      * @return
      */
-    boolean isValid(A annotation, T var1,Class<?> valueType);
+    boolean isValid(A annotation, T value,Class<?> valueType);
 
     /**
-     * use @Default
+     * 修改 var 值
      * @param annotation
-     * @param var
+     * @param value
      * @param valueType
      * @return
      */
-    default Object defaultValue(A annotation, Object var, Class valueType){
+    default T modify(A annotation,T value,Class<?> valueType){
+        return value;
+    }
+
+    /**
+     * return value==null?验证通过:验证不通过
+     * 验证不过 throw Exception value
+     * @param annotation
+     * @param value
+     * @param valueType
+     * @return
+     */
+    default String validObject(A annotation, T value,Class<?> valueType){
         return null;
     }
+
+
+
 }

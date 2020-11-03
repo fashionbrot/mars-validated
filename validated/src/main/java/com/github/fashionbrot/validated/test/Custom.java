@@ -7,10 +7,10 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.FIELD,  ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = {CustomConstraintValidator.class,CustomConstraintValidator2.class})
+@Constraint(validatedBy = {CustomConstraintValidator.class})
 public @interface Custom {
 
-    String msg() default "com.spv.valid.Custom.msg";
+    String msg() default "com.mars.valid.Custom.msg";
 
     int min();
 

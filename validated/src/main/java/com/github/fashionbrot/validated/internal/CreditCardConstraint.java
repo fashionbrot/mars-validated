@@ -1,0 +1,35 @@
+package com.github.fashionbrot.validated.internal;
+
+import com.github.fashionbrot.validated.annotation.BankCard;
+import com.github.fashionbrot.validated.constraint.ConstraintValidator;
+import com.github.fashionbrot.validated.util.PatternSts;
+import com.github.fashionbrot.validated.util.StringUtil;
+
+import java.util.regex.Pattern;
+
+public class CreditCardConstraint implements ConstraintValidator<BankCard,Object> {
+
+
+    @Override
+    public boolean isValid(BankCard creditCard, Object value,Class<?> valueType) {
+
+        String str = StringUtil.formatString(value);
+        if (StringUtil.isEmpty(str)) {
+            return false;
+        } else {
+            String regexp = creditCard.regexp();
+            if (PatternSts.CREDIT_CARD_PATTERN.pattern().equals(regexp)) {
+                return PatternSts.CREDIT_CARD_PATTERN.matcher(str).matches();
+            } else {
+                Pattern pattern ;
+                if (StringUtil.isBlank(regexp)) {
+                    pattern = PatternSts.CREDIT_CARD_PATTERN;
+                } else {
+                    pattern = Pattern.compile(regexp);
+                }
+                return pattern.matcher(str).matches();
+            }
+        }
+    }
+
+}

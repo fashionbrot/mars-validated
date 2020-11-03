@@ -18,6 +18,8 @@ public class MarsViolation {
      * 注解名
      */
     private String annotationName;
-
+    /**
+     * value
+     */
     private Object value;
 }

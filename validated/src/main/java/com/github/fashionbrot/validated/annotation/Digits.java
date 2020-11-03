@@ -16,11 +16,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target({  FIELD,PARAMETER })
 @Retention(RUNTIME)
-@Mars
 public @interface Digits {
 
 
-    String msg() default "com.spv.valid.Digits.msg";
+    String msg() default "com.mars.valid.Digits.msg";
 
     Class<?>[] groups() default  {};
 }

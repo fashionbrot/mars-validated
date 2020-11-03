@@ -20,14 +20,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target({  FIELD,PARAMETER })
 @Retention(RUNTIME)
-@Mars
 public @interface Size {
 
     long min() default 0;
 
     long max() default Long.MAX_VALUE;
 
-    String msg() default "com.spv.valid.Size.msg";
+    String msg() default "com.mars.valid.Size.msg";
 
     Class<?>[] groups() default  {};
 }

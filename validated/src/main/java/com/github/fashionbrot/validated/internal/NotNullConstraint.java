@@ -2,9 +2,8 @@ package com.github.fashionbrot.validated.internal;
 
 import com.github.fashionbrot.validated.annotation.NotNull;
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
-import com.github.fashionbrot.validated.constraint.ValidMethod;
 
-public class NotNullValid implements ConstraintValidator<NotNull,Object> {
+public class NotNullConstraint implements ConstraintValidator<NotNull,Object> {
 
 
     @Override

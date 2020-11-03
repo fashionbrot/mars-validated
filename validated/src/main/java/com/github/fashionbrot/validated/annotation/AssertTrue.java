@@ -10,10 +10,9 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.FIELD,  ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Mars
 public @interface AssertTrue {
 
-    String msg() default "com.spv.valid.AssertTrue.msg";
+    String msg() default "com.mars.valid.AssertTrue.msg";
 
     Class<?>[] groups() default  {};
 }

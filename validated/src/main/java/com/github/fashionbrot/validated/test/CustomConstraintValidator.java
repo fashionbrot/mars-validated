@@ -2,6 +2,7 @@ package com.github.fashionbrot.validated.test;
 
 
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
+import com.github.fashionbrot.validated.util.StringUtil;
 import org.omg.CORBA.CustomMarshal;
 
 public class CustomConstraintValidator implements ConstraintValidator<Custom, Object> {
@@ -24,7 +25,20 @@ public class CustomConstraintValidator implements ConstraintValidator<Custom, Ob
     }
 
     @Override
-    public Object modify(Custom annotation, Object var,Class<?> valueType) {
+    public Object modify(Custom annotation, Object value, Class<?> valueType) {
+        System.out.println("CustomConstraintValidator:"+value);
+        if (value instanceof CustomModel){
+            CustomModel customModel=(CustomModel)value;
+            if (customModel!=null){
+                customModel.setAbc("在 valid modify 中修改的abc");
+            }
+            return customModel;
+        }
+        return value;
+    }
+
+
+    /*public Object modify(Custom annotation, Object var,Class<?> valueType) {
         System.out.println("CustomConstraintValidator:"+var);
         if (var instanceof CustomModel){
             CustomModel customModel= (CustomModel) var;
@@ -32,5 +46,17 @@ public class CustomConstraintValidator implements ConstraintValidator<Custom, Ob
             return customModel;
         }
         return var+"1";
+    }*/
+
+    @Override
+    public String validObject(Custom annotation, Object value, Class<?> valueType) {
+        if (value instanceof CustomModel){
+            CustomModel customModel= (CustomModel) value;
+            if (StringUtil.isEmpty(customModel.getAbc())){
+                return "validObject abc is null";
+            }
+            return null;
+        }
+        return null;
     }
 }

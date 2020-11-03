@@ -11,10 +11,4 @@ public @interface Constraint {
      * @return
      */
     Class<? extends ConstraintValidator<? extends Annotation, ?>>[] validatedBy() default {};
-
-    /**
-     * 对象bean 实现接口
-     * @return
-     */
-    Class<? extends ConstraintValidatorBean<? extends Annotation, ?>>[] validatedByBean() default {};
 }

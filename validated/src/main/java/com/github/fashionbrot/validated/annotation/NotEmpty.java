@@ -10,10 +10,9 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Mars
 public @interface NotEmpty {
 
-    String msg() default  "com.spv.valid.NotEmpty.msg";
+    String msg() default  "com.mars.valid.NotEmpty.msg";
 
     Class<?>[] groups() default  {};
 }

@@ -1,6 +1,6 @@
 package com.github.fashion.test.aop;
 
-import com.github.fashionbrot.validated.validator.SpvValidator;
+import com.github.fashionbrot.validated.validator.MarsMarsValidatorImpl;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -13,7 +13,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 import java.util.Enumeration;
 
 @Component
@@ -24,7 +23,7 @@ public class ValidAspect {
     private void pointcut() {}
 
     @Autowired
-    private SpvValidator spvValidator;
+    private MarsMarsValidatorImpl marsValidatorImpl;
 
     @Around(value = "pointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -44,7 +43,7 @@ public class ValidAspect {
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature)signature;
         //自定义参数验证
-        spvValidator.parameterAnnotationValid(methodSignature.getMethod(),args);
+        marsValidatorImpl.parameterAnnotationValid(methodSignature.getMethod(),args);
 
         return joinPoint.proceed();
     }

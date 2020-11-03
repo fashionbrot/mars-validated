@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedByBean = {CustomBeanConstraintValidatorBean.class})
+@Constraint(validatedBy = {CustomBeanConstraintValidatorBean.class})
 public @interface CustomBean {
 
     //没有任何参数

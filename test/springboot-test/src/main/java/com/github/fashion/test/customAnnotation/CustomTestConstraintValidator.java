@@ -10,7 +10,6 @@ public class CustomTestConstraintValidator implements ConstraintValidator<Custom
         return true;
     }
 
-    @Override
     public Object modify(CustomAnnotationTest annotation, Object var,Class<?> valueType) {
         if ("1".equals(var)){
             return "2";

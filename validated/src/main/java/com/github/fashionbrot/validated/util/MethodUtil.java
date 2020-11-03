@@ -3,14 +3,10 @@ package com.github.fashionbrot.validated.util;
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 @Slf4j
 public class MethodUtil {
 
@@ -107,35 +103,12 @@ public class MethodUtil {
     }
 
 
-    public static Method getMethod(Class clazz, String methodName,Class<?>... parameterTypes){
 
-        try {
-            return   clazz.getDeclaredMethod(methodName,parameterTypes);
-        } catch (NoSuchMethodException e) {
-            log.error(" NoSuchMethodException getMethod clazz:"+clazz.getTypeName() +" methodName:"+methodName +"  parameterTypesLength:"+parameterTypes.length,e);
-        }
-
-        return null;
-    }
-
-
-    public static  Method getAnnotationTypeMethod(Class<? extends Annotation> annotationType,String methodName,Class<?>... parameterTypes){
-        Method method=null;
-        try {
-            if (annotationType!=null) {
-                method = annotationType.getDeclaredMethod(methodName, parameterTypes);
-            }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return method;
-    }
-
-
-    public static boolean checkMethod(Class<?> clazz,String method){
+    public static boolean checkDeclaredMethod(Class<?> clazz,String method){
         if (clazz!=null){
-            Method[] methods = clazz.getMethods();
+            Method[] methods = clazz.getDeclaredMethods();
             if (methods!=null && methods.length>0){
+
                 for(int i=0;i<methods.length;i++){
                     if (methods[i].getName().equals(method)){
                         return true;

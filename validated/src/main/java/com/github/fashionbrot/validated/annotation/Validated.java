@@ -27,4 +27,9 @@ public @interface Validated {
      */
     boolean failFast() default true;
 
+    /**
+     * 验证返回值 默认false
+     * @return
+     */
+    boolean validReturnValue() default false;
 }
