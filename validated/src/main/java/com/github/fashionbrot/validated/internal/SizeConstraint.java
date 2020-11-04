@@ -16,51 +16,48 @@ public class SizeConstraint implements ConstraintValidator<Size,Object> {
         if ( value == null ) {
             return false;
         }
-
+        int length= 0;
         if (value instanceof Object[]){
             Object[] array = (Object[]) value;
-            return min > array.length || array.length > max;
+            length = array.length;
         }else if (value instanceof boolean[]){
             boolean[] array = (boolean[]) value;
-            return min > array.length || array.length > max;
+            length = array.length;
         }else if (value instanceof byte[]){
             byte[] array = (byte[]) value;
-            return min > array.length || array.length > max;
+            length = array.length;
         }else if (value instanceof char[]){
             char[] array = (char[]) value;
-            return min > array.length || array.length > max;
+            length = array.length;
         }else if (value instanceof double[]){
             double[] array = (double[]) value;
-            return min > array.length || array.length > max;
+            length = array.length;
         }else if (value instanceof float[]){
             float[] array = (float[]) value;
-            return min > array.length || array.length > max;
+            length = array.length;
         }else if (value instanceof int[]){
             int[] array = (int[]) value;
-            return min > array.length || array.length > max;
+            length = array.length;
         }else if (value instanceof long[]){
             long[] array = (long[]) value;
-            return min > array.length || array.length > max;
+            length = array.length;
         }else if (value instanceof short[]){
             short[] array = (short[]) value;
-            return min > array.length || array.length > max;
+            length = array.length;
         }else if (value instanceof CharSequence){
             CharSequence charSequence = (CharSequence) value;
-            int length = charSequence.length();
-            return min > length || length > max;
+            length = charSequence.length();
         }else if (value instanceof Collection){
             Collection collection = (Collection) value;
-            int length = collection.size();
-            return min > length || length > max;
+            length = collection.size();
         }else if (value instanceof Map){
             Map map = (Map) value;
-            int length = map.size();
-            return min > length || length > max;
+            length = map.size();
         }else{
             String str = StringUtil.formatString(value);
-            int length = str.length();
-            return min > length || length > max;
+            length = str.length();
         }
+        return !(min > length || length >max);
     }
 
 }

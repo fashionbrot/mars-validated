@@ -30,7 +30,7 @@ public class ConstraintHelper {
         putTemp(builtinConstraints, Length.class, LengthConstraint.class);
         putTemp(builtinConstraints, NotBlank.class, NotBlankConstraint.class);
         putTemp(builtinConstraints, NotEmpty.class, NotEmptyConstraint.class);
-        putTemp(builtinConstraints, NotEqualSize.class, NotEqualsSizeConstraint.class);
+        putTemp(builtinConstraints, NotEqualLength.class, NotEqualsLengthConstraint.class);
         putTemp(builtinConstraints, Pattern.class, PatternConstraint.class);
         putTemp(builtinConstraints, Phone.class, PhoneConstraint.class);
         putTemp(builtinConstraints, Size.class, SizeConstraint.class);
