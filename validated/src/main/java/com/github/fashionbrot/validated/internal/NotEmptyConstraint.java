@@ -11,7 +11,7 @@ public class NotEmptyConstraint implements ConstraintValidator<NotEmpty, Object>
 	@Override
 	public boolean isValid(NotEmpty notEmpty, Object value, Class<?> valueType) {
 
-		if (value == null || StringUtil.isBlank(value.toString())) {
+		if (value == null || StringUtil.isEmpty(value.toString())) {
 			return false;
 		}
 		return true;
