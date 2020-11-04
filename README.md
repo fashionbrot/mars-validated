@@ -51,13 +51,13 @@ jdk1.8    及以上
         <dependency>
             <groupId>com.github.fashionbrot</groupId>
             <artifactId>mars-validated</artifactId>
-            <version>1.0.3</version>
+            <version>2.0.0</version>
         </dependency>
         <!-- springboot 依赖-->
         <dependency>
                <groupId>com.github.fashionbrot</groupId>
                <artifactId>validated-springboot-starter</artifactId>
-               <version>1.0.3</version>
+               <version>2.0.0</version>
         </dependency>
 
 ```
