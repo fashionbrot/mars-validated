@@ -11,7 +11,7 @@ public class ValidService {
 
 
 //    @Validated(groups = AddGroup.class)
-    public void test5(@Custom(min = 1,groups = AddGroup.class) String abc, GroupModel model) {
+    public void test5(@Custom(min = 1) String abc, GroupModel model) {
 
         System.out.println("valid service");
     }

@@ -8,7 +8,7 @@ import com.github.fashionbrot.validated.test.Custom;
 public class GroupModel {
 
 
-    @Custom(min = 3,groups = {EditGroup.class,AddGroup.class})
+    @Custom(min = 3)
     private String abc;
 
 

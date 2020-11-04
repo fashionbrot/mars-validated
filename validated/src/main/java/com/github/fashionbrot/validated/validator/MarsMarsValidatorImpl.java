@@ -176,7 +176,7 @@ public class MarsMarsValidatorImpl implements MarsValidator {
 
 
     private List<MarsViolation> validated(Validated validated,Object[] params,int index ,Class<?> valueType,String paramName, Annotation annotation,Field field) {
-        boolean failFast = validated.failFast();
+        boolean failFast =validated!=null? validated.failFast():true;
         Class<?>[] vGroupClass = validated!=null ? validated.groups():null;
         Map<String, Object> annotationAttributes = AnnotationUtils.getAnnotationAttributes(annotation);
         if (checkGroup(vGroupClass, annotationAttributes)){
