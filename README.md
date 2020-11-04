@@ -12,6 +12,16 @@ validated 是 控制 springmvc  springboot 的验证框架。此框架基于spri
 |2.0.0|1、Constraint 接口删除  validatedByBean 方法 <br/> 2、删除ConstraintValidatorBean 接口 <br/>  3、ConstraintValidator 新增  modify 方法、validObject 方法 <br/> 4、Validated 注解增加 failFast快速失败方法、增加validReturnValue 方法（验证返回值） <br/> 5、重构了以前的逻辑，相比hibernate valid 速度快1倍左右 |      
 
 
+### hibernate valid  和 mars validated 比较 调用1000次接口时间比较,验证参数10个
+
+#### hibernate 
+http://localhost:8080/compare/demo5?method=hibernate&count=1000
+##### 4213,4269,4221,4183,4187
+#### mars
+http://localhost:8080/compare/demo5?method=/compare/mars&count=1000
+##### 2158,2128,2174,2256,2150
+###### 通过测试可以看出，mars 比 hibernate 速度提升接近1倍 
+
 # validated 参数验证
 
 ## 使用环境

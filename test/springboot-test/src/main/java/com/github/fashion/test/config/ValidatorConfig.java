@@ -24,7 +24,7 @@ public class ValidatorConfig {
         // 校验模式: 默认会校验完所有属性，然后将错误信息一起返回，但很多时候不需要这样，一个校验失败了，其它就不必校验了
         ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
                 .configure()
-                .failFast(true)
+                .failFast(false)
                 .buildValidatorFactory();
         return validatorFactory.getValidator();
     }

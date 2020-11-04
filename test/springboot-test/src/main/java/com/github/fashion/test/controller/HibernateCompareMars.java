@@ -1,10 +1,15 @@
 package com.github.fashion.test.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.github.fashion.test.model.DemoModel;
 import com.github.fashion.test.util.HttpClientUtil;
+import com.github.fashionbrot.validated.annotation.Validated;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
 
 
 @Controller
@@ -76,5 +81,14 @@ public class HibernateCompareMars {
         System.out.println(" 一共耗时："+(end-start));
         return "ok"+(end-start);
     }
+
+    @RequestMapping("/mars")
+    @ResponseBody
+    @Validated(failFast = false)
+    public String demo5(DemoModel demoModel){
+        return JSON.toJSONString(demoModel);
+    }
+
+
 
 }

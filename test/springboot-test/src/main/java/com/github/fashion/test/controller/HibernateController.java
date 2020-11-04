@@ -1,5 +1,7 @@
 package com.github.fashion.test.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.github.fashion.test.model.DemoModel;
 import com.github.fashion.test.model.NotNullModel2;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -29,4 +31,9 @@ public class HibernateController {
     }
 
 
+    @RequestMapping("/hibernate")
+    @ResponseBody
+    public String hibernate(@Valid @org.springframework.validation.annotation.Validated DemoModel demoModel,BindingResult bindingResult){
+        return JSON.toJSONString(demoModel);
+    }
 }
