@@ -10,12 +10,18 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 验证 值大小范围
- * int
- * long
- * short
- * Integer
- * Long
- * Short
+ * object[]
+ * boolean[]
+ * byte[]
+ * char[]
+ * double[]
+ * float[]
+ * int[]
+ * long[]
+ * short[]
+ * String length
+ * Collection
+ * Map
  */
 @Documented
 @Target({  FIELD,PARAMETER })

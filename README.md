@@ -46,8 +46,8 @@ jdk1.8    及以上
 |Length|int,long,short,double,Integer,Long,Float,Double,Short,String|验证长度|
 |Pattern|String|正则表达式验证|
 |Phone|String|验证手机号是否正确|
-|Size|int,long,short,Integer,Long,Short|验证大小值|
-|NotEqualSize|String|验证长度|
+|Size|object[],boolean[],byte[],char[],double[],float[],int[],long[],short[],String length,Collection,Map|验证大小值|
+|NotEqualLength|String|验证长度|
 
 
 # 使用4步配置
@@ -72,15 +72,14 @@ jdk1.8    及以上
 
 ```
 
-# validated spring 的使用方式 (springboot 引入jar包直接开启)
+## 1、validated springboot 的使用方式 1 (application.properties 直接添加)
 ```properties
 mars.validated.file-name=valid
 mars.validated.language=zh_CN
 mars.validated.locale-param-name=lang
 ```
-## 1、第一种spring通过注解开启
-### 2.1 springboot 配置
-fileName 如果不填默认jar 包自带提示，如果需要批量自定义请按照jar 包下的valid_zh_CN.properties 修改提示语内容
+
+## 1、validated springboot 的使用方式 2 （fileName 如果不填默认jar 包自带提示，如果需要批量自定义请按照jar 包下的valid_zh_CN.properties 修改提示语内容）
 ```java
 @SpringBootApplication
 @EnableValidatedConfig(fileName = "valid",language="zh_CN",localeParamName="lang")    // fileName 默认中文jar包自带 如需要批量自定义请自己创建 valid_zh_CN.properties  放在自己项目中的resources 下
@@ -90,7 +89,7 @@ public class DemoApplication {
     }
 }
 ```
-## 2、第二种通过类文件配置
+## 3、spring适配方式
 ```java
 @Component
 @Configuration
@@ -106,16 +105,26 @@ public class ValidConfig {
 ```bash
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(ValidatedException.class)
     @ResponseStatus(HttpStatus.OK)
-    public RespMessage ValidationException(ValidatedException e){
-        return new RespMessage(-100,e.getMsg());
+    public Object ValidatedException(ValidatedException e) {
+        List<MarsViolation> violations = e.getViolations();
+        return String.join(",",violations.stream().map(m-> m.getMsg()).collect(Collectors.toList()));
     }
+
 }
 ```
+## @Validated 注解支持功能
+|方法|作用
+|------|------|
+|Class<?>[] validClass() default {}|需要校验的 class|
+|Class<?>[] groups() default { }|校验组|
+|boolean failFast() default true|true 快速失败|
+|boolean validReturnValue() default false|验证返回值 默认false|
 
 
-###  通过aop 自定义拦截
+###  使用参数验证方式（1）通过aop 自定义拦截
 ```java
 @Component
 @Aspect
@@ -125,27 +134,16 @@ public class ValidAspect {
     private void pointcut() {}
 
     @Autowired
-    private SpvValidator spvValidator;
+    private MarsValidator marsValidator;
 
     @Around(value = "pointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.out.println("---------------aop begin");
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        //打印request参数
-        Enumeration<?> temp = request.getParameterNames();
-        if (null != temp) {
-            while (temp.hasMoreElements()) {
-                String en = (String) temp.nextElement();
-                String value = request.getParameter(en);
-                System.out.println("[aop] request parameter name:"+en+";value:"+value);
-            }
-        }
         //打印方法的信息
         Object[] args = joinPoint.getArgs();
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature)signature;
         //自定义参数验证
-        spvValidator.parameterAnnotationValid(methodSignature.getMethod(),args);
+        marsValidator.parameterAnnotationValid(methodSignature.getMethod(),args);
 
         return joinPoint.proceed();
     }
@@ -154,24 +152,21 @@ public class ValidAspect {
 
 ```
 
-##  使用 @Validated 开启接口验证 @Email验证邮箱格式
+##  使用参数验证方式（2） @Validated 开启接口验证 @Email验证邮箱格式
 
 ```bash
-
 @Controller
 public class DemoController {
 
     @Autowired
     private TestService testService;
     
-
     @RequestMapping("/emailCheck")
     @ResponseBody
     @Validated //注意此处
     public String demo(@Email String abc,){
         return testService.test(abc);
     }
-
 }   
 @Controller
 public class DemoController {
@@ -179,20 +174,12 @@ public class DemoController {
     @Autowired
     private TestService testService;
     
-    
     @RequestMapping("/idcardCheck")
     @ResponseBody
     @Validated //注意此处
     public String demo(IdCardModel idCardModel){
         return testService.test("ac");
     }
-    
-    @RequestMapping("/idcardCheck2")
-    @ResponseBody
-    public String demo2(IdCardModel idCardModel){
-        return testService.test2("ac");
-    }
-
 }
 
 
@@ -222,7 +209,7 @@ public class TestService{
 
 ```
 
-### 按照addGroup editGroup valid 校验
+### 按照 @Validated(groups = {EditGroup.class}) valid 校验
 ```java
 @Controller
 public class DemoController {
@@ -247,7 +234,6 @@ public class DemoController {
 ## 支持 默认值设置   hibernate默认不支持
 ```java
 import com.github.fashionbrot.validated.annotation.Default;
-
 @Data
 public class BaseModel {
 
@@ -278,16 +264,22 @@ public class ValidBeanController {
 @Documented
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedByBean = {CustomBeanConstraintValidatorBean.class})
+@Constraint(validatedBy = {CustomBeanConstraintValidatorBean.class})
 public @interface CustomBean {
     //没有任何参数
 
 }
 
-public class CustomBeanConstraintValidatorBean implements ConstraintValidatorBean<CustomBean, Object> {
+public class CustomBeanConstraintValidatorBean implements ConstraintValidator<CustomBean, Object> {
 
     @Override
-    public String isValid(CustomBean custom, Object var) {
+    public boolean isValid(CustomBean annotation, Object value, Class<?> valueType) {
+        return true;
+    }
+
+
+    @Override
+    public String validObject(CustomBean custom, Object var,Class<?> valueType) {
 
         if (var instanceof ValidBeanModel){
             ValidBeanModel beanModel= (ValidBeanModel) var;
@@ -301,7 +293,7 @@ public class CustomBeanConstraintValidatorBean implements ConstraintValidatorBea
         return null;
     }
     @Override
-    public Object modify(CustomBean annotation, Object var) {
+    public Object modify(CustomBean annotation, Object var,Class<?> valueType) {
         System.out.println("CustomConstraintValidator:"+var);
         if (var instanceof ValidBeanModel){
             ValidBeanModel beanModel= (ValidBeanModel) var;
@@ -364,12 +356,31 @@ package com.github.fashionbrot.validated.constraint;
 import java.lang.annotation.Annotation;
 public  interface ConstraintValidator<A extends Annotation, T> {
 
-    boolean isValid(A annotation, T var1);
+        boolean isValid(A annotation, T var1);
     
-    //实现类可实现可不实现,使用场景如 ajax传入 base64字符,可以在自己逻辑中实现自定义逻辑
-    default T modify(A annotation,T var){
-        return var;
-    }
+        //实现类可实现可不实现,使用场景如 ajax传入 base64字符,可以在自己逻辑中实现自定义逻辑
+        /**
+         * 修改 value 值
+         * @param annotation
+         * @param value
+         * @param valueType
+         * @return
+         */
+        default T modify(A annotation,T value,Class<?> valueType){
+            return value;
+        }
+        /**
+         * return value==null?验证通过:验证不通过
+         * 验证不过 throw Exception value
+         * @param annotation
+         * @param value
+         * @param valueType
+         * @return
+         */
+        default String validObject(A annotation, T value,Class<?> valueType){
+            return null;
+        }
+
 }
 
 ```
@@ -387,7 +398,7 @@ public  interface ConstraintValidator<A extends Annotation, T> {
     @Constraint(validatedBy = {CustomConstraintValidator.class,CustomConstraintValidator2.class})
     public @interface Custom {
     
-        String msg() default "com.spv.valid.Custom.msg";
+        String msg() default "com.mars.valid.Custom.msg";
     
         int min();
     }
@@ -400,7 +411,7 @@ public  interface ConstraintValidator<A extends Annotation, T> {
 public class CustomConstraintValidator implements ConstraintValidator<Custom,String> {
 
     @Override
-    public boolean isValid(Custom custom,String var1) {
+    public boolean isValid(Custom custom,String var1,Class<?> valueType) {
         /**
          * 自定义方法
          */

@@ -19,7 +19,7 @@ public  interface ConstraintValidator<A extends Annotation, T> {
     boolean isValid(A annotation, T value,Class<?> valueType);
 
     /**
-     * 修改 var 值
+     * 修改 value 值
      * @param annotation
      * @param value
      * @param valueType
