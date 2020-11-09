@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class GlobalValidatedProperties {
 
-    public static final String BEAN_NAME = "globalValidatedProperties";
+    public static final String BEAN_NAME = "marsGlobalValidatedProperties";
 
     public static final String FILENAME="fileName";
 

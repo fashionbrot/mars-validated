@@ -20,6 +20,8 @@ public class MarsMarsValidatorImpl implements MarsValidator {
     public static final String BEAN_NAME="marsValidator";
     private static final String METHOD_NAME_MODIFY = "modify";
     private static final String METHOD_VALID_OBJECT = "validObject";
+    private static final String MSG = "msg";
+    private static final String GROUPS ="groups";
 
 
     @Override
@@ -234,7 +236,7 @@ public class MarsMarsValidatorImpl implements MarsValidator {
                 ConstraintValidator constraintValidator = constraintValidatorList.get(i);
                 boolean isValid = constraintValidator.isValid(annotation,value,valueType);
                 if (!isValid){
-                    String msg = (String) annotationAttributes.get(ValidMethod.MSG.getMethod());
+                    String msg = (String) annotationAttributes.get(MSG);
                     violationSet = setMarsViolations(value, paramName, annotation, violationSet, constraintValidatorList, msg);
                     if (failFast){
                         ExceptionUtil.throwException(violationSet);
@@ -306,8 +308,8 @@ public class MarsMarsValidatorImpl implements MarsValidator {
             return false;
         }
         //检测groups 是否匹配
-        if(attributes.containsKey(ValidMethod.GROUPS.getMethod())){
-            Class[] groups = (Class[]) attributes.get(ValidMethod.GROUPS.getMethod());
+        if(attributes.containsKey(GROUPS)){
+            Class[] groups = (Class[]) attributes.get(GROUPS);
             if (checkGroup(vGroupClass, groups)) {
                 return false;
             }

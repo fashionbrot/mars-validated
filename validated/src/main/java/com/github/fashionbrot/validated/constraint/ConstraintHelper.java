@@ -71,13 +71,5 @@ public class ConstraintHelper {
         return null;
     }
 
-    public static <A extends Annotation> DefaultConstraint getDefaultConstraint() {
-        List<ConstraintValidator> defaultValid = builtinConstraint.get(Default.class);
-        if (StringUtil.isNotEmpty(defaultValid)) {
-            ConstraintValidator validator = defaultValid.get(0);
-            return (DefaultConstraint) validator;
-        }
-        return null;
-    }
 
 }

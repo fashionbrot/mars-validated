@@ -1,9 +1,8 @@
-package com.github.fashionbrot.validated.test;
+package com.github.fashion.test.test;
 
 
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
 import com.github.fashionbrot.validated.util.StringUtil;
-import org.omg.CORBA.CustomMarshal;
 
 public class CustomConstraintValidator implements ConstraintValidator<Custom, Object> {
 

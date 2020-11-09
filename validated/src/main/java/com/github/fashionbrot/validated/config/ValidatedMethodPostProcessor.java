@@ -16,7 +16,7 @@ import java.lang.annotation.Annotation;
 
 public  class ValidatedMethodPostProcessor extends AbstractAdvisingBeanPostProcessor implements BeanFactoryAware,InitializingBean {
 
-    public static final String BEAN_NAME="validatedMethodPostProcessor";
+    public static final String BEAN_NAME="marsValidatedMethodPostProcessor";
 
     private Class<? extends Annotation> validatedAnnotationType = Validated.class;
 

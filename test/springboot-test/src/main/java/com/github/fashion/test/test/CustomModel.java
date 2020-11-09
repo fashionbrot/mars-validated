@@ -1,4 +1,4 @@
-package com.github.fashionbrot.validated.test;
+package com.github.fashion.test.test;
 
 import lombok.Data;
 

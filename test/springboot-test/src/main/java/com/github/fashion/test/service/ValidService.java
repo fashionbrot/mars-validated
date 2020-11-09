@@ -1,9 +1,7 @@
 package com.github.fashion.test.service;
 
-import com.github.fashion.test.groups.AddGroup;
 import com.github.fashion.test.model.GroupModel;
-import com.github.fashionbrot.validated.annotation.Validated;
-import com.github.fashionbrot.validated.test.Custom;
+import com.github.fashion.test.test.Custom;
 import org.springframework.stereotype.Service;
 
 @Service

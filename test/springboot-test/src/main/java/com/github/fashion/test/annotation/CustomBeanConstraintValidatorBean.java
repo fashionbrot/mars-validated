@@ -3,7 +3,7 @@ package com.github.fashion.test.annotation;
 
 import com.github.fashion.test.model.ValidBeanModel;
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
-import com.github.fashionbrot.validated.test.CustomModel;
+import com.github.fashion.test.test.CustomModel;
 
 public class CustomBeanConstraintValidatorBean implements ConstraintValidator<CustomBean, Object> {
 
