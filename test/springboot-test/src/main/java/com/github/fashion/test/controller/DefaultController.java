@@ -16,7 +16,7 @@ public class DefaultController {
     @RequestMapping("demo1")
     @ResponseBody
     @Validated
-    public String demo1(@Default(value = "12")String abc,@Default(value = "demo1")String test){
+    public String demo1(@Default(value = "12")Short abc,@Default(value = "demo1")String test){
 
         return abc+":"+test;
     }
