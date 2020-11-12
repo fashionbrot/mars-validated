@@ -1,7 +1,7 @@
 package com.github.fashionbrot.validated.spring.intercept;
 
 import com.github.fashionbrot.validated.annotation.Validated;
-import com.github.fashionbrot.validated.validator.MarsMarsValidatorImpl;
+import com.github.fashionbrot.validated.validator.MarsValidatorImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -16,7 +16,7 @@ public class ValidatedMethodIntercept implements MethodInterceptor, BeanFactoryA
 
     public static final String BEAN_NAME = "marsValidatedMethodIntercept";
 
-    private MarsMarsValidatorImpl validator;
+    private MarsValidatorImpl validator;
 
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
@@ -40,7 +40,7 @@ public class ValidatedMethodIntercept implements MethodInterceptor, BeanFactoryA
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         if (beanFactory!=null){
-            this.validator = (MarsMarsValidatorImpl) beanFactory.getBean(MarsMarsValidatorImpl.BEAN_NAME);
+            this.validator = (MarsValidatorImpl) beanFactory.getBean(MarsValidatorImpl.BEAN_NAME);
         }
     }
 }

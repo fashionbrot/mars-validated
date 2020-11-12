@@ -3,7 +3,7 @@ package com.github.fashionbrot.validated.util;
 import com.github.fashionbrot.validated.config.GlobalValidatedProperties;
 import com.github.fashionbrot.validated.config.ValidatedMethodPostProcessor;
 import com.github.fashionbrot.validated.spring.intercept.ValidatedMethodIntercept;
-import com.github.fashionbrot.validated.validator.MarsMarsValidatorImpl;
+import com.github.fashionbrot.validated.validator.MarsValidatorImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -90,7 +90,7 @@ public class BeanUtil {
 
     public static void registerValieator(BeanDefinitionRegistry registry) {
 
-        registerInfrastructureBeanIfAbsent(registry, MarsMarsValidatorImpl.BEAN_NAME, MarsMarsValidatorImpl.class);
+        registerInfrastructureBeanIfAbsent(registry, MarsValidatorImpl.BEAN_NAME, MarsValidatorImpl.class);
 
         registerInfrastructureBeanIfAbsent(registry, ValidatorUtil.BEAN_NAME,ValidatorUtil.class);
 

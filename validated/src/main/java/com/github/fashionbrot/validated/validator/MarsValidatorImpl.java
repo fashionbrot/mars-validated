@@ -15,7 +15,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 @Slf4j
-public class MarsMarsValidatorImpl implements MarsValidator {
+public class MarsValidatorImpl implements MarsValidator {
 
     public static final String BEAN_NAME="marsValidator";
     private static final String METHOD_NAME_MODIFY = "modify";
