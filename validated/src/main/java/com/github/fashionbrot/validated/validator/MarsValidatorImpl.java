@@ -310,12 +310,17 @@ public class MarsValidatorImpl implements MarsValidator {
         //检测groups 是否匹配
         if(attributes.containsKey(GROUPS)){
             Class[] groups = (Class[]) attributes.get(GROUPS);
+            //如果 vGroupClass 不为空，则默认 annotation 注解 groups=DefaultGroup.class
+            if (groups.length==0){
+                return false;
+            }
             if (checkGroup(vGroupClass, groups)) {
                 return false;
             }
             return true;
         }
 
+        //如果 vGroupClass 不为空，则默认 annotation 注解 groups=DefaultGroup.class
         return false;
     }
 

@@ -14,5 +14,5 @@ public @interface Custom {
 
     int min();
 
-    Class<?>[] groups() default  {};
+    //Class<?>[] groups() default  {};
 }

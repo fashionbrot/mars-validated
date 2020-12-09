@@ -30,7 +30,7 @@ public class TestController {
     @RequestMapping("/test1")
     @ResponseBody
     @Validated(groups = {EditGroup.class})
-    public String test1( @Custom(min = 1,groups = {EditGroup.class,AddGroup.class}) String abc1){
+    public String test1( @Custom(min = 1) String abc1){
         return abc1;
     }
 
