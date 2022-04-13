@@ -3,8 +3,11 @@ package com.github.fashionbrot.validated.exception;
 import com.github.fashionbrot.validated.constraint.MarsViolation;
 import com.github.fashionbrot.validated.util.StringUtil;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.List;
 
+@EqualsAndHashCode(callSuper=false)
 @Data
 public class ValidatedException extends RuntimeException  {
 

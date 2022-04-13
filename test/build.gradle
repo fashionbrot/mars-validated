@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+allprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    // 指定java版本
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    group 'com.github.fashionbrot'
+    version '2.0.2'
+
+    repositories {
+        mavenLocal()
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/jcenter" }
+        maven { url "https://maven.aliyun.com/repository/spring" }
+        maven { url "https://maven.aliyun.com/repository/spring-plugin" }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+        maven { url "https://maven.aliyun.com/repository/google" }
+        maven { url "https://maven.aliyun.com/repository/grails-core" }
+        maven { url "https://maven.aliyun.com/repository/apache-snapshots" }
+        maven { url 'https://repo.spring.io/plugins-snapshot' }
+    }
+
+}
+
+
+

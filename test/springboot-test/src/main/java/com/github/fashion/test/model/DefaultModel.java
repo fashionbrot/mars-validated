@@ -3,7 +3,9 @@ package com.github.fashion.test.model;
 import com.github.fashionbrot.validated.annotation.Default;
 import com.github.fashion.test.test.Custom;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper=false)
 @Data
 public class DefaultModel extends BaseModel{
 

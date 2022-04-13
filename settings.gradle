@@ -1,0 +1,5 @@
+rootProject.name = 'mars-validated'
+include 'validated'
+include 'validated-springboot-starter'
+include 'test'
+include ':test:springboot-test'
