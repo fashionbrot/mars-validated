@@ -1,44 +1,29 @@
 package com.github.fashionbrot.validated.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
+import java.util.HashSet;
+import java.util.Set;
 
 public class IgnoreClassUtil {
 
 
-    private static List<String> packageList=new ArrayList<String>();
-    private static StringBuffer packagePattern=new StringBuffer() ;
 
-    private static Pattern pattern =null;
+    private static Set<String> packageSet =new HashSet<>();
 
     static {
-        packageList.add("org.springframework.ui");
-        packageList.add("javax.servlet");
-        reload();
-    }
-    private static void reload(){
-        for (String str:packageList) {
-            if (StringUtil.isBlank(packagePattern.toString())){
-                packagePattern.append(str);
-            }else {
-                packagePattern.append("|").append(str);
-            }
-        }
-        pattern=Pattern.compile(packagePattern.toString());
+        packageSet.add("org.springframework.ui");
+        packageSet.add("javax.servlet");
     }
 
     public static void putIgnorePackage(String packageName){
         if (StringUtil.isNotBlank(packageName)) {
-            packageList.add(packageName);
-            reload();
+            packageSet.add(packageName);
         }
     }
 
 
 
     public static boolean checkIgnorePackage(String packageName){
-        if (pattern.matcher(packageName).lookingAt()){
+        if (StringUtil.isNotEmpty(packageName) && packageSet.contains(packageName)){
             return true;
         }
         return false;
@@ -46,7 +31,7 @@ public class IgnoreClassUtil {
 
     public static void main(String[] args) {
         long start=System.currentTimeMillis();
-        System.out.println(pattern.matcher("javax.servlet.").lookingAt());
+        System.out.println((checkIgnorePackage("javax.servlet")));
         System.out.println(System.currentTimeMillis()-start);
     }
 

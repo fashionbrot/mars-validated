@@ -1,9 +1,7 @@
 package com.github.fashionbrot.validated.validator;
 
 import com.github.fashionbrot.validated.annotation.Validated;
-import com.github.fashionbrot.validated.constraint.MarsViolation;
 import java.lang.reflect.Method;
-import java.util.List;
 
 public interface MarsValidator {
 
@@ -31,6 +29,6 @@ public interface MarsValidator {
      * @param objectValue    objectValue
      * @param index          filed index
      */
-    List<MarsViolation> entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] objectValue, int index);
+    void entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] objectValue, int index);
 
 }

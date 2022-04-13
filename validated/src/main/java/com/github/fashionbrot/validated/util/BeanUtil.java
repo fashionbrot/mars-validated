@@ -3,7 +3,8 @@ package com.github.fashionbrot.validated.util;
 import com.github.fashionbrot.validated.config.GlobalValidatedProperties;
 import com.github.fashionbrot.validated.config.ValidatedMethodPostProcessor;
 import com.github.fashionbrot.validated.spring.intercept.ValidatedMethodIntercept;
-import com.github.fashionbrot.validated.validator.MarsValidatorImpl;
+import com.github.fashionbrot.validated.validator.DefaultValidator;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -17,9 +18,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -43,7 +42,7 @@ public class BeanUtil {
                                                      BeanDefinitionRegistry registry,
                                                      PropertyResolver propertyResolver,
                                                      String beanName) {
-        if (!CollectionUtils.isEmpty(globalProperties)){
+        if (ObjectUtil.isNotEmpty(globalProperties)){
             Properties properties = resolveProperties(globalProperties,propertyResolver);
             if (properties!=null) {
                 GlobalValidatedProperties validatedProperties = GlobalValidatedProperties.builder()
@@ -88,9 +87,9 @@ public class BeanUtil {
         registerInfrastructureBeanIfAbsent(registry, ValidatedMethodIntercept.BEAN_NAME,ValidatedMethodIntercept.class);
     }
 
-    public static void registerValieator(BeanDefinitionRegistry registry) {
+    public static void registerValidated(BeanDefinitionRegistry registry) {
 
-        registerInfrastructureBeanIfAbsent(registry, MarsValidatorImpl.BEAN_NAME, MarsValidatorImpl.class);
+        registerInfrastructureBeanIfAbsent(registry, DefaultValidator.BEAN_NAME, DefaultValidator.class);
 
         registerInfrastructureBeanIfAbsent(registry, ValidatorUtil.BEAN_NAME,ValidatorUtil.class);
 
@@ -265,7 +264,7 @@ public class BeanUtil {
 
         }
 
-        return StringUtils.toStringArray(beanNames);
+        return StringUtil.toStringArray(beanNames);
     }
 
     /**
@@ -307,7 +306,7 @@ public class BeanUtil {
 
         Class<?> beanType = null;
 
-        if (StringUtils.hasText(factoryBeanName)) {
+        if (StringUtil.isNotEmpty(factoryBeanName)) {
 
             beanType = getFactoryBeanType(beanFactory, beanDefinition);
 
@@ -317,7 +316,7 @@ public class BeanUtil {
 
             String beanClassName = beanDefinition.getBeanClassName();
 
-            if (StringUtils.hasText(beanClassName)) {
+            if (StringUtil.isNotEmpty(beanClassName)) {
 
                 beanType = resolveBeanType(beanClassName, classLoader);
 
@@ -351,7 +350,7 @@ public class BeanUtil {
 
         String factoryBeanClassName = actualFactoryBeanDefinition.getBeanClassName();
 
-        if (StringUtils.isEmpty(factoryBeanClassName)) {
+        if (StringUtil.isEmpty(factoryBeanClassName)) {
 
             String factoryBeanName = factoryBeanDefinition.getFactoryBeanName();
 
@@ -361,7 +360,7 @@ public class BeanUtil {
 
         }
 
-        if (StringUtils.hasText(factoryBeanClassName)) {
+        if (StringUtil.isNotEmpty(factoryBeanClassName)) {
 
             Class<?> factoryBeanClass = resolveBeanType(factoryBeanClassName, classLoader);
 
@@ -399,7 +398,7 @@ public class BeanUtil {
      */
     public static Class<?> resolveBeanType(String beanClassName, ClassLoader classLoader) {
 
-        if (!StringUtils.hasText(beanClassName)) {
+        if (StringUtil.isEmpty(beanClassName)) {
             return null;
         }
 

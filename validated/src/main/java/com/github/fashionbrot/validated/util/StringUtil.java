@@ -3,6 +3,7 @@ package com.github.fashionbrot.validated.util;
 
 import com.github.fashionbrot.validated.enums.ClassTypeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -291,6 +292,47 @@ public final class StringUtil {
             log.error("formatObject classType:{} value:{} error:",type,defaultValue,e);
         }
         return null;
+    }
+
+    /**
+     * Convenience method to return a String array as a delimited (e.g. CSV)
+     * String. E.g. useful for {@code toString()} implementations.
+     * @param arr the array to display
+     * @param delim the delimiter to use (probably a ",")
+     * @return the delimited String
+     */
+    public static String arrayToDelimitedString(Object[] arr, String delim) {
+        if (ObjectUtils.isEmpty(arr)) {
+            return "";
+        }
+        if (arr.length == 1) {
+            return ObjectUtils.nullSafeToString(arr[0]);
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < arr.length; i++) {
+            if (i > 0) {
+                sb.append(delim);
+            }
+            sb.append(arr[i]);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Convenience method to return a String array as a CSV String.
+     * E.g. useful for {@code toString()} implementations.
+     * @param arr the array to display
+     * @return the delimited String
+     */
+    public static String arrayToCommaDelimitedString(Object[] arr) {
+        return arrayToDelimitedString(arr, ",");
+    }
+
+    public static String[] toStringArray(Collection<String> collection) {
+        if (collection == null) {
+            return null;
+        }
+        return collection.toArray(new String[collection.size()]);
     }
 
     public static void main(String[] args) {

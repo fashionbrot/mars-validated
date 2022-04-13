@@ -47,12 +47,11 @@ public class ValidatorUtil implements BeanFactoryAware {
     }
 
 
-    private static final Pattern pattern = Pattern.compile("com.mars.valid");
     public static String filterMsg(String msg) {
-        if (msg==null){
+        if (StringUtil.isEmpty(msg)){
             return null;
         }
-        boolean isDefaultMsg = pattern.matcher(msg).lookingAt();
+        boolean isDefaultMsg = msg.startsWith("com.mars.valid");
         if (isDefaultMsg) {
             msg = getMsg(msg);
         }

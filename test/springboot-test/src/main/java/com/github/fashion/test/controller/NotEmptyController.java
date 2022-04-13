@@ -18,9 +18,12 @@ public class NotEmptyController {
 
     @RequestMapping("/notEmpty")
     @ResponseBody
-    @Validated(failFast = false)
-    public String test(@NotEmpty(msg = "abc is null") String abc){
-        return abc;
+    @Validated(failFast = false,validReturnValue = true)
+    public NotEmptyModel  test(@NotEmpty(msg = "入参 abc is null") String abc){
+
+        NotEmptyModel b=new NotEmptyModel();
+
+        return b;
     }
 
     @RequestMapping("/notEmpty2")

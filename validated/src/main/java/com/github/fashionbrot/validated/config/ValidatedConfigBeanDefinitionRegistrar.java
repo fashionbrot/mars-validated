@@ -28,7 +28,7 @@ public class ValidatedConfigBeanDefinitionRegistrar implements ImportBeanDefinit
 
         BeanUtil.registerglobalValidatedProperties(attributes,registry,environment, GlobalValidatedProperties.BEAN_NAME);
 
-        BeanUtil.registerValieator(registry);
+        BeanUtil.registerValidated(registry);
 
         BeanUtil.registerValidatedMethodInterceptor(registry);
 
