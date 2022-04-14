@@ -21,4 +21,8 @@ public class TestUser {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public void say() {
+        System.out.println("Hello");
+    }
 }
