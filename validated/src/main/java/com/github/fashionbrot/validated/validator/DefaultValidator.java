@@ -14,7 +14,8 @@ import java.util.*;
 @Slf4j
 public class DefaultValidator implements MarsValidator {
 
-    public static final String BEAN_NAME="defaultValidator";
+    public static final String BEAN_NAME="defaultMarsValidatorImpl";
+
     private static final String METHOD_NAME_MODIFY = "modify";
     private static final String METHOD_VALID_OBJECT = "validObject";
     private static final String MSG = "msg";

@@ -1,3 +1,4 @@
+/*
 package com.github.fashion.test.aop;
 
 import com.github.fashionbrot.validated.validator.DefaultValidator;
@@ -49,3 +50,4 @@ public class ValidAspect {
     }
 
 }
+*/

@@ -12,15 +12,93 @@ validated 是 控制 springmvc  springboot 的验证框架。此框架基于spri
 |2.0.0|1、Constraint 接口删除  validatedByBean 方法 <br/> 2、删除ConstraintValidatorBean 接口 <br/>  3、ConstraintValidator 新增  modify 方法、validObject 方法 <br/> 4、Validated 注解增加 failFast快速失败方法、增加validReturnValue 方法（验证返回值） <br/> 5、重构了以前的逻辑，相比hibernate valid 速度快1倍左右 |      
 |2.0.1|1、修复 @Validation.groups={AddGroup.class} 并且 注解.groups ={} 时,注解.groups ={}代表默认Groups,则不验证是否包含  @Validation.groups={AddGroup.class},代表跳过groups 验证|
 
-### hibernate valid  和 mars validated 比较 调用1000次接口时间比较,验证参数10个
+### hibernate valid  和 mars validated 比较 调用1000次接口时间比较,验证参数10个 笔记本可能测的不太准确，也没有设置jvm 参数，后期设置jvm 在linux 测试
 
-#### hibernate 
-http://localhost:8080/compare/demo5?method=hibernate&count=1000
-##### 4213,4269,4221,4183,4187
-#### mars
-http://localhost:8080/compare/demo5?method=/compare/mars&count=1000
-##### 2158,2128,2174,2256,2150
-###### 通过测试可以看出，mars 比 hibernate 速度提升接近1倍 
+
+#### mars-validated 2.0.2 failFast=true
+```log
+INFO http-nio-8080-exec-6 2022-04-14 23:21:35.035 compare:mars: 一共耗时：1919 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-2 2022-04-14 23:21:38.600 compare:mars: 一共耗时：1923 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-6 2022-04-14 23:21:42.574 compare:mars: 一共耗时：1908 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-2 2022-04-14 23:21:46.226 compare:mars: 一共耗时：1900 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-3 2022-04-14 23:21:50.028 compare:mars: 一共耗时：1948 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-9 2022-04-14 23:21:53.911 compare:mars: 一共耗时：1879 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-1 2022-04-14 23:21:58.018 compare:mars: 一共耗时：1911 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-9 2022-04-14 23:22:02.002 compare:mars: 一共耗时：1928 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-7 2022-04-14 23:22:05.886 compare:mars: 一共耗时：1897 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-5 2022-04-14 23:22:09.846 compare:mars: 一共耗时：1956 毫秒 执行次数:1000 系统：Windows 10
+
+```
+
+#### mars-validated 2.0.2 failFast=false
+```log
+INFO http-nio-8080-exec-5 2022-04-14 23:27:34.503 compare:mars: 一共耗时：2324 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-2 2022-04-14 23:27:39.716 compare:mars: 一共耗时：2078 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-1 2022-04-14 23:27:42.450 compare:mars: 一共耗时：1975 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-8 2022-04-14 23:27:45.939 compare:mars: 一共耗时：2021 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-1 2022-04-14 23:27:49.063 compare:mars: 一共耗时：2044 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-2 2022-04-14 23:27:53.165 compare:mars: 一共耗时：1957 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-5 2022-04-14 23:27:59.187 compare:mars: 一共耗时：1989 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-2 2022-04-14 23:28:02.058 compare:mars: 一共耗时：1928 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-3 2022-04-14 23:28:04.775 compare:mars: 一共耗时：2059 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-1 2022-04-14 23:28:07.615 compare:mars: 一共耗时：1916 毫秒 执行次数:1000 系统：Windows 10
+
+
+INFO http-nio-8080-exec-2 2022-04-14 23:55:39.437 compare:mars: 一共耗时：4318 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-8 2022-04-14 23:55:45.803 compare:mars: 一共耗时：4283 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-5 2022-04-14 23:55:59.818 compare:mars: 一共耗时：4302 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-3 2022-04-14 23:57:04.937 compare:mars: 一共耗时：4320 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-7 2022-04-14 23:57:19.673 compare:mars: 一共耗时：4533 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-4 2022-04-14 23:57:28.210 compare:mars: 一共耗时：4701 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-10 2022-04-14 23:57:35.630 compare:mars: 一共耗时：4294 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-7 2022-04-14 23:58:03.614 compare:mars: 一共耗时：3971 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-1 2022-04-14 23:58:15.647 compare:mars: 一共耗时：3947 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-7 2022-04-14 23:58:26.813 compare:mars: 一共耗时：3941 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-6 2022-04-14 23:58:40.095 compare:mars: 一共耗时：4000 毫秒 执行次数:2000 系统：Windows 10
+```
+
+
+#### hibernate 6.2.0.Final failFast=true
+
+```bash
+INFO http-nio-8080-exec-2 2022-04-14 23:13:43.987 compare:hibernate: 一共耗时：2106 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-6 2022-04-14 23:13:47.721 compare:hibernate: 一共耗时：2032 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-9 2022-04-14 23:13:51.204 compare:hibernate: 一共耗时：2035 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-4 2022-04-14 23:13:54.494 compare:hibernate: 一共耗时：1986 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-3 2022-04-14 23:13:57.797 compare:hibernate: 一共耗时：2050 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-5 2022-04-14 23:14:01.053 compare:hibernate: 一共耗时：2039 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-4 2022-04-14 23:14:04.272 compare:hibernate: 一共耗时：2004 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-1 2022-04-14 23:14:07.667 compare:hibernate: 一共耗时：2058 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-8 2022-04-14 23:14:20.490 compare:hibernate: 一共耗时：2018 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-9 2022-04-14 23:14:24.071 compare:hibernate: 一共耗时：2049 毫秒 执行次数:1000 系统：Windows 10
+```
+
+#### hibernate 6.2.0.Final failFast=false
+
+```bash
+INFO http-nio-8080-exec-9 2022-04-14 23:29:48.050 compare:hibernate: 一共耗时：2613 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-8 2022-04-14 23:29:51.571 compare:hibernate: 一共耗时：2610 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-6 2022-04-14 23:29:54.931 compare:hibernate: 一共耗时：2662 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-10 2022-04-14 23:29:58.469 compare:hibernate: 一共耗时：2655 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-8 2022-04-14 23:30:02.278 compare:hibernate: 一共耗时：2657 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-10 2022-04-14 23:30:05.986 compare:hibernate: 一共耗时：2638 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-8 2022-04-14 23:30:11.653 compare:hibernate: 一共耗时：2567 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-2 2022-04-14 23:30:34.583 compare:hibernate: 一共耗时：2550 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-8 2022-04-14 23:30:49.462 compare:hibernate: 一共耗时：2662 毫秒 执行次数:1000 系统：Windows 10
+INFO http-nio-8080-exec-5 2022-04-14 23:30:53.032 compare:hibernate: 一共耗时：2660 毫秒 执行次数:1000 系统：Windows 10
+
+
+INFO http-nio-8080-exec-2 2022-04-14 23:49:41.644 compare:hibernate: 一共耗时：4836 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-8 2022-04-14 23:49:49.082 compare:hibernate: 一共耗时：5232 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-3 2022-04-14 23:50:00.638 compare:hibernate: 一共耗时：8877 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-5 2022-04-14 23:50:12.151 compare:hibernate: 一共耗时：9172 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-7 2022-04-14 23:50:30.909 compare:hibernate: 一共耗时：5114 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-4 2022-04-14 23:50:51.617 compare:hibernate: 一共耗时：4998 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-6 2022-04-14 23:51:06.028 compare:hibernate: 一共耗时：12682 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-1 2022-04-14 23:51:18.058 compare:hibernate: 一共耗时：7956 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-9 2022-04-14 23:51:37.973 compare:hibernate: 一共耗时：4992 毫秒 执行次数:2000 系统：Windows 10
+INFO http-nio-8080-exec-6 2022-04-14 23:52:37.387 compare:hibernate: 一共耗时：5301 毫秒 执行次数:2000 系统：Windows 10
+```
 
 # validated 参数验证
 

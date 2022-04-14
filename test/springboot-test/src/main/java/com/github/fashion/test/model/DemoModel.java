@@ -1,6 +1,7 @@
 package com.github.fashion.test.model;
 
-import com.github.fashionbrot.validated.annotation.NotEmpty;
+import com.github.fashionbrot.validated.annotation.*;
+import com.github.fashionbrot.validated.util.PatternSts;
 
 public class DemoModel {
 
@@ -8,20 +9,20 @@ public class DemoModel {
     @javax.validation.constraints.NotEmpty(message = "test1 is null")
     private String test1;
 
-    @NotEmpty(msg = "test2 is null")
-    @javax.validation.constraints.NotEmpty(message = "test2 is null")
+    @NotNull(msg = "test2 is null")
+    @javax.validation.constraints.NotNull(message = "test2 is null")
     private String test2;
 
-    @NotEmpty(msg = "test3 is null")
-    @javax.validation.constraints.NotEmpty(message = "test3 is null")
+    @Size(msg = "test3 is null",min = 10,max = 12)
+    @javax.validation.constraints.Size(message = "test3 is null",min = 10,max = 12)
     private String test3;
 
-    @NotEmpty(msg = "test4 is null")
-    @javax.validation.constraints.NotEmpty(message = "test4 is null")
+    @Pattern(msg = "test4 is null",regexp = PatternSts.EMAIL_REGEXP)
+    @javax.validation.constraints.Pattern(message = "test4 is null",regexp = PatternSts.EMAIL_REGEXP)
     private String test4;
 
-    @NotEmpty(msg = "test5 is null")
-    @javax.validation.constraints.NotEmpty(message = "test5 is null")
+    @Email(msg = "test5 is null")
+    @javax.validation.constraints.Email(message = "test5 is null")
     private String test5;
 
     @NotEmpty(msg = "test6 is null")

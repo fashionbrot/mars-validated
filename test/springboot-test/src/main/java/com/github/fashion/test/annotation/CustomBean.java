@@ -1,7 +1,6 @@
 package com.github.fashion.test.annotation;
 
 import com.github.fashionbrot.validated.constraint.Constraint;
-import lombok.Data;
 
 import java.lang.annotation.*;
 

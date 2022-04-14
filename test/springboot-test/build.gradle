@@ -6,27 +6,49 @@ plugins {
 }
 
 
+apply plugin: 'java'
+apply plugin: 'idea'
+
 apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
 
 
 ext{
-    log4j="2.17.1"
-    pagehelper="1.3.0"
+    tinylog_version="2.4.1"
 }
+configurations {
+    all*.exclude group:"ch.qos.logback", module:""
+    all*.exclude group:"org.apache.logging", module:""
+    all*.exclude group:"org.springframework.boot", module:"spring-boot-starter-logging"
+    all*.exclude group:"com.zaxxer", module:""
+}
+
 
 dependencies {
     compile project(":validated-springboot-starter")
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
+//    implementation 'com.github.fashionbrot:validated-springboot-starter:2.0.1'
+
     implementation 'com.alibaba:fastjson:1.2.79'
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation ("org.springframework.boot:spring-boot-starter-web"){
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        exclude group: 'org.springframework.boot',module:'spring-boot-starter-log4j2'
+    }
+
     implementation "org.springframework.boot:spring-boot-starter-aop"
     compile 'javax.servlet:javax.servlet-api:3.1.0'
 
+    implementation "com.github.fashionbrot:mars-tool:+"
     compile 'javax.validation:validation-api:+'
     compile 'org.hibernate:hibernate-validator:+'
+
+    implementation "org.tinylog:tinylog-api:${tinylog_version}"
+    implementation "org.tinylog:tinylog-impl:${tinylog_version}"
+    implementation "org.tinylog:slf4j-tinylog:${tinylog_version}"
+    implementation "org.tinylog:jcl-tinylog:${tinylog_version}"
+    implementation "org.tinylog:log4j1.2-api:${tinylog_version}"
 
 }
 compileJava.options.encoding = "UTF-8"

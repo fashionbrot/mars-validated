@@ -24,6 +24,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors;
+
 
 @Slf4j
 public class BeanUtil {
@@ -31,67 +33,66 @@ public class BeanUtil {
     private static final String[] EMPTY_BEAN_NAMES = new String[0];
 
 
-
     public static void registerglobalValidatedProperties(AnnotationAttributes attributes, BeanDefinitionRegistry registry, PropertyResolver propertyResolver, String beanName) {
 
-        registerGlobalProperties(attributes, registry, propertyResolver,beanName);
+        registerGlobalProperties(attributes, registry, propertyResolver, beanName);
     }
 
 
-    public static void registerGlobalProperties(Map<?,?> globalProperties ,
-                                                     BeanDefinitionRegistry registry,
-                                                     PropertyResolver propertyResolver,
-                                                     String beanName) {
-        if (ObjectUtil.isNotEmpty(globalProperties)){
-            Properties properties = resolveProperties(globalProperties,propertyResolver);
-            if (properties!=null) {
+    public static void registerGlobalProperties(Map<?, ?> globalProperties,
+                                                BeanDefinitionRegistry registry,
+                                                PropertyResolver propertyResolver,
+                                                String beanName) {
+        if (ObjectUtil.isNotEmpty(globalProperties)) {
+            Properties properties = resolveProperties(globalProperties, propertyResolver);
+            if (properties != null) {
                 GlobalValidatedProperties validatedProperties = GlobalValidatedProperties.builder()
-                        .fileName(properties.getProperty(GlobalValidatedProperties.FILENAME,"valid"))
-                        .localeParamName(properties.getProperty(GlobalValidatedProperties.LOCALE_PARAM_NAME,"lang"))
-                        .language(properties.getProperty("language","zh_CN"))
+                        .fileName(properties.getProperty(GlobalValidatedProperties.FILENAME, "valid"))
+                        .localeParamName(properties.getProperty(GlobalValidatedProperties.LOCALE_PARAM_NAME, "lang"))
+                        .language(properties.getProperty("language", "zh_CN"))
                         .build();
-                if(propertyResolver.containsProperty("mars.validated.file-name")){
-                    validatedProperties.setFileName(propertyResolver.getProperty("mars.validated.file-name","valid"));
+                if (propertyResolver.containsProperty("mars.validated.file-name")) {
+                    validatedProperties.setFileName(propertyResolver.getProperty("mars.validated.file-name", "valid"));
                 }
-                if(propertyResolver.containsProperty("mars.validated.language")){
-                    validatedProperties.setLanguage(propertyResolver.getProperty("mars.validated.language","zh_CN"));
+                if (propertyResolver.containsProperty("mars.validated.language")) {
+                    validatedProperties.setLanguage(propertyResolver.getProperty("mars.validated.language", "zh_CN"));
                 }
-                if(propertyResolver.containsProperty("mars.validated.locale-param-name")){
-                    validatedProperties.setLocaleParamName(propertyResolver.getProperty("mars.validated.locale-param-name","lang"));
+                if (propertyResolver.containsProperty("mars.validated.locale-param-name")) {
+                    validatedProperties.setLocaleParamName(propertyResolver.getProperty("mars.validated.locale-param-name", "lang"));
                 }
-                registerSingleton(registry, beanName,validatedProperties );
+                registerSingleton(registry, beanName, validatedProperties);
             }
-        }else{
+        } else {
             GlobalValidatedProperties validatedProperties = GlobalValidatedProperties.builder().build();
-            if(propertyResolver.containsProperty("mars.validated.file-name")){
-                validatedProperties.setFileName(propertyResolver.getProperty("mars.validated.file-name","valid"));
+            if (propertyResolver.containsProperty("mars.validated.file-name")) {
+                validatedProperties.setFileName(propertyResolver.getProperty("mars.validated.file-name", "valid"));
             }
-            if(propertyResolver.containsProperty("mars.validated.language")){
-                validatedProperties.setLanguage(propertyResolver.getProperty("mars.validated.language","zh_CN"));
+            if (propertyResolver.containsProperty("mars.validated.language")) {
+                validatedProperties.setLanguage(propertyResolver.getProperty("mars.validated.language", "zh_CN"));
             }
-            if(propertyResolver.containsProperty("mars.validated.locale-param-name")){
-                validatedProperties.setLocaleParamName(propertyResolver.getProperty("mars.validated.locale-param-name","lang"));
+            if (propertyResolver.containsProperty("mars.validated.locale-param-name")) {
+                validatedProperties.setLocaleParamName(propertyResolver.getProperty("mars.validated.locale-param-name", "lang"));
             }
-            registerSingleton(registry, beanName,validatedProperties );
+            registerSingleton(registry, beanName, validatedProperties);
         }
 
     }
 
 
     public static void registerValidatedMethodPostProcessor(BeanDefinitionRegistry registry) {
-        registerInfrastructureBeanIfAbsent(registry, ValidatedMethodPostProcessor.BEAN_NAME,ValidatedMethodPostProcessor.class);
+        registerInfrastructureBeanIfAbsent(registry, ValidatedMethodPostProcessor.BEAN_NAME, ValidatedMethodPostProcessor.class);
     }
 
 
     public static void registerValidatedMethodInterceptor(BeanDefinitionRegistry registry) {
-        registerInfrastructureBeanIfAbsent(registry, ValidatedMethodIntercept.BEAN_NAME,ValidatedMethodIntercept.class);
+        registerInfrastructureBeanIfAbsent(registry, ValidatedMethodIntercept.BEAN_NAME, ValidatedMethodIntercept.class);
     }
 
     public static void registerValidated(BeanDefinitionRegistry registry) {
 
         registerInfrastructureBeanIfAbsent(registry, DefaultValidator.BEAN_NAME, DefaultValidator.class);
 
-        registerInfrastructureBeanIfAbsent(registry, ValidatorUtil.BEAN_NAME,ValidatorUtil.class);
+        registerInfrastructureBeanIfAbsent(registry, ValidatorUtil.BEAN_NAME, ValidatorUtil.class);
 
     }
 
@@ -100,8 +101,6 @@ public class BeanUtil {
         PropertiesPlaceholderResolver propertiesPlaceholderResolver = new PropertiesPlaceholderResolver(propertyResolver);
         return propertiesPlaceholderResolver.resolve(properties);
     }
-
-
 
 
     /**
@@ -124,8 +123,6 @@ public class BeanUtil {
             beanRegistry.registerSingleton(beanName, singletonObject);
         }
     }
-
-
 
 
     /**
@@ -165,7 +162,6 @@ public class BeanUtil {
     }
 
 
-
     /**
      * Is {@link BeanDefinition} present in {@link BeanDefinitionRegistry}
      *
@@ -180,7 +176,6 @@ public class BeanUtil {
     }
 
 
-
     /**
      * Get Bean Names from {@link ListableBeanFactory} by type.
      *
@@ -193,233 +188,14 @@ public class BeanUtil {
     }
 
 
-    /**
-     * Get Bean Names from {@link ListableBeanFactory} by type.
-     *
-     * @param beanFactory        {@link ListableBeanFactory}
-     * @param beanClass          The  {@link Class} of Bean
-     * @param includingAncestors including ancestors or not
-     * @return If found , return the array of Bean Names , or empty array.
-     */
     public static String[] getBeanNames(ListableBeanFactory beanFactory, Class<?> beanClass,
                                         boolean includingAncestors) {
-
-        final BeanFactory actualBeanFactory;
-
-
-        if (beanFactory instanceof ConfigurableApplicationContext) {
-
-
-            ConfigurableApplicationContext applicationContext = ConfigurableApplicationContext.class.cast(beanFactory);
-
-            actualBeanFactory = applicationContext.getBeanFactory();
-
-        } else {
-
-            actualBeanFactory = beanFactory;
-
-        }
-
-
-        if (actualBeanFactory instanceof ConfigurableListableBeanFactory) {
-
-            return getBeanNames((ConfigurableListableBeanFactory) actualBeanFactory, beanClass, includingAncestors);
-
-        }
-
-        return EMPTY_BEAN_NAMES;
-
-    }
-
-
-    /**
-     * Get Bean Names from {@link ConfigurableListableBeanFactory} by type.
-     *
-     * @param beanFactory        {@link ConfigurableListableBeanFactory}
-     * @param beanClass          The  {@link Class} of Bean
-     * @param includingAncestors including ancestors or not
-     * @return If found , return the array of Bean Names , or empty array.
-     */
-    public static String[] getBeanNames(ConfigurableListableBeanFactory beanFactory, Class<?> beanClass,
-                                        boolean includingAncestors) {
-
-        Set<String> beanNames = new LinkedHashSet<String>();
-
-        beanNames.addAll(doGetBeanNames(beanFactory, beanClass));
-
+        // Issue : https://github.com/alibaba/spring-context-support/issues/22
         if (includingAncestors) {
-
-            BeanFactory parentBeanFactory = beanFactory.getParentBeanFactory();
-
-            if (parentBeanFactory instanceof ConfigurableListableBeanFactory) {
-
-                ConfigurableListableBeanFactory configurableListableBeanFactory =
-                        (ConfigurableListableBeanFactory) parentBeanFactory;
-
-                String[] parentBeanNames = getBeanNames(configurableListableBeanFactory, beanClass, includingAncestors);
-
-                beanNames.addAll(Arrays.asList(parentBeanNames));
-
-            }
-
+            return beanNamesForTypeIncludingAncestors(beanFactory, beanClass, true, false);
+        } else {
+            return beanFactory.getBeanNamesForType(beanClass, true, false);
         }
-
-        return StringUtil.toStringArray(beanNames);
-    }
-
-    /**
-     * Get Bean names from {@link ConfigurableListableBeanFactory} by type
-     *
-     * @param beanFactory {@link ConfigurableListableBeanFactory}
-     * @param beanType    The  {@link Class type} of Bean
-     * @return the array of bean names.
-     */
-    protected static Set<String> doGetBeanNames(ConfigurableListableBeanFactory beanFactory, Class<?> beanType) {
-
-        String[] allBeanNames = beanFactory.getBeanDefinitionNames();
-
-        Set<String> beanNames = new LinkedHashSet<String>();
-
-        for (String beanName : allBeanNames) {
-
-            BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
-
-            Class<?> beanClass = resolveBeanType(beanFactory, beanDefinition);
-
-            if (beanClass != null && ClassUtils.isAssignable(beanType, beanClass)) {
-
-                beanNames.add(beanName);
-
-            }
-
-        }
-
-        return Collections.unmodifiableSet(beanNames);
-
-    }
-
-    private static Class<?> resolveBeanType(ConfigurableListableBeanFactory beanFactory, BeanDefinition beanDefinition) {
-
-        String factoryBeanName = beanDefinition.getFactoryBeanName();
-
-        ClassLoader classLoader = beanFactory.getBeanClassLoader();
-
-        Class<?> beanType = null;
-
-        if (StringUtil.isNotEmpty(factoryBeanName)) {
-
-            beanType = getFactoryBeanType(beanFactory, beanDefinition);
-
-        }
-
-        if (beanType == null) {
-
-            String beanClassName = beanDefinition.getBeanClassName();
-
-            if (StringUtil.isNotEmpty(beanClassName)) {
-
-                beanType = resolveBeanType(beanClassName, classLoader);
-
-            }
-
-        }
-
-        if (beanType == null) {
-
-            if (log.isErrorEnabled()) {
-
-                String message = beanDefinition + " can't be resolved bean type!";
-
-                log.error(message);
-            }
-
-        }
-
-        return beanType;
-
-    }
-
-    private static Class<?> getFactoryBeanType(ConfigurableListableBeanFactory beanFactory,
-                                               BeanDefinition factoryBeanDefinition) {
-
-        BeanDefinition actualFactoryBeanDefinition = factoryBeanDefinition;
-
-        final List<Class<?>> beanClasses = new ArrayList<Class<?>>(1);
-
-        ClassLoader classLoader = beanFactory.getBeanClassLoader();
-
-        String factoryBeanClassName = actualFactoryBeanDefinition.getBeanClassName();
-
-        if (StringUtil.isEmpty(factoryBeanClassName)) {
-
-            String factoryBeanName = factoryBeanDefinition.getFactoryBeanName();
-
-            actualFactoryBeanDefinition = beanFactory.getBeanDefinition(factoryBeanName);
-
-            factoryBeanClassName = actualFactoryBeanDefinition.getBeanClassName();
-
-        }
-
-        if (StringUtil.isNotEmpty(factoryBeanClassName)) {
-
-            Class<?> factoryBeanClass = resolveBeanType(factoryBeanClassName, classLoader);
-
-            final String factoryMethodName = factoryBeanDefinition.getFactoryMethodName();
-
-            // @Configuration only allow one method FactoryBean
-            ReflectionUtils.doWithMethods(factoryBeanClass, new ReflectionUtils.MethodCallback() {
-
-                @Override
-                public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-
-                    beanClasses.add(method.getReturnType());
-
-                }
-            }, new ReflectionUtils.MethodFilter() {
-
-                @Override
-                public boolean matches(Method method) {
-                    return factoryMethodName.equals(method.getName());
-                }
-            });
-
-        }
-
-        return beanClasses.isEmpty() ? null : beanClasses.get(0);
-
-    }
-
-    /**
-     * Resolve Bean Type
-     *
-     * @param beanClassName the class name of Bean
-     * @param classLoader   {@link ClassLoader}
-     * @return Bean type if can be resolved , or return <code>null</code>.
-     */
-    public static Class<?> resolveBeanType(String beanClassName, ClassLoader classLoader) {
-
-        if (StringUtil.isEmpty(beanClassName)) {
-            return null;
-        }
-
-        Class<?> beanType = null;
-
-        try {
-
-            beanType = ClassUtils.resolveClassName(beanClassName, classLoader);
-
-            beanType = ClassUtils.getUserClass(beanType);
-
-        } catch (Exception e) {
-
-            if (log.isErrorEnabled()) {
-                log.error(e.getMessage(), e);
-            }
-
-        }
-
-        return beanType;
-
     }
 
 

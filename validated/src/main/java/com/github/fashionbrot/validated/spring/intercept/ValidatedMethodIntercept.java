@@ -42,7 +42,7 @@ public class ValidatedMethodIntercept implements MethodInterceptor, BeanFactoryA
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         if (beanFactory!=null){
-            this.validator = (MarsValidator) beanFactory.getBean(DefaultValidator.BEAN_NAME);
+            this.validator = (DefaultValidator) beanFactory.getBean(DefaultValidator.BEAN_NAME);
         }
     }
 }

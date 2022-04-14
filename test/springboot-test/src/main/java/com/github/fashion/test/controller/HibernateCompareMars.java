@@ -4,7 +4,9 @@ package com.github.fashion.test.controller;
 import com.alibaba.fastjson.JSON;
 import com.github.fashion.test.model.DemoModel;
 import com.github.fashion.test.util.HttpClientUtil;
+import com.github.fashion.test.util.test;
 import com.github.fashionbrot.validated.annotation.Validated;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.validation.Valid;
 
 
+@Slf4j
 @Controller
 @RequestMapping("/compare")
 public class HibernateCompareMars {
@@ -78,8 +81,12 @@ public class HibernateCompareMars {
             HttpClientUtil.httpGet("http://localhost:8080/"+method+"?i"+i,null,null,false);
         }
         long end = System.currentTimeMillis();
-        System.out.println(" 一共耗时："+(end-start));
-        return "ok"+(end-start);
+        if ("/compare/mars".equals(method)){
+            method = "mars";
+        }
+        String msg = (method+": 一共耗时："+(end-start)+" 毫秒 执行次数:"+count +" 系统："+ test.getKey("os.name"));
+        log.info("compare:"+msg);
+        return msg;
     }
 
     @RequestMapping("/mars")
