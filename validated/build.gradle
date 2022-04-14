@@ -127,11 +127,14 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
+    implementation 'org.javassist:javassist:3.28.0-GA'
     implementation 'org.slf4j:slf4j-api:1.7.10'
     compileOnly 'javax.servlet:javax.servlet-api:3.0.1'
     compileOnly 'org.springframework:spring-web:4.0.0.RELEASE'
     compileOnly 'org.springframework:spring-aop:4.0.0.RELEASE'
     compileOnly 'org.springframework:spring-context:4.0.0.RELEASE'
+
+    testCompile 'junit:junit:4.13.2'
 }
 
 compileJava.options.encoding = "UTF-8"
