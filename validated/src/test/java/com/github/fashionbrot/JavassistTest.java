@@ -59,6 +59,9 @@ public class JavassistTest {
         public Object invoke(Object arg0, Method arg1, Method arg2, Object[] arg3)
                 throws Throwable {
             System.out.println("我来自代理");
+            if (true) {
+                throw new RuntimeException("报错了");
+            }
             return arg2.invoke(arg0, arg3);
         }
 
