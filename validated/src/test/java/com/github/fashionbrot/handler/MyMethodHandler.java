@@ -1,7 +1,6 @@
 package com.github.fashionbrot.handler;
 
-import com.github.fashionbrot.validated.util.ObjectUtil;
-import com.github.fashionbrot.validated.validator.DefaultValidator;
+import com.github.fashionbrot.validated.validator.MarsValidatorImpl;
 import javassist.util.proxy.MethodHandler;
 
 import java.lang.reflect.Method;
@@ -14,9 +13,9 @@ public class MyMethodHandler implements MethodHandler {
             throws Throwable {
         System.out.println("我来自代理");
 
-        DefaultValidator defaultValidator=new DefaultValidator();
+        MarsValidatorImpl marsValidatorImpl =new MarsValidatorImpl();
 
-        defaultValidator.parameterAnnotationValid(arg1,arg3);
+        marsValidatorImpl.parameterAnnotationValid(arg1,arg3);
 
         Object result =  arg2.invoke(arg0, arg3);
 

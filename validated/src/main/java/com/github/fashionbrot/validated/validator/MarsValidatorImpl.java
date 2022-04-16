@@ -12,7 +12,7 @@ import java.util.*;
 
 
 @Slf4j
-public class DefaultValidator implements MarsValidator {
+public class MarsValidatorImpl implements MarsValidator {
 
     public static final String BEAN_NAME = "defaultMarsValidatorImpl";
 

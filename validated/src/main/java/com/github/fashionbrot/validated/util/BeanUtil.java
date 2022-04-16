@@ -3,25 +3,19 @@ package com.github.fashionbrot.validated.util;
 import com.github.fashionbrot.validated.config.GlobalValidatedProperties;
 import com.github.fashionbrot.validated.config.ValidatedMethodPostProcessor;
 import com.github.fashionbrot.validated.spring.intercept.ValidatedMethodIntercept;
-import com.github.fashionbrot.validated.validator.DefaultValidator;
+import com.github.fashionbrot.validated.validator.MarsValidatorImpl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.SingletonBeanRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.env.PropertyResolver;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.*;
 
 import static org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors;
@@ -90,7 +84,7 @@ public class BeanUtil {
 
     public static void registerValidated(BeanDefinitionRegistry registry) {
 
-        registerInfrastructureBeanIfAbsent(registry, DefaultValidator.BEAN_NAME, DefaultValidator.class);
+        registerInfrastructureBeanIfAbsent(registry, MarsValidatorImpl.BEAN_NAME, MarsValidatorImpl.class);
 
         registerInfrastructureBeanIfAbsent(registry, ValidatorUtil.BEAN_NAME, ValidatorUtil.class);
 

@@ -1,6 +1,6 @@
 package com.github.fashion.test.aop;
 
-import com.github.fashionbrot.validated.validator.DefaultValidator;
+import com.github.fashionbrot.validated.validator.MarsValidatorImpl;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -23,7 +23,7 @@ public class ValidAspect {
     private void pointcut() {}
 
     @Autowired
-    private DefaultValidator defaultValidator;
+    private MarsValidatorImpl marsValidatorImpl;
 
     @Around(value = "pointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -43,7 +43,7 @@ public class ValidAspect {
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature)signature;
         //自定义参数验证
-        defaultValidator.parameterAnnotationValid(methodSignature.getMethod(),args);
+        marsValidatorImpl.parameterAnnotationValid(methodSignature.getMethod(),args);
 
         return joinPoint.proceed();
     }
