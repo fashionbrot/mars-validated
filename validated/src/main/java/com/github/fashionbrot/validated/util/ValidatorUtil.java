@@ -61,12 +61,16 @@ public class ValidatorUtil implements BeanFactoryAware {
     private static String getMsg(String msg) {
 
         String language = null;
-        RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes!=null){
             HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
             if (request!=null){
                 language = request.getParameter(globalValidatedProperties.getLocaleParamName());
             }
+        }
+        if (StringUtil.isEmpty(defaultFileName)){
+            defaultFileName = "valid_zh_CN";
         }
         ResourceBundle resourceBundleOther =null;
         if (StringUtil.isEmpty(language)){

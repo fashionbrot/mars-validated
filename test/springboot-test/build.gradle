@@ -26,6 +26,7 @@ configurations {
 
 dependencies {
     compile project(":validated-springboot-starter")
+
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 

@@ -194,7 +194,7 @@ public class DefaultValidator implements MarsValidator {
                                     Class valueType,
                                     Field field) {
 
-        if (StringUtil.isNotEmpty(constraintValidatorList)) {
+        if (ObjectUtil.isNotEmpty(constraintValidatorList)) {
             Object value = params[index];
             if (field != null) {
                 value = MethodUtil.getFieldValue(field, params[index]);
