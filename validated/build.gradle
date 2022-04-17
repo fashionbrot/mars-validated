@@ -114,6 +114,24 @@ signing {
     sign publishing.publications.mavenJava
 }
 
+javadoc {
+    afterEvaluate {
+        configure(options) {
+            encoding "UTF-8"
+            charSet 'UTF-8'
+            author true
+            version true
+            failOnError false
+            links "http://docs.oracle.com/javase/8/docs/api"
+        }
+    }
+}
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.warnings = false
+    options.deprecation = true
+//    options.compilerArgs += ["-parameters"]
+}
 
 ext{
 
@@ -134,8 +152,8 @@ dependencies {
     compileOnly 'org.springframework:spring-aop:4.0.0.RELEASE'
     compileOnly 'org.springframework:spring-context:4.0.0.RELEASE'
 
-    testCompile 'org.javassist:javassist:3.28.0-GA'
-    testCompile 'junit:junit:4.13.2'
+    testImplementation ("org.javassist:javassist:3.28.0-GA")
+    testImplementation ('junit:junit:4.13.2')
 }
 
 compileJava.options.encoding = "UTF-8"

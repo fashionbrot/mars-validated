@@ -139,6 +139,7 @@ public class AnnotationAttributes extends LinkedHashMap<String, Object> {
 	 * immediately without creating any new instance; otherwise create a new instance by
 	 * wrapping the map with the {@link #AnnotationAttributes(Map)} constructor.
 	 * @param map original source of annotation attribute key/value pairs
+	 * @return AnnotationAttributes
 	 */
 	public static AnnotationAttributes fromMap(Map<String, Object> map) {
 		if (map == null) {

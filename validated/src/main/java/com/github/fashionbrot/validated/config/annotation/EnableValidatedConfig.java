@@ -14,18 +14,18 @@ public @interface EnableValidatedConfig {
 
     /**
      * properties file name
-     * @return
+     * @return String
      */
     String fileName()  default "valid";
 
     /**
      * language
-     * @return
+     * @return String
      */
     String language() default "zh_CN";
     /**
      * request locale param name
-     * @return
+     * @return String
      */
     String localeParamName() default "lang";
 

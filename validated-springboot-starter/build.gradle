@@ -124,6 +124,7 @@ configurations {
 
 dependencies {
     compile project(":validated")
+//    implementation project(":validated")
 
 //    implementation "com.github.fashionbrot:mars-validated:2.0.2"
     compileOnly 'org.springframework.boot:spring-boot-starter:2.0.0.RELEASE'

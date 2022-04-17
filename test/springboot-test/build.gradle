@@ -26,6 +26,7 @@ configurations {
 
 dependencies {
     compile project(":validated-springboot-starter")
+//    implementation project(":validated-springboot-starter")
 
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
@@ -39,11 +40,11 @@ dependencies {
     }
 
     implementation "org.springframework.boot:spring-boot-starter-aop"
-    compile 'javax.servlet:javax.servlet-api:3.1.0'
+    implementation 'javax.servlet:javax.servlet-api:3.1.0'
 
     implementation "com.github.fashionbrot:mars-tool:+"
-    compile 'javax.validation:validation-api:+'
-    compile 'org.hibernate:hibernate-validator:+'
+    implementation 'javax.validation:validation-api:+'
+    implementation 'org.hibernate:hibernate-validator:+'
 
     implementation "org.tinylog:tinylog-api:${tinylog_version}"
     implementation "org.tinylog:tinylog-impl:${tinylog_version}"

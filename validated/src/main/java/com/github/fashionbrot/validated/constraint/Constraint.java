@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 public @interface Constraint {
     /**
      * 属性 参数 实现接口
-     * @return
+     * @return Class
      */
     Class<? extends ConstraintValidator<? extends Annotation, ?>>[] validatedBy() default {};
 }
