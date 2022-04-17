@@ -114,24 +114,7 @@ signing {
     sign publishing.publications.mavenJava
 }
 
-javadoc {
-    afterEvaluate {
-        configure(options) {
-            encoding "UTF-8"
-            charSet 'UTF-8'
-            author true
-            version true
-            failOnError false
-            links "http://docs.oracle.com/javase/8/docs/api"
-        }
-    }
-}
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-    options.warnings = false
-    options.deprecation = true
-//    options.compilerArgs += ["-parameters"]
-}
+
 
 ext{
 
