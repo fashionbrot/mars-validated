@@ -9,6 +9,7 @@ plugins {
 group 'com.github.fashionbrot'
 version '2.0.2'
 
+
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
@@ -56,7 +57,7 @@ publishing {
 
             pom {
 
-                name = 'validated'
+                name = 'validated-springboot-starter'
                 description = 'validated-springboot-starter 参数验证  https://github.com/fashionbrot/mars-validated'
                 url = 'https://github.com/fashionbrot/mars-validated.git'
                 packaging 'jar'
@@ -123,7 +124,7 @@ configurations {
 }
 
 dependencies {
-    compile project(":validated")
+    compile project(":mars-validated")
 //    implementation project(":validated")
 
 //    implementation "com.github.fashionbrot:mars-validated:2.0.2"
