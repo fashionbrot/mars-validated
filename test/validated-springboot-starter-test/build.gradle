@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id "org.springframework.boot" version "2.6.0"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+
+
+group 'com.github.fashionbrot'
+version '2.0.2'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-aop"
+
+    //自己的项目应用使用  implementation "com.github.fashionbrot:validated-springboot-starter:2.0.2"
+    compile project(":validated-springboot-starter")
+//    implementation "com.github.fashionbrot:validated-springboot-starter:2.0.2"
+}
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
