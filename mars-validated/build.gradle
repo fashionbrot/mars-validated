@@ -1,0 +1,148 @@
+import java.time.LocalDateTime
+
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group 'com.github.fashionbrot'
+version '2.0.2'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+jar {
+    into("META-INF/") {
+        from rootProject.file("LICENSE")
+    }
+    into("META-INF/maven/$project.group/$project.name") {
+        from { generatePomFileForMavenJavaPublication }
+        rename ".*", "pom.xml"
+    }
+    afterEvaluate {
+        manifest {
+            attributes 'Implementation-Title': archiveBaseName
+            attributes 'Implementation-Version': archiveVersion
+            attributes 'Built-Gradle': gradle.gradleVersion
+            attributes 'Build-OS': System.getProperty("os.name")
+            attributes 'Built-By': System.getProperty("user.name")
+            attributes 'Build-Jdk': System.getProperty("java.version")
+            attributes 'Build-Timestamp': LocalDateTime.now().format("yyyy-MM-dd HH:mm:ss")
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+publishing {
+    publications {
+
+        mavenJava(MavenPublication) {
+
+            from components.java
+
+
+            pom {
+
+                name = 'mars-validated'
+                description = 'mars-validated 参数验证 https://github.com/fashionbrot/mars-validated'
+                url = 'https://github.com/fashionbrot/mars-validated.git'
+                packaging 'jar'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'fashionbrot'
+                        name = 'fashionbrot'
+                        email = "fashionbrot@163.com"
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/fashionbrot/mars-validated.git'
+                    developerConnection = 'scm:git:ssh://github.com/fashionbrot/mars-validated.git'
+                    url = 'https://github.com/fashionbrot/mars-validated.git'
+                }
+
+                withXml {
+                    def root = asNode()
+                    root.dependencies.'*'.findAll {
+                        def d = it
+                        d.scope.text() == 'runtime' && project.configurations.findByName("implementation").allDependencies.find { dep ->
+                            dep.name == it.artifactId.text()
+                        }.each() {
+                            d.scope*.value = 'compile'
+                            d.appendNode('optional', true)
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username System.getProperty("oss.username")
+                password System.getProperty("oss.password")
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+
+
+ext{
+
+}
+configurations {
+//    all*.exclude group:"ch.qos.logback", module:""
+}
+
+dependencies {
+
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    implementation 'org.slf4j:slf4j-api:1.7.10'
+
+
+    compileOnly 'javax.servlet:javax.servlet-api:3.0.1'
+    compileOnly 'org.springframework:spring-web:4.0.0.RELEASE'
+    compileOnly 'org.springframework:spring-aop:4.0.0.RELEASE'
+    compileOnly 'org.springframework:spring-context:4.0.0.RELEASE'
+
+    testImplementation ("org.javassist:javassist:3.28.0-GA")
+    testImplementation ('junit:junit:4.13.2')
+}
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+
+
+
