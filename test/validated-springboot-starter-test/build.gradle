@@ -28,9 +28,8 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-aop"
 
-    //自己的项目应用使用  implementation "com.github.fashionbrot:validated-springboot-starter:2.0.2"
-    compile project(":validated-springboot-starter")
-//    implementation "com.github.fashionbrot:validated-springboot-starter:2.0.2"
+    implementation "com.github.fashionbrot:validated-springboot-starter:2.0.2"
+
 }
 
 compileJava.options.encoding = "UTF-8"
