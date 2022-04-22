@@ -1,8 +1,7 @@
 rootProject.name = 'mars-validated'
+
 include 'mars-validated'
 include 'validated-springboot-starter'
-include 'test'
-include "test:springboot-test"
-include 'test:validated-springboot-starter-test'
-findProject(':test:validated-springboot-starter-test')?.name = 'validated-springboot-starter-test'
+include "mars-validated-test"
+include 'validated-springboot-starter-test'
 
