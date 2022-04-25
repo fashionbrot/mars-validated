@@ -4,17 +4,15 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'signing'
+    id 'java-library'
 }
-
-group 'com.github.fashionbrot'
-version '2.0.2'
 
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
-
+apply plugin: "java-library"
 
 java {
     withJavadocJar()
@@ -124,8 +122,7 @@ configurations {
 }
 
 dependencies {
-    compile project(":mars-validated")
-//    implementation project(":validated")
+    api project(":mars-validated")
 
 //    implementation "com.github.fashionbrot:mars-validated:2.0.2"
     compileOnly 'org.springframework.boot:spring-boot-starter:2.0.0.RELEASE'

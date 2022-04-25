@@ -1,7 +1,5 @@
 package com.github.fashion.test.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.github.fashion.test.model.DefaultModel;
 import com.github.fashion.test.model.SizeModel;
 import com.github.fashionbrot.validated.annotation.Default;
 import com.github.fashionbrot.validated.annotation.Size;

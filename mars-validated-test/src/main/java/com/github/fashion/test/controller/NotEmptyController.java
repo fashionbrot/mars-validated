@@ -3,7 +3,6 @@ package com.github.fashion.test.controller;
 
 
 import com.github.fashion.test.model.NotEmptyModel;
-import com.github.fashion.test.model.NotNullModel;
 import com.github.fashionbrot.validated.annotation.NotEmpty;
 import com.github.fashionbrot.validated.annotation.NotNull;
 import com.github.fashionbrot.validated.annotation.Validated;

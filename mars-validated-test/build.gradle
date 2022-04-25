@@ -1,13 +1,14 @@
 plugins {
-    id 'java'
+    id "java"
+    id 'java-library'
     id "org.springframework.boot" version "2.6.0"
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
-
 }
-
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: "java-library"
+
 
 apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
@@ -25,13 +26,17 @@ configurations {
 
 
 dependencies {
-    compile project(":validated-springboot-starter")
+//    compile project(":validated-springboot-starter")
 //    implementation project(":validated-springboot-starter")
+
+    api project(":validated-springboot-starter")
+
+    //自己的项目引用
+//    implementation "com.github.fashionbrot:validated-springboot-starter:2.0.2" //自己的项目引用
 
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-//    implementation 'com.github.fashionbrot:validated-springboot-starter:2.0.1'
 
     implementation 'com.alibaba:fastjson:1.2.79'
     implementation ("org.springframework.boot:spring-boot-starter-web"){
