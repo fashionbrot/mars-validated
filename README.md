@@ -2,6 +2,8 @@
 简单好用的 springmvc springboot springcloud dubbo  参数校验
 validated 是 控制 springmvc  springboot 的验证框架。此框架基于spring 开发。
 
+##### github:https://github.com/fashionbrot/mars-validated.git
+##### gitee :https://gitee.com/fashionbrot/mars-validated.git
 
 |版本|新增功能|
 |---|--------|
@@ -9,7 +11,7 @@ validated 是 控制 springmvc  springboot 的验证框架。此框架基于spri
 |1.0.1|1、新增验证注解 <br>2、Validated 注解增加validClass方法，可以选择性验证自己想要的参数。 <br> 3、新增Default 注解|
 |1.0.2|1、代码逻辑优化。<br>2、新增groups 功能，可以根据groups 选择性验证|
 |1.0.3|1、Constraint 接口增加  validatedByBean 方法，用来自定义注解实现 <br/>2、新增国际化支持 EnableValidatedConfig 中增加了 language方法、localeParamName方法用来实现消息内容国际化支持，目前支持中英文两种。其他语言请自行添加 <br/> 3、增加1.0.3 的validated-springboot-starter 支持 |
-|2.0.0|1、Constraint 接口删除  validatedByBean 方法 <br/> 2、删除ConstraintValidatorBean 接口 <br/>  3、ConstraintValidator 新增  modify 方法、validObject 方法 <br/> 4、Validated 注解增加 failFast快速失败方法、增加validReturnValue 方法（验证返回值） <br/> 5、重构了以前的逻辑，相比hibernate valid 速度快1倍左右 |      
+|2.0.0|1、Constraint 接口删除  validatedByBean 方法 <br/> 2、删除ConstraintValidatorBean 接口 <br/>  3、ConstraintValidator 新增  modify 方法、validObject 方法 <br/> 4、Validated 注解增加 failFast快速失败方法、增加validReturnValue 方法（验证返回值） <br/> 5、重构了以前的逻辑，相比hibernate valid 速度快1倍左右 |
 |2.0.1|1、修复 @Validation.groups={AddGroup.class} 并且 注解.groups ={} 时,注解.groups ={}代表默认Groups,则不验证是否包含  @Validation.groups={AddGroup.class},代表跳过groups 验证|
 |2.0.2|1、优化bean注入问题 2、maven 编译修改为gradle 编译 3、代码优化|
 ### hibernate valid 最新版本  和 mars validated 2.0.1 比较 调用1000次接口时间比较,验证参数10个 速度最优还是 mars-validated
@@ -20,7 +22,7 @@ validated 是 控制 springmvc  springboot 的验证框架。此框架基于spri
 
 ## 使用环境
 
-spring4.0 及以上  
+spring4.0 及以上
 jdk1.8    及以上
 
 
@@ -87,7 +89,7 @@ public class DemoApplication {
 ```java
 @Component
 @Configuration
-@EnableValidatedConfig(fileName = "valid",language="zh_CN",localeParamName="lang") 
+@EnableValidatedConfig(fileName = "valid",language="zh_CN",localeParamName="lang")
 public class ValidConfig {
 }
 ```
@@ -154,20 +156,20 @@ public class DemoController {
 
     @Autowired
     private TestService testService;
-    
+
     @RequestMapping("/emailCheck")
     @ResponseBody
     @Validated //注意此处
     public String demo(@Email String abc,){
         return testService.test(abc);
     }
-}   
+}
 @Controller
 public class DemoController {
 
     @Autowired
     private TestService testService;
-    
+
     @RequestMapping("/idcardCheck")
     @ResponseBody
     @Validated //注意此处
@@ -177,7 +179,7 @@ public class DemoController {
 }
 
 
-**此处支持多继承验证*** 
+**此处支持多继承验证***
 
 public class IdCardModel extends BaseModel{
 
@@ -213,14 +215,14 @@ public class DemoController {
      public String test1( @Custom(min = 1,groups = {EditGroup.class,AddGroup.class}) String abc1){
          return abc1;
      }
- 
- 
+
+
      @RequestMapping("/test2")
      @ResponseBody
      @Validated(groups = AddGroup.class)
      public String test2(GroupModel groupModel){
          return groupModel.getAbc();
-     } 
+     }
 }
 ```
 
@@ -351,7 +353,7 @@ import java.lang.annotation.Annotation;
 public  interface ConstraintValidator<A extends Annotation, T> {
 
         boolean isValid(A annotation, T var1);
-    
+
         //实现类可实现可不实现,使用场景如 ajax传入 base64字符,可以在自己逻辑中实现自定义逻辑
         /**
          * 修改 value 值
@@ -391,9 +393,9 @@ public  interface ConstraintValidator<A extends Annotation, T> {
     @Retention(RetentionPolicy.RUNTIME)
     @Constraint(validatedBy = {CustomConstraintValidator.class,CustomConstraintValidator2.class})
     public @interface Custom {
-    
+
         String msg() default "com.mars.valid.Custom.msg";
-    
+
         int min();
     }
 ```
@@ -424,7 +426,7 @@ public class CustomConstraintValidator implements ConstraintValidator<Custom,Str
 ```
 
 
-#### 6、可通过 test项目中的 https://github.com/fashionbrot/mars-validated/tree/master/test/springboot-test 参考使用demo 
+#### 6、可通过 test项目中的 https://github.com/fashionbrot/mars-validated/tree/master/test/springboot-test 参考使用demo
 #### 7、如有问题请通过 https://github.com/fashionbrot/mars-validated/issues 提出 告诉我们。我们非常认真地对待错误和缺陷，在产品面前没有不重要的问题。不过在创建错误报告之前，请检查是否存在报告相同问题的issues。
 
 
