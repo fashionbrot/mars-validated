@@ -62,7 +62,7 @@ public class TestController {
     @RequestMapping("/test5")
     @ResponseBody
     public String test5(String abc){
-        validService.test5(abc,new GroupModel());
+        validService.test5(abc,null);
         return "test5";
     }
 

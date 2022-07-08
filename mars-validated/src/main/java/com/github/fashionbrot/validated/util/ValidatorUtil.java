@@ -12,8 +12,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 
@@ -25,6 +27,8 @@ public class ValidatorUtil implements BeanFactoryAware {
     private static GlobalValidatedProperties globalValidatedProperties;
 
     private static String defaultFileName;
+
+    private static Map<String,ResourceBundle> MSG_MAP=new ConcurrentHashMap<>();
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
@@ -72,22 +76,32 @@ public class ValidatorUtil implements BeanFactoryAware {
         if (StringUtil.isEmpty(defaultFileName)){
             defaultFileName = "valid_zh_CN";
         }
-        ResourceBundle resourceBundleOther =null;
+        ResourceBundle resourceBundle =null;
         if (StringUtil.isEmpty(language)){
-            resourceBundleOther = ResourceBundle.getBundle(defaultFileName);
+            resourceBundle = getResourceBundle(defaultFileName);
         }else{
             String fileName = globalValidatedProperties.getFileName()+"_"+language;
-            resourceBundleOther = ResourceBundle.getBundle(fileName);
+            resourceBundle = getResourceBundle(fileName);
         }
-        if (resourceBundleOther==null){
+        if (resourceBundle==null){
             throw new MissingResourceException(globalValidatedProperties.getFileName()+"_"+language+" does not exist", "EnableValidatedConfig","language");
         }
-        if (resourceBundleOther.containsKey(msg)){
-            msg = resourceBundleOther.getString(msg);
+        if (resourceBundle.containsKey(msg)){
+            msg = resourceBundle.getString(msg);
         }
 
         return msg;
     }
 
+    public static ResourceBundle getResourceBundle(final String fileName){
+        ResourceBundle resourceBundle = MSG_MAP.get(fileName);
+        if (resourceBundle==null){
+            resourceBundle = ResourceBundle.getBundle(fileName);
+            if (resourceBundle!=null){
+                MSG_MAP.put(fileName,resourceBundle);
+            }
+        }
+        return resourceBundle;
+    }
 
 }

@@ -20,7 +20,7 @@ public class CustomConstraintValidator implements ConstraintValidator<Custom, Ob
         /**
          * return true 则验证成功 false 验证失败
           */
-        return false;
+        return true;
     }
 
     @Override
@@ -47,15 +47,15 @@ public class CustomConstraintValidator implements ConstraintValidator<Custom, Ob
         return var+"1";
     }*/
 
-    @Override
-    public String validObject(Custom annotation, Object value, Class<?> valueType) {
-        if (value instanceof CustomModel){
-            CustomModel customModel= (CustomModel) value;
-            if (StringUtil.isEmpty(customModel.getAbc())){
-                return "validObject abc is null";
-            }
-            return null;
-        }
-        return null;
-    }
+//    @Override
+//    public String validObject(Custom annotation, Object value, Class<?> valueType) {
+//        if (value instanceof CustomModel){
+//            CustomModel customModel= (CustomModel) value;
+//            if (StringUtil.isEmpty(customModel.getAbc())){
+//                return "validObject abc is null";
+//            }
+//            return null;
+//        }
+//        return null;
+//    }
 }

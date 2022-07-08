@@ -70,13 +70,6 @@ public class ValidatedTest {
 
         System.out.println("代理完成");
 
-        Test1 test1=(Test1)obj;
-
-        test1.test1(null);
-        test1.test2(null);
-
-        System.out.println("验证完成");
-
 
     }
 

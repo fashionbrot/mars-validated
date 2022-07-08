@@ -29,7 +29,7 @@ dependencies {
 //    compile project(":validated-springboot-starter")
 //    implementation project(":validated-springboot-starter")
 
-    api project(":validated-springboot-starter")
+    api project(":mars-validated")
 
     //自己的项目引用
 //    implementation "com.github.fashionbrot:validated-springboot-starter:2.0.2" //自己的项目引用

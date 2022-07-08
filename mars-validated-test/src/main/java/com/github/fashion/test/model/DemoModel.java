@@ -5,14 +5,14 @@ import com.github.fashionbrot.validated.util.PatternSts;
 
 public class DemoModel {
 
-    @NotEmpty(msg = "test1 is null")
-    @javax.validation.constraints.NotEmpty(message = "test1 is null")
+    @NotEmpty
+    @javax.validation.constraints.NotEmpty
     private String test1;
 
-    @NotNull(msg = "test2 is null")
-    @javax.validation.constraints.NotNull(message = "test2 is null")
+    @NotNull
+    @javax.validation.constraints.NotNull
     private String test2;
-
+/*
     @Size(msg = "test3 is null",min = 10,max = 12)
     @javax.validation.constraints.Size(message = "test3 is null",min = 10,max = 12)
     private String test3;
@@ -44,5 +44,5 @@ public class DemoModel {
 
     @NotEmpty(msg = "test10 is null")
     @javax.validation.constraints.NotEmpty(message = "test10 is null")
-    private String test10;
+    private String test10;*/
 }

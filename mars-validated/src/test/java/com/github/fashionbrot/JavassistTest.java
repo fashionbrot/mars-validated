@@ -25,11 +25,11 @@ public class JavassistTest {
 //            System.out.println( aClass.getDeclaredFields()[i].getName());
 //        }
 
-        ProxyFactory proxyFactory = new ProxyFactory();
-        //指定父类/proxtfactory会自动生成继承该类的子类
-        proxyFactory.setSuperclass(TestUser.class);
-
-        Class<?> clazz = proxyFactory.createClass();
+//        ProxyFactory proxyFactory = new ProxyFactory();
+//        //指定父类/proxtfactory会自动生成继承该类的子类
+//        proxyFactory.setSuperclass(TestUser.class);
+//
+//        Class<?> clazz = proxyFactory.createClass();
 
         //设置过滤器,判断哪些方法需要被拦截
 //        proxyFactory.setFilter((m) ->{
@@ -41,13 +41,13 @@ public class JavassistTest {
         //创建Person代理类,并创建对象
 
 
-        Object testUser =clazz.newInstance();
-
-        MyMethodHandler myMethodHandler = new MyMethodHandler();
-        //设置拦截代理
-        ((ProxyObject)testUser).setHandler(myMethodHandler);
-
-        ((TestUser)testUser).say();
+//        Object testUser =clazz.newInstance();
+//
+//        MyMethodHandler myMethodHandler = new MyMethodHandler();
+//        //设置拦截代理
+//        ((ProxyObject)testUser).setHandler(myMethodHandler);
+//
+//        ((TestUser)testUser).say();
 
 
 

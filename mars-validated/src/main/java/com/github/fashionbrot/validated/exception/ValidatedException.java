@@ -2,6 +2,7 @@ package com.github.fashionbrot.validated.exception;
 
 import com.github.fashionbrot.validated.constraint.MarsViolation;
 import com.github.fashionbrot.validated.util.StringUtil;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,5 +32,25 @@ public class ValidatedException extends RuntimeException  {
             this.value = marsViolation.getValue();
         }
         this.violations = violations;
+    }
+
+    public ValidatedException(String fieldName,String msg,String annotationName,Object value){
+        super();
+        this.fieldName = fieldName;
+        this.msg = msg;
+        this.annotationName = annotationName;
+        this.value = value;
+    }
+
+    public static void throwMsg(String fieldName,String msg){
+        throw new ValidatedException(fieldName,msg,null,null);
+    }
+
+    public static void throwMsg(String fieldName,String msg,String annotationName){
+        throw new ValidatedException(fieldName,msg,annotationName,null);
+    }
+
+    public static void throwMsg(String fieldName,String msg,String annotationName,Object value){
+        throw new ValidatedException(fieldName,msg,annotationName,value);
     }
 }

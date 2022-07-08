@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class NotEmptyController {
 
-
-
     @RequestMapping("/notEmpty")
     @ResponseBody
     @Validated(failFast = true)

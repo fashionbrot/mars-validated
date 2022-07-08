@@ -17,7 +17,7 @@ public class MarsValidatorImpl implements MarsValidator {
     public static final String BEAN_NAME = "defaultMarsValidatorImpl";
 
     private static final String METHOD_NAME_MODIFY = "modify";
-    private static final String METHOD_VALID_OBJECT = "validObject";
+//    private static final String METHOD_VALID_OBJECT = "validObject";
     private static final String MSG = "msg";
     private static final String GROUPS = "groups";
 
@@ -119,16 +119,11 @@ public class MarsValidatorImpl implements MarsValidator {
 
                     Annotation[] annotations = parameter.getDeclaredAnnotations();
                     if (ObjectUtil.isNotEmpty(annotations)) {
-                        //直接验证参数
-                        for (Annotation annotation : annotations) {
+
+                        for (int i = 0; i < annotations.length; i++) {
+                            Annotation annotation = annotations[i];
 
                             validated(validated, params, j, parameter.getType(), parameter.getName(), annotation, null);
-                            //验证当前参数是类，还是普通类型
-                            ClassTypeEnum classTypeEnum = ClassTypeEnum.getValue(parameterTypeName);
-                            if (classTypeEnum == null) {
-                                //验证参数属性
-                                entityFieldsAnnotationValid(validated, parameterTypeName, classType, params, j);
-                            }
                         }
                     } else {
                         //验证参数属性
@@ -204,7 +199,7 @@ public class MarsValidatorImpl implements MarsValidator {
                 ConstraintValidator constraintValidator = constraintValidatorList.get(i);
                 boolean isValid = constraintValidator.isValid(annotation, value, valueType);
                 if (!isValid) {
-                    addMarsViolations(value, paramName, annotation, constraintValidatorList, (String) annotationAttributes.get(MSG));
+                    addMarsViolations(value, paramName, annotation, (String) annotationAttributes.get(MSG));
                     if (failFast) {
                         ExceptionUtil.throwException();
                     }
@@ -233,20 +228,20 @@ public class MarsValidatorImpl implements MarsValidator {
                         }
                     }
                 }
-                if (MethodUtil.checkDeclaredMethod(validConstraintClass, METHOD_VALID_OBJECT)) {
-                    String msg = constraintValidator.validObject(annotation, value, valueType);
-                    if (StringUtil.isNotEmpty(msg)) {
-                        addMarsViolations(value, paramName, annotation, constraintValidatorList, msg);
-                        if (failFast) {
-                            ExceptionUtil.throwException();
-                        }
-                    }
-                }
+//                if (MethodUtil.checkDeclaredMethod(validConstraintClass, METHOD_VALID_OBJECT)) {
+//                    String msg = constraintValidator.validObject(annotation, value, valueType);
+//                    if (StringUtil.isNotEmpty(msg)) {
+//                        addMarsViolations(value, paramName, annotation, constraintValidatorList, msg);
+//                        if (failFast) {
+//                            ExceptionUtil.throwException();
+//                        }
+//                    }
+//                }
             }
         }
     }
 
-    private void addMarsViolations(Object value, String paramName, Annotation annotation, List<ConstraintValidator> constraintValidatorList, String msg) {
+    private void addMarsViolations(Object value, String paramName, Annotation annotation, String msg) {
         ExceptionUtil.addMarsViolation(MarsViolation.builder()
                 .annotationName(annotation.annotationType().getName())
                 .fieldName(paramName)

@@ -29,18 +29,6 @@ public  interface ConstraintValidator<A extends Annotation, T> {
         return value;
     }
 
-    /**
-     * return value==null?验证通过:验证不通过
-     * 验证不过 throw Exception value
-     * @param annotation annotation
-     * @param value value
-     * @param valueType valueType
-     * @return String
-     */
-    default String validObject(A annotation, T value,Class<?> valueType){
-        return null;
-    }
-
 
 
 }

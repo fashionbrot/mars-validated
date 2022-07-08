@@ -10,15 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class NotEmptyController {
 
-
-
     @RequestMapping("/notEmpty")
     @ResponseBody
-    @Validated(failFast = true)
+    @Validated
     public String  test(@NotEmpty(msg = "入参 abc is null") String abc){
-
         return "ok";
     }
-
 
 }

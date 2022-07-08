@@ -5,7 +5,6 @@ import com.github.fashion.test.test.Custom;
 public class GroupModel {
 
 
-    @Custom(min = 3)
     private String abc;
 
 
