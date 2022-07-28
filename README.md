@@ -71,7 +71,7 @@ jdk1.8    及以上
 ```
 #### gradle 依赖
 ```bash
-implementation 'com.github.fashionbrot:validated-springboot-starter:2.0.3'
+implementation 'com.github.fashionbrot:validated-springboot-starter:2.0.4'
 ```
 
 ### 1.2、参数验证
@@ -103,7 +103,7 @@ public class NotEmptyController {
 ```
 #### gradle 依赖
 ```bash
-implementation 'com.github.fashionbrot:mars-validated:2.0.3'
+implementation 'com.github.fashionbrot:mars-validated:2.0.4'
 ```
 
 ### 2.2、配置扫描类
