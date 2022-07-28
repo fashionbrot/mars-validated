@@ -15,6 +15,7 @@ validated 是 控制 springmvc  springboot 的验证框架。此框架基于spri
 | 2.0.1 | 1、修复 @Validation.groups={AddGroup.class} 并且 注解.groups ={} 时,注解.groups ={}代表默认Groups,则不验证是否包含  @Validation.groups={AddGroup.class},代表跳过groups 验证                                                                                                    |
 | 2.0.2 | 1、优化bean注入问题 2、maven 编译修改为gradle 编译 3、代码优化                                                                                                                                                                                                         |
 | 2.0.3 | 1、优化验证逻辑实现   2、删除 ConstraintValidator接口中的 validObject 方法。   3、所有注解可实现bean 验证，不在是对基本类型的验证，所有对象都可验证                                                                                                                                                  |
+| 2.0.4 | 优化快速失败逻辑                                                                                                                                                                                                                                           |
 ### hibernate valid 最新版本  和 mars validated 2.0.1 比较 调用1000次接口时间比较,验证参数10个 速度最优还是 mars-validated
 
 
@@ -65,7 +66,7 @@ jdk1.8    及以上
         <dependency>
                <groupId>com.github.fashionbrot</groupId>
                <artifactId>validated-springboot-starter</artifactId>
-               <version>2.0.3</version>
+               <version>2.0.4</version>
         </dependency>
 ```
 #### gradle 依赖
@@ -97,7 +98,7 @@ public class NotEmptyController {
         <dependency>
             <groupId>com.github.fashionbrot</groupId>
             <artifactId>mars-validated</artifactId>
-            <version>2.0.3</version>
+            <version>2.0.4</version>
         </dependency>
 ```
 #### gradle 依赖
