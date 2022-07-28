@@ -24,8 +24,6 @@ import static org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTyp
 @Slf4j
 public class BeanUtil {
 
-    private static final String[] EMPTY_BEAN_NAMES = new String[0];
-
 
     public static void registerglobalValidatedProperties(AnnotationAttributes attributes, BeanDefinitionRegistry registry, PropertyResolver propertyResolver, String beanName) {
 
@@ -60,12 +58,18 @@ public class BeanUtil {
             GlobalValidatedProperties validatedProperties = GlobalValidatedProperties.builder().build();
             if (propertyResolver.containsProperty("mars.validated.file-name")) {
                 validatedProperties.setFileName(propertyResolver.getProperty("mars.validated.file-name", "valid"));
+            }else{
+                validatedProperties.setFileName("valid");
             }
             if (propertyResolver.containsProperty("mars.validated.language")) {
                 validatedProperties.setLanguage(propertyResolver.getProperty("mars.validated.language", "zh_CN"));
+            }else{
+                validatedProperties.setLanguage("zh_CN");
             }
             if (propertyResolver.containsProperty("mars.validated.locale-param-name")) {
                 validatedProperties.setLocaleParamName(propertyResolver.getProperty("mars.validated.locale-param-name", "lang"));
+            }else{
+                validatedProperties.setLocaleParamName("lang");
             }
             registerSingleton(registry, beanName, validatedProperties);
         }

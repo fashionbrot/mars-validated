@@ -40,8 +40,7 @@ public class MethodUtil {
     public static boolean checkDeclaredMethod(Class<?> clazz,String method){
         if (clazz!=null){
             Method[] methods = clazz.getDeclaredMethods();
-            if (methods!=null && methods.length>0){
-
+            if (ObjectUtil.isNotEmpty(methods)){
                 for(int i=0;i<methods.length;i++){
                     if (methods[i].getName().equals(method)){
                         return true;

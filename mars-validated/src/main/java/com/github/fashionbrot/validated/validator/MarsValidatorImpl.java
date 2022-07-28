@@ -3,6 +3,7 @@ package com.github.fashionbrot.validated.validator;
 import com.github.fashionbrot.validated.annotation.Validated;
 import com.github.fashionbrot.validated.constraint.*;
 import com.github.fashionbrot.validated.enums.ClassTypeEnum;
+import com.github.fashionbrot.validated.exception.ValidatedException;
 import com.github.fashionbrot.validated.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -17,7 +18,6 @@ public class MarsValidatorImpl implements MarsValidator {
     public static final String BEAN_NAME = "defaultMarsValidatorImpl";
 
     private static final String METHOD_NAME_MODIFY = "modify";
-//    private static final String METHOD_VALID_OBJECT = "validObject";
     private static final String MSG = "msg";
     private static final String GROUPS = "groups";
 
@@ -97,9 +97,13 @@ public class MarsValidatorImpl implements MarsValidator {
                 //验证参数属性
                 entityFieldsAnnotationValid(validated, object.getClass().getTypeName(), object.getClass(), new Object[]{object}, 0);
             }
-            ExceptionUtil.throwException();
+            if (!validated.failFast()) {
+                ExceptionUtil.throwException();
+            }
         } finally {
-            ExceptionUtil.reset();
+            if (!validated.failFast()) {
+                ExceptionUtil.reset();
+            }
         }
     }
 
@@ -131,10 +135,14 @@ public class MarsValidatorImpl implements MarsValidator {
                     }
                 }
             }
+            if (!validated.failFast()){
+                ExceptionUtil.throwException();
+            }
 
-            ExceptionUtil.throwException();
         } finally {
-            ExceptionUtil.reset();
+            if (!validated.failFast()) {
+                ExceptionUtil.reset();
+            }
         }
     }
 
@@ -199,9 +207,10 @@ public class MarsValidatorImpl implements MarsValidator {
                 ConstraintValidator constraintValidator = constraintValidatorList.get(i);
                 boolean isValid = constraintValidator.isValid(annotation, value, valueType);
                 if (!isValid) {
-                    addMarsViolations(value, paramName, annotation, (String) annotationAttributes.get(MSG));
                     if (failFast) {
-                        ExceptionUtil.throwException();
+                        ValidatedException.throwMsg(paramName,ValidatorUtil.filterMsg((String) annotationAttributes.get(MSG)),annotation.annotationType().getName(),value);
+                    }else{
+                        addMarsViolations(value, paramName, annotation, (String) annotationAttributes.get(MSG));
                     }
                 }
 
@@ -228,15 +237,6 @@ public class MarsValidatorImpl implements MarsValidator {
                         }
                     }
                 }
-//                if (MethodUtil.checkDeclaredMethod(validConstraintClass, METHOD_VALID_OBJECT)) {
-//                    String msg = constraintValidator.validObject(annotation, value, valueType);
-//                    if (StringUtil.isNotEmpty(msg)) {
-//                        addMarsViolations(value, paramName, annotation, constraintValidatorList, msg);
-//                        if (failFast) {
-//                            ExceptionUtil.throwException();
-//                        }
-//                    }
-//                }
             }
         }
     }
