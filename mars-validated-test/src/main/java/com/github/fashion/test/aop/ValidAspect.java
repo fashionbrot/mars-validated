@@ -16,8 +16,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
-@Component
-@Aspect
+//@Component
+//@Aspect
 public class ValidAspect {
 
     @Pointcut("execution(* com.github.fashion.test.service.*.*(..))")

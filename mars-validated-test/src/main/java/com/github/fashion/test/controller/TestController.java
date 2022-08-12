@@ -7,6 +7,7 @@ import com.github.fashion.test.groups.EditGroup;
 import com.github.fashion.test.model.DefaultModel;
 import com.github.fashion.test.model.GroupModel;
 import com.github.fashion.test.service.ValidService;
+import com.github.fashion.test.service.TestService;
 import com.github.fashionbrot.validated.annotation.Validated;
 import com.github.fashion.test.test.Custom;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,4 +73,15 @@ public class TestController {
         validService.test6(abc);
         return "test6";
     }
+
+    @Autowired
+    TestService test;
+
+    @RequestMapping("/test7")
+    @ResponseBody
+    public String test7(String abc){
+        test.test1(abc);
+        return "test6";
+    }
+
 }
