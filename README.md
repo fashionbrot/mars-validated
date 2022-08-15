@@ -66,12 +66,12 @@ jdk1.8    及以上
         <dependency>
                <groupId>com.github.fashionbrot</groupId>
                <artifactId>validated-springboot-starter</artifactId>
-               <version>2.0.4</version>
+               <version>2.0.5</version>
         </dependency>
 ```
 #### gradle 依赖
 ```bash
-implementation 'com.github.fashionbrot:validated-springboot-starter:2.0.4'
+implementation 'com.github.fashionbrot:validated-springboot-starter:2.0.5'
 ```
 
 ### 1.2、参数验证
@@ -98,12 +98,12 @@ public class NotEmptyController {
         <dependency>
             <groupId>com.github.fashionbrot</groupId>
             <artifactId>mars-validated</artifactId>
-            <version>2.0.4</version>
+            <version>2.0.5</version>
         </dependency>
 ```
 #### gradle 依赖
 ```bash
-implementation 'com.github.fashionbrot:mars-validated:2.0.4'
+implementation 'com.github.fashionbrot:mars-validated:2.0.5'
 ```
 
 ### 2.2、配置扫描类
