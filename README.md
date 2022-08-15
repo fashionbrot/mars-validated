@@ -49,12 +49,12 @@ jdk1.8    及以上
 
 
 ## @Validated 注解支持功能说明： 接口方法添加此注解开启参数验证
-|方法| 默认值   | 说明                       |
-|------|-------|--------------------------|
-|Class<?>[] validClass() default {}| {}    | 需要校验的 class,只对填写的class验证 |
-|Class<?>[] groups() default { }| {}    | 校验组                      |
-|boolean failFast() default true| true  | true 快速失败                |
-|boolean validReturnValue() default false| false | 验证返回值 默认false            |
+|方法| 默认值                  | 说明                       |
+|------|----------------------|--------------------------|
+|Class<?>[] validClass() default {}| {}                   | 需要校验的 class,只对填写的class验证 |
+|Class<?>[] groups() default { }| {DefaultGroup.class} | 校验组                      |
+|boolean failFast() default true| true                 | true 快速失败                |
+|boolean validReturnValue() default false| false                | 验证返回值 默认false            |
 
 
 
@@ -234,6 +234,66 @@ public class ValidAspect {
 
 ```
 
+
+## ** 通过 group 来分组验证参数  **
+```bash
+访问：http://localhost:8080/group/add  返回：name 不能为空
+访问：http://localhost:8080/group/edit 返回：id 不能为空,name 不能为空
+```
+```java
+package com.github.fashion.test.controller;
+import com.github.fashion.test.groups.EditGroup;
+import com.github.fashion.test.model.GroupModel;
+import com.github.fashionbrot.validated.annotation.Validated;
+import com.github.fashionbrot.validated.groups.DefaultGroup;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+@RequestMapping("/group")
+public class GroupController {
+
+    @GetMapping("add")
+    @ResponseBody
+    @Validated(failFast = false)
+    public String add(GroupModel groupModel){
+        return "ok";
+    }
+
+    @GetMapping("edit")
+    @ResponseBody
+    @Validated(groups ={EditGroup.class,DefaultGroup.class},failFast = false)
+    public String edit(GroupModel groupModel){
+        return "ok";
+    }
+
+}
+```
+```java
+package com.github.fashion.test.model;
+
+import com.github.fashion.test.groups.EditGroup;
+import com.github.fashionbrot.validated.annotation.NotEmpty;
+import com.github.fashionbrot.validated.annotation.NotNull;
+import lombok.Data;
+
+@Data
+public class GroupModel {
+
+
+    private String abc;
+
+    @NotNull(msg = "id 不能为空",groups = {EditGroup.class})
+    private Long id;
+
+    @NotEmpty(msg = "name 不能为空")
+    private String name;
+
+}
+
+```
 
 
 

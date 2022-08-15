@@ -1,31 +1,29 @@
 package com.github.fashion.test.controller;
 
-
-
-import com.github.fashion.test.model.NotNullModel;
-import com.github.fashionbrot.validated.annotation.NotNull;
+import com.github.fashion.test.groups.EditGroup;
+import com.github.fashion.test.model.GroupModel;
 import com.github.fashionbrot.validated.annotation.Validated;
 import com.github.fashionbrot.validated.groups.DefaultGroup;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class NotNullController {
+@RequestMapping("/group")
+public class GroupController {
 
-
-
-    @RequestMapping("/notnull")
+    @GetMapping("add")
     @ResponseBody
     @Validated(failFast = false)
-    public String test(@NotNull(msg = "abc is null") String abc){
-        return abc;
+    public String add(GroupModel groupModel){
+        return "ok";
     }
 
-    @RequestMapping("/notnullBean")
+    @GetMapping("edit")
     @ResponseBody
-    @Validated(failFast = false,groups = {DefaultGroup.class})
-    public String test(NotNullModel notNullModel){
+    @Validated(groups ={EditGroup.class,DefaultGroup.class},failFast = false)
+    public String edit(GroupModel groupModel){
         return "ok";
     }
 

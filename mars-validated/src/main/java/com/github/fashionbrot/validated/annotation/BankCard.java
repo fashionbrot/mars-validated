@@ -1,6 +1,8 @@
 package com.github.fashionbrot.validated.annotation;
 
 
+import com.github.fashionbrot.validated.groups.DefaultGroup;
+
 import java.lang.annotation.*;
 
 /**
@@ -19,5 +21,5 @@ public @interface BankCard {
      */
     String regexp() default "^([1-9]{1})(\\d{14}|\\d{18})$";
 
-    Class<?>[] groups() default  {};
+    Class<?>[] groups() default  {DefaultGroup.class};
 }

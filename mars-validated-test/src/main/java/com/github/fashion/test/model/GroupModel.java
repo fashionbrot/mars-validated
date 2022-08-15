@@ -1,18 +1,20 @@
 package com.github.fashion.test.model;
 
-import com.github.fashion.test.test.Custom;
+import com.github.fashion.test.groups.EditGroup;
+import com.github.fashionbrot.validated.annotation.NotEmpty;
+import com.github.fashionbrot.validated.annotation.NotNull;
+import lombok.Data;
 
+@Data
 public class GroupModel {
 
 
     private String abc;
 
+    @NotNull(msg = "id 不能为空",groups = {EditGroup.class})
+    private Long id;
 
-    public String getAbc() {
-        return abc;
-    }
+    @NotEmpty(msg = "name 不能为空")
+    private String name;
 
-    public void setAbc(String abc) {
-        this.abc = abc;
-    }
 }

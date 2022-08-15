@@ -1,5 +1,7 @@
 package com.github.fashionbrot.validated.annotation;
 
+import com.github.fashionbrot.validated.groups.DefaultGroup;
+
 import java.lang.annotation.*;
 
 @Documented
@@ -11,5 +13,5 @@ public @interface NotEqualLength {
 
     String msg() default "com.mars.valid.NotEqualLength.msg";
 
-    Class<?>[] groups() default  {};
+    Class<?>[] groups() default  {DefaultGroup.class};
 }

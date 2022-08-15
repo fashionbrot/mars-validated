@@ -1,5 +1,7 @@
 package com.github.fashionbrot.validated.annotation;
 
+import com.github.fashionbrot.validated.groups.DefaultGroup;
+
 import java.lang.annotation.*;
 
 /**
@@ -23,6 +25,6 @@ public @interface IdCard {
 
     String below18Msg() default "com.mars.valid.IdCard.below18.msg";
 
-    Class<?>[] groups() default  {};
+    Class<?>[] groups() default  {DefaultGroup.class};
 
 }

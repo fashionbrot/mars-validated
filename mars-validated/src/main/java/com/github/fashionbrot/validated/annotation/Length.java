@@ -1,5 +1,7 @@
 package com.github.fashionbrot.validated.annotation;
 
+import com.github.fashionbrot.validated.groups.DefaultGroup;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -37,5 +39,5 @@ public @interface Length {
 
     String msg() default "com.mars.valid.Length.msg";
 
-    Class<?>[] groups() default  {};
+    Class<?>[] groups() default  {DefaultGroup.class};
 }

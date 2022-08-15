@@ -1,6 +1,8 @@
 package com.github.fashionbrot.validated.annotation;
 
 
+import com.github.fashionbrot.validated.groups.DefaultGroup;
+
 import java.lang.annotation.*;
 
 
@@ -20,7 +22,7 @@ public @interface Validated {
      * 校验组
      * @return Class
      */
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {DefaultGroup.class};
 
     /**
      * true 快速失败
