@@ -122,7 +122,7 @@ public class MarsValidatorImpl implements MarsValidator {
                     String parameterTypeName = classType.getTypeName();
 
                     Annotation[] annotations = parameter.getDeclaredAnnotations();
-                    if (ObjectUtil.isNotEmpty(annotations)) {
+                    if (checkValidAnnotation(annotations) ) {
 
                         for (int i = 0; i < annotations.length; i++) {
                             Annotation annotation = annotations[i];
@@ -144,6 +144,20 @@ public class MarsValidatorImpl implements MarsValidator {
                 ExceptionUtil.reset();
             }
         }
+    }
+
+    private boolean checkValidAnnotation(Annotation[] annotations){
+        if (ObjectUtil.isNotEmpty(annotations) ) {
+
+            for (int i = 0; i < annotations.length; i++) {
+                Annotation annotation = annotations[i];
+                Class<? extends Annotation> annotationType = annotation.annotationType();
+                if (ConstraintHelper.containsKey(annotation.annotationType()) || annotationType.isAnnotationPresent(Constraint.class) ){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 

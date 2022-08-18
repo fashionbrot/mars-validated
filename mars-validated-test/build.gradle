@@ -40,8 +40,6 @@ dependencies {
 
     implementation 'com.alibaba:fastjson:1.2.79'
     implementation ("org.springframework.boot:spring-boot-starter-web"){
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-        exclude group: 'org.springframework.boot',module:'spring-boot-starter-log4j2'
     }
 
     implementation "org.springframework.boot:spring-boot-starter-aop"
@@ -51,11 +49,6 @@ dependencies {
     implementation 'javax.validation:validation-api:+'
     implementation 'org.hibernate:hibernate-validator:+'
 
-    implementation "org.tinylog:tinylog-api:${tinylog_version}"
-    implementation "org.tinylog:tinylog-impl:${tinylog_version}"
-    implementation "org.tinylog:slf4j-tinylog:${tinylog_version}"
-    implementation "org.tinylog:jcl-tinylog:${tinylog_version}"
-    implementation "org.tinylog:log4j1.2-api:${tinylog_version}"
 
 }
 compileJava.options.encoding = "UTF-8"

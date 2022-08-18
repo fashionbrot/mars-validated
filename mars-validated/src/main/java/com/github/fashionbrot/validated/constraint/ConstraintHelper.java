@@ -71,5 +71,9 @@ public class ConstraintHelper {
         return null;
     }
 
+    public static boolean containsKey(Class constraintType) {
+        return builtinConstraint.containsKey(constraintType);
+    }
+
 
 }
