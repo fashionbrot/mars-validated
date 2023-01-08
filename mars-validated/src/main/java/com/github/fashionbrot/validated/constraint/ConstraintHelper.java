@@ -4,7 +4,6 @@ package com.github.fashionbrot.validated.constraint;
 import com.github.fashionbrot.validated.annotation.*;
 import com.github.fashionbrot.validated.internal.*;
 import com.github.fashionbrot.validated.util.MethodUtil;
-import com.github.fashionbrot.validated.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.*;

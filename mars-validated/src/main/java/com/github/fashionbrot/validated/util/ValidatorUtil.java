@@ -52,7 +52,7 @@ public class ValidatorUtil implements BeanFactoryAware {
 
 
     public static String filterMsg(String msg) {
-        if (StringUtil.isEmpty(msg)){
+        if (ObjectUtil.isEmpty(msg)){
             return null;
         }
         boolean isDefaultMsg = msg.startsWith("com.mars.valid");
@@ -73,11 +73,11 @@ public class ValidatorUtil implements BeanFactoryAware {
                 language = request.getParameter(globalValidatedProperties.getLocaleParamName());
             }
         }
-        if (StringUtil.isEmpty(defaultFileName)){
+        if (ObjectUtil.isEmpty(defaultFileName)){
             defaultFileName = "valid_zh_CN";
         }
         ResourceBundle resourceBundle =null;
-        if (StringUtil.isEmpty(language)){
+        if (ObjectUtil.isEmpty(language)){
             resourceBundle = getResourceBundle(defaultFileName);
         }else{
             String fileName = globalValidatedProperties.getFileName()+"_"+language;

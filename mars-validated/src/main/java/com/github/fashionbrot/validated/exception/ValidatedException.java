@@ -1,8 +1,7 @@
 package com.github.fashionbrot.validated.exception;
 
 import com.github.fashionbrot.validated.constraint.MarsViolation;
-import com.github.fashionbrot.validated.util.StringUtil;
-import lombok.AllArgsConstructor;
+import com.github.fashionbrot.validated.util.ObjectUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,7 +23,7 @@ public class ValidatedException extends RuntimeException  {
 
     public ValidatedException(List<MarsViolation> violations) {
         super();
-        if (StringUtil.isNotEmpty(violations) && violations.size()==1){
+        if (ObjectUtil.isNotEmpty(violations) && violations.size()==1){
             MarsViolation marsViolation=  violations.get(0);
             this.fieldName = marsViolation.getFieldName();
             this.msg = marsViolation.getMsg();

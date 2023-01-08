@@ -10,6 +10,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -25,7 +26,7 @@ public class MarsValidatorImpl implements MarsValidator {
     @Override
     public void entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] params, int index) {
 
-        if (!IgnoreClassUtil.checkIgnorePackage(valueTypeName)) {
+        if (JavaUtil.isNotMvcIgnoreParams(valueTypeName)) {
 
             // 判断是否 有继承类
             checkClassSuper(validated, clazz, params, index);
@@ -44,11 +45,12 @@ public class MarsValidatorImpl implements MarsValidator {
 
             for (Field field : fields) {
 
-                Annotation[] annotations = field.getDeclaredAnnotations();
-                if (ObjectUtil.isNotEmpty(annotations)) {
-                    field.setAccessible(true);
-
-                    for (Annotation annotation : annotations) {
+                if (JavaUtil.isFinal(field)){
+                    continue;
+                }
+                List<Annotation> validAnnotation = getValidAnnotation(field.getDeclaredAnnotations());
+                if (ObjectUtil.isNotEmpty(validAnnotation)) {
+                    for (Annotation annotation : validAnnotation) {
 
                         Class<?> valueType = field.getType();
                         String fieldName = field.getName();
@@ -58,7 +60,6 @@ public class MarsValidatorImpl implements MarsValidator {
             }
         }
     }
-
 
     private boolean isValidClass(Class<?>[] validClass, Class<?> clazz) {
         if (ObjectUtil.isEmpty(validClass)) {
@@ -79,12 +80,9 @@ public class MarsValidatorImpl implements MarsValidator {
     private void checkClassSuper(Validated validated, Class clazz, Object[] params, int index) {
         //获取 superclass 是否是 appClassloader 加载的
         Class superclass = clazz.getSuperclass();
-        if (superclass != null) {
+        if (superclass != null && JavaUtil.isNotObject(superclass)) {
             //如果不是定义的类型，则把 class 当做bean 进行校验 field
-            boolean exist = ClassTypeEnum.checkClass(superclass.getName());
-            if (!exist) {
-                entityFieldsAnnotationValid(validated, superclass.getName(), superclass, params, index);
-            }
+           entityFieldsAnnotationValid(validated, superclass.getName(), superclass, params, index);
         }
     }
 
@@ -121,11 +119,11 @@ public class MarsValidatorImpl implements MarsValidator {
                     Class<?> classType = parameter.getType();
                     String parameterTypeName = classType.getTypeName();
 
-                    Annotation[] annotations = parameter.getDeclaredAnnotations();
-                    if (checkValidAnnotation(annotations) ) {
+                    List<Annotation> validAnnotation = getValidAnnotation(parameter.getDeclaredAnnotations());
+                    if (ObjectUtil.isNotEmpty(validAnnotation)){
 
-                        for (int i = 0; i < annotations.length; i++) {
-                            Annotation annotation = annotations[i];
+                        for (int i = 0; i < validAnnotation.size(); i++) {
+                            Annotation annotation = validAnnotation.get(i);
 
                             validated(validated, params, j, parameter.getType(), parameter.getName(), annotation, null);
                         }
@@ -144,6 +142,16 @@ public class MarsValidatorImpl implements MarsValidator {
                 ExceptionUtil.reset();
             }
         }
+    }
+
+
+    private List<Annotation> getValidAnnotation(Annotation[] annotations) {
+        if (ObjectUtil.isNotEmpty(annotations)) {
+            return Arrays.stream(annotations)
+                .filter(annotation -> ConstraintHelper.containsKey(annotation.annotationType()) || annotation.annotationType().isAnnotationPresent(Constraint.class))
+                .collect(Collectors.toList());
+        }
+        return null;
     }
 
     private boolean checkValidAnnotation(Annotation[] annotations){
@@ -177,7 +185,7 @@ public class MarsValidatorImpl implements MarsValidator {
         }
 
         List<ConstraintValidator> constraintValidatorList = ConstraintHelper.getConstraint(annotation.annotationType());
-        if (StringUtil.isNotEmpty(constraintValidatorList)) {
+        if (ObjectUtil.isNotEmpty(constraintValidatorList)) {
 
             validatedConstrain(constraintValidatorList, annotationAttributes, failFast, annotation, params, index, paramName, valueType, field);
 
@@ -234,7 +242,7 @@ public class MarsValidatorImpl implements MarsValidator {
                     if (reValue != null) {
                         if (field != null) {
                             Object param = params[index];
-                            Object formatValue = StringUtil.formatObject(reValue, field.getType());
+                            Object formatValue = ObjectUtil.formatObject(reValue, field.getType());
                             if (formatValue != null && field.getType() == formatValue.getClass()) {
                                 try {
                                     field.set(param, formatValue);
@@ -246,7 +254,7 @@ public class MarsValidatorImpl implements MarsValidator {
                             }
                         } else {
                             if (reValue != null) {
-                                params[index] = StringUtil.formatObject(reValue, valueType);
+                                params[index] = ObjectUtil.formatObject(reValue, valueType);
                             }
                         }
                     }
@@ -278,7 +286,7 @@ public class MarsValidatorImpl implements MarsValidator {
             return false;
         }
         //检测groups 是否匹配
-        if (attributes.containsKey(GROUPS)) {
+        if (attributes.containsKey(GROUPS) ) {
             Class[] groups = (Class[]) attributes.get(GROUPS);
             //如果 vGroupClass 不为空，则默认 annotation 注解 groups=DefaultGroup.class
             if (ObjectUtil.isEmpty(groups)) {

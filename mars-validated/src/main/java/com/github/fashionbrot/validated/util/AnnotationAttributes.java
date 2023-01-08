@@ -84,7 +84,7 @@ public class AnnotationAttributes extends LinkedHashMap<String, Object> {
 
 	@SuppressWarnings("unchecked")
 	private <T> T doGet(String attributeName, Class<T> expectedType) {
-		if (StringUtil.isEmpty(attributeName)) {
+		if (ObjectUtil.isEmpty(attributeName)) {
 			throw new IllegalArgumentException("attributeName must not be null or empty");
 		}
 		Object value = get(attributeName);
@@ -127,7 +127,7 @@ public class AnnotationAttributes extends LinkedHashMap<String, Object> {
 			return "(this Map)";
 		}
 		if (value instanceof Object[]) {
-			return "[" + StringUtil.arrayToCommaDelimitedString((Object[]) value) + "]";
+			return "[" + ObjectUtil.arrayToCommaDelimitedString((Object[]) value) + "]";
 		}
 		return String.valueOf(value);
 	}

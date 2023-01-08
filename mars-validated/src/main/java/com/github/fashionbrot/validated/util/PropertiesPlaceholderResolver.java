@@ -35,7 +35,7 @@ public class PropertiesPlaceholderResolver {
                 String key = String.valueOf(entry.getKey());
                 String value = String.valueOf(entry.getValue());
                 String resolvedValue = propertyResolver.resolvePlaceholders(value);
-                if (StringUtil.isNotEmpty(resolvedValue)) { // set properties if has test
+                if (ObjectUtil.isNotEmpty(resolvedValue)) { // set properties if has test
                     resolvedProperties.setProperty(key, resolvedValue);
                 }
             }

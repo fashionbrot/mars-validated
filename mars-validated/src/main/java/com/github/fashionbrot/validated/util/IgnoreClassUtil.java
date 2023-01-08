@@ -15,7 +15,7 @@ public class IgnoreClassUtil {
     }
 
     public static void putIgnorePackage(String packageName){
-        if (StringUtil.isNotBlank(packageName)) {
+        if (ObjectUtil.isNotBlank(packageName)) {
             packageSet.add(packageName);
         }
     }
@@ -23,7 +23,7 @@ public class IgnoreClassUtil {
 
 
     public static boolean checkIgnorePackage(String packageName){
-        if (StringUtil.isNotEmpty(packageName) && packageSet.contains(packageName)){
+        if (ObjectUtil.isNotEmpty(packageName) && packageSet.contains(packageName)){
             return true;
         }
         return false;
