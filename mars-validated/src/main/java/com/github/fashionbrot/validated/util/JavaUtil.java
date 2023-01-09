@@ -2,6 +2,7 @@ package com.github.fashionbrot.validated.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
 import java.util.Properties;
 
 
@@ -54,7 +55,32 @@ public class JavaUtil {
      * @return boolean
      */
     public static boolean isCollection(Class clazz) {
-        return clazz!=null && Iterable.class.isAssignableFrom(clazz);
+
+        return clazz!=null && Collection.class.isAssignableFrom(clazz);
+    }
+
+    /**
+     * validate java collection
+     *
+     * @param type java typeName
+     * @return boolean
+     */
+    public static boolean isCollection(String type) {
+        switch (type) {
+            case "java.util.List":
+            case "java.util.LinkedList":
+            case "java.util.ArrayList":
+            case "java.util.Set":
+            case "java.util.TreeSet":
+            case "java.util.HashSet":
+            case "java.util.SortedSet":
+            case "java.util.Collection":
+            case "java.util.ArrayDeque":
+            case "java.util.PriorityQueue":
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static boolean isObject(Class clazz){

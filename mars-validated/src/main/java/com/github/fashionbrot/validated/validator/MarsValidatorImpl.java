@@ -44,16 +44,15 @@ public class MarsValidatorImpl implements MarsValidator {
             }
 
             for (Field field : fields) {
-
                 if (JavaUtil.isFinal(field)){
                     continue;
                 }
+                Class<?> valueType = field.getType();
+                String fieldName = field.getName();
+
                 List<Annotation> validAnnotation = getValidAnnotation(field.getDeclaredAnnotations());
                 if (ObjectUtil.isNotEmpty(validAnnotation)) {
                     for (Annotation annotation : validAnnotation) {
-
-                        Class<?> valueType = field.getType();
-                        String fieldName = field.getName();
                         validated(validated, params, index, valueType, fieldName, annotation, field);
                     }
                 }
@@ -118,6 +117,11 @@ public class MarsValidatorImpl implements MarsValidator {
                     Parameter parameter = parameters[j];
                     Class<?> classType = parameter.getType();
                     String parameterTypeName = classType.getTypeName();
+                    if(JavaUtil.isMvcIgnoreParams(parameterTypeName)){
+                        continue;
+                    }
+
+
 
                     List<Annotation> validAnnotation = getValidAnnotation(parameter.getDeclaredAnnotations());
                     if (ObjectUtil.isNotEmpty(validAnnotation)){
@@ -128,8 +132,29 @@ public class MarsValidatorImpl implements MarsValidator {
                             validated(validated, params, j, parameter.getType(), parameter.getName(), annotation, null);
                         }
                     } else {
-                        //验证参数属性
-                        entityFieldsAnnotationValid(validated, parameterTypeName, classType, params, j);
+
+                        if (JavaUtil.isArray(parameterTypeName)){
+
+                        }else if (JavaUtil.isCollection(parameterTypeName)){
+                            Type[] actualTypeArguments = TypeUtil.getActualTypeArguments(parameter);
+                            if (ObjectUtil.isNotEmpty(actualTypeArguments) &&
+                                actualTypeArguments[0] instanceof Class &&
+                                JavaUtil.isNotPrimitive(actualTypeArguments[0].getTypeName())){
+                                Class typeConvertClass = TypeUtil.typeConvertClass(actualTypeArguments[0]);
+                                if (typeConvertClass!=null){
+                                    List param = (List) params[j];
+                                    if (ObjectUtil.isNotEmpty(param)){
+                                        for (int i = 0; i < param.size(); i++) {
+                                            Object o = param.get(i);
+                                            entityFieldsAnnotationValid(validated, parameter.getName(), typeConvertClass, new Object[]{o}, 0);
+                                        }
+                                    }
+                                }
+                            }
+                        }else {
+                            //验证参数属性
+                            entityFieldsAnnotationValid(validated, parameterTypeName, classType, params, j);
+                        }
                     }
                 }
             }
@@ -154,19 +179,6 @@ public class MarsValidatorImpl implements MarsValidator {
         return null;
     }
 
-    private boolean checkValidAnnotation(Annotation[] annotations){
-        if (ObjectUtil.isNotEmpty(annotations) ) {
-
-            for (int i = 0; i < annotations.length; i++) {
-                Annotation annotation = annotations[i];
-                Class<? extends Annotation> annotationType = annotation.annotationType();
-                if (ConstraintHelper.containsKey(annotation.annotationType()) || annotationType.isAnnotationPresent(Constraint.class) ){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
 
     private void validated(Validated validated,
