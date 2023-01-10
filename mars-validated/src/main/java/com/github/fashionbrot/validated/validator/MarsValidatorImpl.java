@@ -121,8 +121,6 @@ public class MarsValidatorImpl implements MarsValidator {
                         continue;
                     }
 
-
-
                     List<Annotation> validAnnotation = getValidAnnotation(parameter.getDeclaredAnnotations());
                     if (ObjectUtil.isNotEmpty(validAnnotation)){
 
@@ -134,6 +132,15 @@ public class MarsValidatorImpl implements MarsValidator {
                     } else {
 
                         if (JavaUtil.isArray(parameterTypeName)){
+                            Class convertClass = parameter.getType().getComponentType();
+                            if (JavaUtil.isNotPrimitive(convertClass.getTypeName())){
+                                Object[] fieldValues = (Object[]) params[j];
+                                if (ObjectUtil.isNotEmpty(fieldValues)){
+                                    for (Object obj : fieldValues){
+                                        entityFieldsAnnotationValid(validated, parameter.getName(), convertClass, new Object[]{obj}, 0);
+                                    }
+                                }
+                            }
 
                         }else if (JavaUtil.isCollection(parameterTypeName)){
                             Type[] actualTypeArguments = TypeUtil.getActualTypeArguments(parameter);

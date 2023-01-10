@@ -11,7 +11,7 @@ public class TypeUtil {
     public static Type[] getActualTypeArguments(Parameter parameter){
         Type parameterizedType = parameter.getParameterizedType();
         if (parameterizedType!=null){
-            return convertActualTypeArguments(parameter.getParameterizedType());
+            return convertActualTypeArguments(parameterizedType);
         }
         return null;
     }
