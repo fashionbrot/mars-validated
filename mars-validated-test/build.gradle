@@ -45,7 +45,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation 'javax.servlet:javax.servlet-api:3.1.0'
 
-    implementation "com.github.fashionbrot:mars-tool:+"
+    implementation "com.github.fashionbrot:mars-tool:0.0.1"
     implementation 'javax.validation:validation-api:+'
     implementation 'org.hibernate:hibernate-validator:+'
 
