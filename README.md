@@ -56,7 +56,7 @@ jdk1.8    及以上
 |------|----------------------|--------------------------|
 |Class<?>[] validClass() default {}| {}                   | 需要校验的 class,只对填写的class验证 |
 |Class<?>[] groups() default { }| {DefaultGroup.class} | 校验组                      |
-|boolean failFast() default true| true                 | true 快速失败                |
+|boolean failFast() default true| true                 | true 快速失败 false全部验证完失败   |
 |boolean validReturnValue() default false| false                | 验证返回值 默认false            |
 
 
