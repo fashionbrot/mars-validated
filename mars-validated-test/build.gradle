@@ -38,7 +38,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
 
-    implementation 'com.alibaba:fastjson:1.2.79'
+    implementation 'com.alibaba.fastjson2:fastjson2:2.0.22'
+
     implementation ("org.springframework.boot:spring-boot-starter-web"){
     }
 

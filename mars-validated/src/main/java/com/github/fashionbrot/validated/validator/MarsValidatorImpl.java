@@ -7,6 +7,7 @@ import com.github.fashionbrot.validated.exception.ValidatedException;
 import com.github.fashionbrot.validated.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotationUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
@@ -26,45 +27,37 @@ public class MarsValidatorImpl implements MarsValidator {
     @Override
     public void entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] params, int index) {
 
-        if (JavaUtil.isNotMvcIgnoreParams(valueTypeName)) {
 
-            // 判断是否 有继承类
-            checkClassSuper(validated, clazz, params, index);
+        // 判断是否 有继承类
+        checkClassSuper(validated, clazz, params, index);
 
-            //如果填写 validClass
-            Class<?>[] validClass = validated != null ? validated.validClass() : null;
-            if (!isValidClass(validClass, clazz)) {
-                return;
+        //如果填写 validClass
+        Class<?>[] validClass = validated != null ? validated.validClass() : null;
+        if (!isValidClass(validClass, clazz)) {
+            return;
+        }
+
+
+        Field[] fields = clazz.getDeclaredFields();
+        if (ObjectUtil.isEmpty(fields)) {
+            return;
+        }
+
+        for (Field field : fields) {
+            if (JavaUtil.isFinal(field)) {
+                continue;
             }
+            Class<?> valueType = field.getType();
+            String fieldName = field.getName();
 
-
-            Field[] fields = clazz.getDeclaredFields();
-            if (ObjectUtil.isEmpty(fields)) {
-                return;
-            }
-
-            for (Field field : fields) {
-                if (JavaUtil.isFinal(field)){
-                    continue;
-                }
-                Class<?> valueType = field.getType();
-                String fieldName = field.getName();
-
-                List<Annotation> validAnnotation = getValidAnnotation(field.getDeclaredAnnotations());
-                if (ObjectUtil.isNotEmpty(validAnnotation)) {
-                    for (Annotation annotation : validAnnotation) {
-                        validated(validated, params, index, valueType, fieldName, annotation, field);
-                    }
+            List<Annotation> validAnnotation = getValidAnnotation(field.getDeclaredAnnotations());
+            if (ObjectUtil.isNotEmpty(validAnnotation)) {
+                for (Annotation annotation : validAnnotation) {
+                    validated(validated, params, index, valueType, fieldName, annotation, field);
                 }
             }
         }
-    }
 
-    private boolean isValidClass(Class<?>[] validClass, Class<?> clazz) {
-        if (ObjectUtil.isEmpty(validClass)) {
-            return true;
-        }
-        return Arrays.asList(validClass).contains(clazz);
     }
 
 
@@ -81,7 +74,7 @@ public class MarsValidatorImpl implements MarsValidator {
         Class superclass = clazz.getSuperclass();
         if (superclass != null && JavaUtil.isNotObject(superclass)) {
             //如果不是定义的类型，则把 class 当做bean 进行校验 field
-           entityFieldsAnnotationValid(validated, superclass.getName(), superclass, params, index);
+            entityFieldsAnnotationValid(validated, superclass.getName(), superclass, params, index);
         }
     }
 
@@ -117,12 +110,12 @@ public class MarsValidatorImpl implements MarsValidator {
                     Parameter parameter = parameters[j];
                     Class<?> classType = parameter.getType();
                     String parameterTypeName = classType.getTypeName();
-                    if(JavaUtil.isMvcIgnoreParams(parameterTypeName)){
+                    if (JavaUtil.isMvcIgnoreParams(parameterTypeName)) {
                         continue;
                     }
 
                     List<Annotation> validAnnotation = getValidAnnotation(parameter.getDeclaredAnnotations());
-                    if (ObjectUtil.isNotEmpty(validAnnotation)){
+                    if (ObjectUtil.isNotEmpty(validAnnotation)) {
 
                         for (int i = 0; i < validAnnotation.size(); i++) {
                             Annotation annotation = validAnnotation.get(i);
@@ -131,26 +124,27 @@ public class MarsValidatorImpl implements MarsValidator {
                         }
                     } else {
 
-                        if (JavaUtil.isArray(parameterTypeName)){
+                        if (JavaUtil.isArray(parameterTypeName)) {
                             Class convertClass = parameter.getType().getComponentType();
-                            if (JavaUtil.isNotPrimitive(convertClass.getTypeName())){
+                            if (JavaUtil.isNotPrimitive(convertClass.getTypeName())) {
                                 Object[] fieldValues = (Object[]) params[j];
-                                if (ObjectUtil.isNotEmpty(fieldValues)){
-                                    for (Object obj : fieldValues){
+                                if (ObjectUtil.isNotEmpty(fieldValues)) {
+                                    for (Object obj : fieldValues) {
                                         entityFieldsAnnotationValid(validated, parameter.getName(), convertClass, new Object[]{obj}, 0);
                                     }
                                 }
                             }
 
-                        }else if (JavaUtil.isCollection(parameterTypeName)){
+                        } else if (JavaUtil.isCollection(parameterTypeName)) {
                             Type[] actualTypeArguments = TypeUtil.getActualTypeArguments(parameter);
                             if (ObjectUtil.isNotEmpty(actualTypeArguments) &&
                                 actualTypeArguments[0] instanceof Class &&
-                                JavaUtil.isNotPrimitive(actualTypeArguments[0].getTypeName())){
+                                JavaUtil.isNotPrimitive(actualTypeArguments[0].getTypeName())) {
+
                                 Class typeConvertClass = TypeUtil.typeConvertClass(actualTypeArguments[0]);
-                                if (typeConvertClass!=null){
+                                if (typeConvertClass != null) {
                                     List param = (List) params[j];
-                                    if (ObjectUtil.isNotEmpty(param)){
+                                    if (ObjectUtil.isNotEmpty(param)) {
                                         for (int i = 0; i < param.size(); i++) {
                                             Object o = param.get(i);
                                             entityFieldsAnnotationValid(validated, parameter.getName(), typeConvertClass, new Object[]{o}, 0);
@@ -158,14 +152,14 @@ public class MarsValidatorImpl implements MarsValidator {
                                     }
                                 }
                             }
-                        }else {
+                        } else {
                             //验证参数属性
                             entityFieldsAnnotationValid(validated, parameterTypeName, classType, params, j);
                         }
                     }
                 }
             }
-            if (!validated.failFast()){
+            if (!validated.failFast()) {
                 ExceptionUtil.throwException();
             }
 
@@ -177,6 +171,7 @@ public class MarsValidatorImpl implements MarsValidator {
     }
 
 
+
     private List<Annotation> getValidAnnotation(Annotation[] annotations) {
         if (ObjectUtil.isNotEmpty(annotations)) {
             return Arrays.stream(annotations)
@@ -185,7 +180,6 @@ public class MarsValidatorImpl implements MarsValidator {
         }
         return null;
     }
-
 
 
     private void validated(Validated validated,
@@ -249,8 +243,8 @@ public class MarsValidatorImpl implements MarsValidator {
                 boolean isValid = constraintValidator.isValid(annotation, value, valueType);
                 if (!isValid) {
                     if (failFast) {
-                        ValidatedException.throwMsg(paramName,ValidatorUtil.filterMsg((String) annotationAttributes.get(MSG)),annotation.annotationType().getName(),value);
-                    }else{
+                        ValidatedException.throwMsg(paramName, ValidatorUtil.filterMsg((String) annotationAttributes.get(MSG)), annotation.annotationType().getName(), value);
+                    } else {
                         addMarsViolations(value, paramName, annotation, (String) annotationAttributes.get(MSG));
                     }
                 }
@@ -284,11 +278,19 @@ public class MarsValidatorImpl implements MarsValidator {
 
     private void addMarsViolations(Object value, String paramName, Annotation annotation, String msg) {
         ExceptionUtil.addMarsViolation(MarsViolation.builder()
-                .annotationName(annotation.annotationType().getName())
-                .fieldName(paramName)
-                .msg(ValidatorUtil.filterMsg(msg))
-                .value(value)
-                .build());
+            .annotationName(annotation.annotationType().getName())
+            .fieldName(paramName)
+            .msg(ValidatorUtil.filterMsg(msg))
+            .value(value)
+            .build());
+    }
+
+
+    private boolean isValidClass(Class<?>[] validClass, Class<?> clazz) {
+        if (ObjectUtil.isEmpty(validClass)) {
+            return true;
+        }
+        return Arrays.asList(validClass).contains(clazz);
     }
 
 
@@ -297,7 +299,7 @@ public class MarsValidatorImpl implements MarsValidator {
      *
      * @param vGroupClass
      * @param attributes
-     * @return
+     * @return boolean
      */
     private boolean checkGroup(Class<?>[] vGroupClass, Map<String, Object> attributes) {
         //groups==null ,则不验证groups
@@ -305,7 +307,7 @@ public class MarsValidatorImpl implements MarsValidator {
             return false;
         }
         //检测groups 是否匹配
-        if (attributes.containsKey(GROUPS) ) {
+        if (attributes.containsKey(GROUPS)) {
             Class[] groups = (Class[]) attributes.get(GROUPS);
             //如果 vGroupClass 不为空，则默认 annotation 注解 groups=DefaultGroup.class
             if (ObjectUtil.isEmpty(groups)) {
@@ -316,7 +318,6 @@ public class MarsValidatorImpl implements MarsValidator {
             }
             return true;
         }
-
         //如果 vGroupClass 不为空，则默认 annotation 注解 groups=DefaultGroup.class
         return false;
     }

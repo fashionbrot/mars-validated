@@ -3,21 +3,18 @@ package com.github.fashionbrot.validated.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Properties;
 
 
 public class JavaUtil {
 
     public static Properties javaPrimitive = new Properties();
-    public static Properties javaMap = new Properties();
     public static Properties mvcIgnoreParam = new Properties();
-    public static Properties mvcFile = new Properties();
 
     static {
         javaPrimitive = ResourceUtil.getResourceAsProperties("mars-java-primitive.properties");
-        javaMap = ResourceUtil.getResourceAsProperties("mars-java-map.properties");
         mvcIgnoreParam = ResourceUtil.getResourceAsProperties("mars-mvc-ignore-param.properties");
-        mvcFile = ResourceUtil.getResourceAsProperties("mars-mvc-file.properties");
     }
 
     /**
@@ -101,19 +98,6 @@ public class JavaUtil {
         return JavaUtil.isNotPrimitive(clazz.getTypeName());
     }
 
-    public static boolean isMap(Class clazz){
-        return isMap(clazz.getTypeName());
-    }
-    /**
-     * Check if it is an map
-     *
-     * @param type java type
-     * @return boolean
-     */
-    public static boolean isMap(String type) {
-        return javaMap.containsKey(type);
-    }
-
     /**
      * check array
      *
@@ -169,37 +153,6 @@ public class JavaUtil {
         }
         return mvcIgnoreParam.containsKey(paramType);
     }
-
-    /**
-     * ignore field type name
-     *
-     * @param typeName field type name
-     * @return String
-     */
-    public static boolean isIgnoreFieldTypes(String typeName) {
-        switch (typeName) {
-            case "org.slf4j.Logger":
-            case "org.apache.ibatis.logging.Log":
-            case "java.lang.Class":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * check file
-     *
-     * @param typeName type name
-     * @return boolean
-     */
-    public static boolean isFile(String typeName) {
-        if (ObjectUtil.isEmpty(typeName)){
-            return false;
-        }
-        return mvcFile.containsKey(typeName);
-    }
-
 
 
 
