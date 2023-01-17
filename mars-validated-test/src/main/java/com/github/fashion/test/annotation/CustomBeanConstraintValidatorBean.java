@@ -20,17 +20,17 @@ public class CustomBeanConstraintValidatorBean implements ConstraintValidator<Cu
             if (ObjectUtil.isEmpty(beanModel.getA1())){
                 msg.add("A1 不能为空") ;
                 if (annotation.failFast()){
-                    ValidatedException.throwMsg("A1",msg.toString());
+                    ValidatedException.throwMsg("A1",msg.toString(),null,null,null);
                 }
             }
             if (ObjectUtil.isEmpty(beanModel.getA2())){
                 msg.add("A2 不能为空") ;
                 if (annotation.failFast()){
-                    ValidatedException.throwMsg("A2",msg.toString());
+                    ValidatedException.throwMsg("A2",msg.toString(),null,null,null);
                 }
             }
             if (msg.length()>0){
-                ValidatedException.throwMsg("req",msg.toString());
+                ValidatedException.throwMsg("req",msg.toString(),null,null,null);
             }
         }
         return true;

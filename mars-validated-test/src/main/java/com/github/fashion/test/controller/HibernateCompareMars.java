@@ -1,7 +1,7 @@
 package com.github.fashion.test.controller;
 
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.github.fashion.test.model.DemoModel;
 import com.github.fashion.test.util.HttpClientUtil;
 import com.github.fashion.test.util.test;

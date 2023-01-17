@@ -26,9 +26,9 @@ public interface MarsValidator {
      * @param validated      validated
      * @param valueTypeName  valueTypeName
      * @param clazz          clazz
-     * @param objectValue    objectValue
-     * @param index          filed index
+     * @param params        params
+     * @param paramIndex    paramIndex
      */
-    void entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] objectValue, int index);
+    void entityFieldsAnnotationValid(Validated validated, String valueTypeName, Class<?> clazz, Object[] params,Integer paramIndex);
 
 }

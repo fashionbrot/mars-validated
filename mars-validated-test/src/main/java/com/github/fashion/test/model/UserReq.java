@@ -14,9 +14,11 @@ public class UserReq {
     @Default("1")
     private String id;
 
+    @javax.validation.constraints.NotEmpty(message = "username: 不能为空")
     @NotEmpty
     private String username;
 
+    @javax.validation.constraints.NotEmpty(message = "password: 不能为空")
     @NotEmpty
     private String password;
 

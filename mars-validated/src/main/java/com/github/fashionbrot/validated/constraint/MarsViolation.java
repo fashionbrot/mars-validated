@@ -22,4 +22,9 @@ public class MarsViolation {
      * value
      */
     private Object value;
+    /**
+     * Array or List
+     * value index
+     */
+    private Integer valueIndex;
 }
