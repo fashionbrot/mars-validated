@@ -3,7 +3,6 @@ package com.github.fashionbrot.validated.validator;
 import com.github.fashionbrot.validated.annotation.Valid;
 import com.github.fashionbrot.validated.annotation.Validated;
 import com.github.fashionbrot.validated.constraint.*;
-import com.github.fashionbrot.validated.enums.ClassTypeEnum;
 import com.github.fashionbrot.validated.exception.ValidatedException;
 import com.github.fashionbrot.validated.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -59,25 +58,20 @@ public class MarsValidatorImpl implements MarsValidator {
             }else{
                 Valid valid = field.getDeclaredAnnotation(Valid.class);
                 String typeName = fieldClassType.getTypeName();
-
                 if (JavaUtil.isArray(typeName)) {
                     if (valid==null){
                         continue;
                     }
                     validArrayObject(validated,field,params,paramIndex);
-
                 } else if (JavaUtil.isCollection(typeName)) {
                     if (valid==null){
                         continue;
                     }
-
                     validListObject(validated,field, params,paramIndex);
-
                 } else {
                     //验证参数属性
                     entityFieldsAnnotationValid(validated, typeName, fieldClassType, params, paramIndex);
                 }
-
             }
         }
 
@@ -86,7 +80,6 @@ public class MarsValidatorImpl implements MarsValidator {
 
 
     private void checkClassSuper(Validated validated, Class clazz, Object[] params,Integer valueIndex) {
-        //获取 superclass 是否是 appClassloader 加载的
         Class superclass = clazz.getSuperclass();
         if (superclass != null && JavaUtil.isNotObject(superclass)) {
             //如果不是定义的类型，则把 class 当做bean 进行校验 field
@@ -96,10 +89,8 @@ public class MarsValidatorImpl implements MarsValidator {
 
     @Override
     public void returnValueAnnotationValid(Validated validated, Object object) {
-        //验证当前参数是类，还是普通类型
         try {
-            ClassTypeEnum classTypeEnum = ClassTypeEnum.getValue(object.getClass().getName());
-            if (classTypeEnum == null) {
+            if (JavaUtil.isNotPrimitive(object.getClass().getName())) {
                 //验证参数属性
                 entityFieldsAnnotationValid(validated, object.getClass().getTypeName(), object.getClass(), new Object[]{object},0);
             }
@@ -140,19 +131,16 @@ public class MarsValidatorImpl implements MarsValidator {
 
                     } else {
                         Valid valid = parameter.getDeclaredAnnotation(Valid.class);
-
                         if (JavaUtil.isArray(parameterTypeName) ) {
                             if (valid==null){
                                 continue;
                             }
                             validArrayObject(validated,parameter.getType(),params,j,parameter.getName());
-
                         } else if (JavaUtil.isCollection(parameterTypeName)) {
                             if (valid==null){
                                 continue;
                             }
                             validListObject(validated,parameter,params,j);
-
                         } else {
                             //验证参数属性
                             entityFieldsAnnotationValid(validated, parameterTypeName, classType, params, j);
@@ -266,26 +254,19 @@ public class MarsValidatorImpl implements MarsValidator {
         }
 
         List<ConstraintValidator> constraintValidatorList = ConstraintHelper.getConstraint(annotation.annotationType());
-        if (ObjectUtil.isNotEmpty(constraintValidatorList)) {
-
-            validatedConstrain(constraintValidatorList, annotationAttributes, failFast, annotation, params,paramIndex, paramName, valueType, field);
-
-        } else {
-            Class<? extends Annotation> annotationType = annotation.annotationType();
-            if (annotationType.isAnnotationPresent(Constraint.class)) {
-                Constraint constraint = annotationType.getDeclaredAnnotation(Constraint.class);
-                if (constraint != null) {
-                    Class<? extends ConstraintValidator<? extends Annotation, ?>>[] classes = constraint.validatedBy();
-                    if (ObjectUtil.isEmpty(classes)) {
-                        return;
-                    }
-                    ConstraintHelper.putConstraintValidator(annotation.annotationType(), classes);
-                    constraintValidatorList = ConstraintHelper.getConstraint(annotation.annotationType());
-                    if (ObjectUtil.isNotEmpty(constraintValidatorList)) {
-                        validatedConstrain(constraintValidatorList, annotationAttributes, failFast, annotation, params,paramIndex, paramName, valueType, field);
-                    }
+        if (ObjectUtil.isEmpty(constraintValidatorList)) {
+            Constraint constraint = annotation.annotationType().getDeclaredAnnotation(Constraint.class);
+            if (constraint != null) {
+                Class<? extends ConstraintValidator<? extends Annotation, ?>>[] classes = constraint.validatedBy();
+                if (ObjectUtil.isEmpty(classes)) {
+                    return;
                 }
+                ConstraintHelper.putConstraintValidator(annotation.annotationType(), classes);
+                constraintValidatorList = ConstraintHelper.getConstraint(annotation.annotationType());
             }
+        }
+        if (ObjectUtil.isNotEmpty(constraintValidatorList)) {
+            validatedConstrain(constraintValidatorList, annotationAttributes, failFast, annotation, params,paramIndex, paramName, valueType, field);
         }
     }
 
