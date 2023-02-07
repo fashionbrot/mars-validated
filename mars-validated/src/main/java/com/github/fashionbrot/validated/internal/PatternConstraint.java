@@ -1,7 +1,7 @@
 package com.github.fashionbrot.validated.internal;
 
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
-import com.github.fashionbrot.validated.util.StringUtil;
+import com.github.fashionbrot.validated.util.ObjectUtil;
 
 import java.util.regex.Pattern;
 
@@ -15,8 +15,8 @@ public class PatternConstraint implements ConstraintValidator<com.github.fashion
             return false;
         } else {
             String regexp = pattern.regexp();
-            String str = StringUtil.formatString(objectValue);
-            if (StringUtil.isNotEmpty(regexp)) {
+            String str = ObjectUtil.formatString(objectValue);
+            if (ObjectUtil.isNotEmpty(regexp)) {
                 Pattern patternV = Pattern.compile(pattern.regexp());
                 return patternV.matcher(str).matches();
             }

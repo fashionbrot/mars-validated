@@ -2,7 +2,8 @@ package com.github.fashionbrot.validated.internal;
 
 import com.github.fashionbrot.validated.annotation.Default;
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
-import com.github.fashionbrot.validated.util.StringUtil;
+import com.github.fashionbrot.validated.util.ObjectUtil;
+
 
 import java.math.BigDecimal;
 
@@ -20,7 +21,7 @@ public class DefaultConstraint implements ConstraintValidator<Default,Object> {
         }
         if (value instanceof CharSequence){
             CharSequence sequence = (CharSequence) value;
-            if (StringUtil.isEmpty(sequence)){
+            if (ObjectUtil.isEmpty(sequence)){
                 return annotation.value();
             }
         }else if (value instanceof BigDecimal){
@@ -29,8 +30,8 @@ public class DefaultConstraint implements ConstraintValidator<Default,Object> {
                 return annotation.value();
             }
         }else{
-            String str = StringUtil.formatString(value);
-            if (StringUtil.isEmpty(str)){
+            String str = ObjectUtil.formatString(value);
+            if (ObjectUtil.isEmpty(str)){
                 return annotation.value();
             }
         }

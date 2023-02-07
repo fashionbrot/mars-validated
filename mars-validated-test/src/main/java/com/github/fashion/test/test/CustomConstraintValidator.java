@@ -2,7 +2,6 @@ package com.github.fashion.test.test;
 
 
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
-import com.github.fashionbrot.validated.util.StringUtil;
 
 public class CustomConstraintValidator implements ConstraintValidator<Custom, Object> {
 

@@ -12,7 +12,7 @@ public class DemoModel {
     @NotNull
     @javax.validation.constraints.NotNull
     private String test2;
-/*
+
     @Size(msg = "test3 is null",min = 10,max = 12)
     @javax.validation.constraints.Size(message = "test3 is null",min = 10,max = 12)
     private String test3;
@@ -44,5 +44,5 @@ public class DemoModel {
 
     @NotEmpty(msg = "test10 is null")
     @javax.validation.constraints.NotEmpty(message = "test10 is null")
-    private String test10;*/
+    private String test10;
 }

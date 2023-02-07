@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
             if (violations.size() == 1) {
                 msg = violations.get(0).getMsg();
             } else {
-                msg = String.join(",", violations.stream().map(m -> m.getMsg()).collect(Collectors.toList()));
+                msg =  violations.stream().map(m -> m.getMsg()).collect(Collectors.joining(","));
             }
         }
         return msg;

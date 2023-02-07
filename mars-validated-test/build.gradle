@@ -17,12 +17,12 @@ apply plugin: "io.spring.dependency-management"
 ext{
     tinylog_version="2.4.1"
 }
-configurations {
-    all*.exclude group:"ch.qos.logback", module:""
-    all*.exclude group:"org.apache.logging", module:""
-    all*.exclude group:"org.springframework.boot", module:"spring-boot-starter-logging"
-    all*.exclude group:"com.zaxxer", module:""
-}
+//configurations {
+//    all*.exclude group:"ch.qos.logback", module:""
+//    all*.exclude group:"org.apache.logging", module:""
+//    all*.exclude group:"org.springframework.boot", module:"spring-boot-starter-logging"
+//    all*.exclude group:"com.zaxxer", module:""
+//}
 
 
 dependencies {
@@ -38,14 +38,14 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
 
-    implementation 'com.alibaba:fastjson:1.2.79'
-    implementation ("org.springframework.boot:spring-boot-starter-web"){
-    }
+    implementation 'com.alibaba.fastjson2:fastjson2:2.0.22'
 
+    implementation ("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation 'javax.servlet:javax.servlet-api:3.1.0'
 
-    implementation "com.github.fashionbrot:mars-tool:0.0.1"
+    implementation "com.github.fashionbrot:mars-tool:0.0.2"
     implementation 'javax.validation:validation-api:+'
     implementation 'org.hibernate:hibernate-validator:+'
 
