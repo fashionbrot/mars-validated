@@ -27,6 +27,6 @@ public @interface EnableValidatedConfig {
      * request locale param name
      * @return String
      */
-    String localeParamName() default "lang";
+    String localeParamName() default "";
 
 }

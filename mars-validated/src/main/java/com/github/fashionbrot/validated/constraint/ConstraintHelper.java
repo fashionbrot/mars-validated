@@ -3,7 +3,10 @@ package com.github.fashionbrot.validated.constraint;
 
 import com.github.fashionbrot.validated.annotation.*;
 import com.github.fashionbrot.validated.internal.*;
+import com.github.fashionbrot.validated.util.BeanUtil;
 import com.github.fashionbrot.validated.util.MethodUtil;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -37,11 +40,11 @@ public class ConstraintHelper {
     }
 
 
-    public static <A extends Annotation> void putTemp(
-            Map<Class<? extends Annotation>, List<ConstraintValidator>> builtinConstraints,
-            Class<A> constraintType,
-            Class<? extends ConstraintValidator>... constraintValidators) {
-        if (constraintValidators.length > 0) {
+    private static <A extends Annotation> void putTemp(
+        Map<Class<? extends Annotation>, List<ConstraintValidator>> builtinConstraints,
+        Class<A> constraintType,
+        Class<? extends ConstraintValidator>... constraintValidators) {
+        if (constraintValidators!=null && constraintValidators.length > 0) {
             List<ConstraintValidator> list = new ArrayList<>(constraintValidators.length);
             for (int i = 0; i < constraintValidators.length; i++) {
                 list.add(MethodUtil.newInstance(constraintValidators[i]));
@@ -51,8 +54,8 @@ public class ConstraintHelper {
     }
 
     public static <A extends Annotation> void putConstraintValidator(
-            Class<A> constraintType,
-            Class<? extends ConstraintValidator>[] constraintValidators) {
+        Class<A> constraintType,
+        Class<? extends ConstraintValidator>[] constraintValidators) {
         if (constraintValidators != null && constraintValidators.length > 0) {
             List<ConstraintValidator> list = new ArrayList<>(constraintValidators.length);
             for (int i = 0; i < constraintValidators.length; i++) {
@@ -62,12 +65,25 @@ public class ConstraintHelper {
         }
     }
 
+    public static <A extends Annotation> void putConstraintValidator(BeanFactory beanFactory, Class<A> constraintType, Class<? extends ConstraintValidator>[] constraintValidators) {
+        if (constraintValidators != null && constraintValidators.length > 0) {
+            List<ConstraintValidator> list = new ArrayList<>(constraintValidators.length);
+            for (int i = 0; i < constraintValidators.length; i++) {
+                Class<? extends ConstraintValidator> constraintValidator = constraintValidators[i];
+                //issue#5 注入spring容器
+                BeanUtil.registerInfrastructureBeanIfAbsent((BeanDefinitionRegistry) beanFactory,constraintValidator.getName(),constraintValidator);
+                ConstraintValidator bean = beanFactory.getBean(constraintValidator);
+                if (bean!=null) {
+                    list.add(bean);
+                }
+            }
+            builtinConstraint.putIfAbsent(constraintType, list);
+        }
+    }
+
 
     public static <A extends Annotation> List<ConstraintValidator> getConstraint(Class<A> constraintType) {
-        if (builtinConstraint.containsKey(constraintType)) {
             return builtinConstraint.get(constraintType);
-        }
-        return null;
     }
 
     public static boolean containsKey(Class constraintType) {

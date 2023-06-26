@@ -4,8 +4,12 @@ import com.github.fashionbrot.validated.annotation.Valid;
 import com.github.fashionbrot.validated.annotation.Validated;
 import com.github.fashionbrot.validated.constraint.*;
 import com.github.fashionbrot.validated.exception.ValidatedException;
+import com.github.fashionbrot.validated.groups.DefaultGroup;
 import com.github.fashionbrot.validated.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.annotation.Annotation;
@@ -15,10 +19,16 @@ import java.util.stream.Collectors;
 
 
 @Slf4j
-public class MarsValidatorImpl implements MarsValidator {
+public class MarsValidatorImpl implements MarsValidator , BeanFactoryAware {
+
+    private BeanFactory beanFactory;
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
+    }
 
     public static final String BEAN_NAME = "defaultMarsValidatorImpl";
-
     private static final String METHOD_NAME_MODIFY = "modify";
     private static final String MSG = "msg";
     private static final String GROUPS = "groups";
@@ -248,6 +258,7 @@ public class MarsValidatorImpl implements MarsValidator {
 
         boolean failFast = validated != null ? validated.failFast() : true;
         Class<?>[] vGroupClass = validated != null ? validated.groups() : null;
+
         Map<String, Object> annotationAttributes = AnnotationUtils.getAnnotationAttributes(annotation);
         if (checkGroup(vGroupClass, annotationAttributes)) {
             return;
@@ -261,7 +272,7 @@ public class MarsValidatorImpl implements MarsValidator {
                 if (ObjectUtil.isEmpty(classes)) {
                     return;
                 }
-                ConstraintHelper.putConstraintValidator(annotation.annotationType(), classes);
+                ConstraintHelper.putConstraintValidator(beanFactory,annotation.annotationType(), classes);
                 constraintValidatorList = ConstraintHelper.getConstraint(annotation.annotationType());
             }
         }
@@ -350,29 +361,25 @@ public class MarsValidatorImpl implements MarsValidator {
     /**
      * check groups matches
      *
-     * @param vGroupClass
+     * @param validatedGroupClass
      * @param attributes
      * @return boolean
      */
-    private boolean checkGroup(Class<?>[] vGroupClass, Map<String, Object> attributes) {
+    private boolean checkGroup(Class<?>[] validatedGroupClass, Map<String, Object> attributes) {
         //groups==null ,则不验证groups
-        if (ObjectUtil.isEmpty(vGroupClass)) {
+        if (ObjectUtil.isEmpty(validatedGroupClass)) {
             return false;
         }
-        //检测groups 是否匹配
-        if (attributes.containsKey(GROUPS)) {
-            Class[] groups = (Class[]) attributes.get(GROUPS);
-            //如果 vGroupClass 不为空，则默认 annotation 注解 groups=DefaultGroup.class
-            if (ObjectUtil.isEmpty(groups)) {
-                return false;
-            }
-            if (checkGroup(vGroupClass, groups)) {
-                return false;
-            }
-            return true;
+        Class[] groups = (Class[]) attributes.get(GROUPS);
+        //issue#6 如果注解 groups 为空，则默认 annotation 注解 groups=DefaultGroup.class
+        if (checkGroup(DefaultGroup.class,validatedGroupClass)) {
+            return false;
         }
-        //如果 vGroupClass 不为空，则默认 annotation 注解 groups=DefaultGroup.class
-        return false;
+        if (checkGroup(validatedGroupClass, groups)) {
+            return false;
+        }
+        return true;
+
     }
 
     private boolean checkGroup(Class<?>[] vGroup, Class<?>[] aGroup) {
@@ -397,6 +404,8 @@ public class MarsValidatorImpl implements MarsValidator {
         }
         return false;
     }
+
+
 
 
 }

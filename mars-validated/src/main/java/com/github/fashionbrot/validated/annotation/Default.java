@@ -1,8 +1,6 @@
 package com.github.fashionbrot.validated.annotation;
 
 
-import com.github.fashionbrot.validated.groups.DefaultGroup;
-
 import java.lang.annotation.*;
 
 /**
@@ -23,5 +21,5 @@ public @interface Default {
 
     String  value() ;
 
-    Class<?>[] groups() default  {DefaultGroup.class};
+    Class<?>[] groups() default  {};
 }

@@ -26,7 +26,7 @@ public class ValidatorUtil implements BeanFactoryAware {
 
     private static GlobalValidatedProperties globalValidatedProperties;
 
-    private static String defaultFileName;
+    private static String defaultFileName = "valid_zh_CN";
 
     private static Map<String,ResourceBundle> MSG_MAP=new ConcurrentHashMap<>();
 
@@ -53,9 +53,9 @@ public class ValidatorUtil implements BeanFactoryAware {
 
     public static String filterMsg(String msg) {
         if (ObjectUtil.isEmpty(msg)){
-            return null;
+            return "";
         }
-        boolean isDefaultMsg = msg.startsWith("com.mars.valid");
+        boolean isDefaultMsg = msg.startsWith("validated.");
         if (isDefaultMsg) {
             msg = getMsg(msg);
         }
@@ -64,18 +64,8 @@ public class ValidatorUtil implements BeanFactoryAware {
 
     private static String getMsg(String msg) {
 
-        String language = null;
+        String language = getLanguage();
 
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes!=null){
-            HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
-            if (request!=null){
-                language = request.getParameter(globalValidatedProperties.getLocaleParamName());
-            }
-        }
-        if (ObjectUtil.isEmpty(defaultFileName)){
-            defaultFileName = "valid_zh_CN";
-        }
         ResourceBundle resourceBundle =null;
         if (ObjectUtil.isEmpty(language)){
             resourceBundle = getResourceBundle(defaultFileName);
@@ -93,6 +83,20 @@ public class ValidatorUtil implements BeanFactoryAware {
         return msg;
     }
 
+    private static String getLanguage() {
+        if (ObjectUtil.isEmpty(globalValidatedProperties.getLocaleParamName())){
+            return null;
+        }
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes!=null){
+            HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
+            if (request!=null){
+                return request.getParameter(globalValidatedProperties.getLocaleParamName());
+            }
+        }
+        return null;
+    }
+
     public static ResourceBundle getResourceBundle(final String fileName){
         ResourceBundle resourceBundle = MSG_MAP.get(fileName);
         if (resourceBundle==null){
@@ -103,5 +107,6 @@ public class ValidatorUtil implements BeanFactoryAware {
         }
         return resourceBundle;
     }
+
 
 }

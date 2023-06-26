@@ -1,12 +1,22 @@
 package com.github.fashion.test.test;
 
 
+import com.github.fashion.test.service.ValidService;
 import com.github.fashionbrot.validated.constraint.ConstraintValidator;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 
+@RequiredArgsConstructor
 public class CustomConstraintValidator implements ConstraintValidator<Custom, Object> {
+
+
+    final Environment environment;
+    final ValidService validService;
 
     @Override
     public boolean isValid(Custom custom, Object var1,Class<?> valueType) {
+        String test = environment.getProperty("test");
+        System.out.println(test);
         /**
          * 自定义方法
          */

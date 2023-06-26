@@ -1,6 +1,6 @@
 package com.github.fashionbrot.validated.annotation;
 
-import com.github.fashionbrot.validated.groups.DefaultGroup;
+
 
 import java.lang.annotation.*;
 
@@ -10,11 +10,11 @@ import java.lang.annotation.*;
  * String 类型
  */
 @Documented
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.FIELD,  ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotEmpty {
 
-    String msg() default  "com.mars.valid.NotEmpty.msg";
+    String msg() default  "validated.NotEmpty.msg";
 
-    Class<?>[] groups() default  {DefaultGroup.class};
+    Class<?>[] groups() default  {};
 }

@@ -5,21 +5,22 @@ validated 是 控制 springmvc  springboot 的验证框架。此框架基于spri
 ##### github:https://github.com/fashionbrot/mars-validated.git
 ##### gitee :https://gitee.com/fashionbrot/mars-validated.git
 
-| 版本        | 新增功能                                                                                                                                                                                                                                              |
-|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1.0.0     | 1、参数验证基本功能上线                                                                                                                                                                                                                                      |
-| 1.0.1     | 1、新增验证注解 <br>2、Validated 注解增加validClass方法，可以选择性验证自己想要的参数。 <br> 3、新增Default 注解                                                                                                                                                                     |
-| 1.0.2     | 1、代码逻辑优化。<br>2、新增groups 功能，可以根据groups 选择性验证                                                                                                                                                                                                       |
-| 1.0.3     | 1、Constraint 接口增加  validatedByBean 方法，用来自定义注解实现 <br/>2、新增国际化支持 EnableValidatedConfig 中增加了 language方法、localeParamName方法用来实现消息内容国际化支持，目前支持中英文两种。其他语言请自行添加 <br/> 3、增加1.0.3 的validated-springboot-starter 支持                                          |
+| 版本        | 新增功能                                                                                                                                                                                                                                               |
+|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1.0.0     | 1、参数验证基本功能上线                                                                                                                                                                                                                                       |
+| 1.0.1     | 1、新增验证注解 <br>2、Validated 注解增加validClass方法，可以选择性验证自己想要的参数。 <br> 3、新增Default 注解                                                                                                                                                                      |
+| 1.0.2     | 1、代码逻辑优化。<br>2、新增groups 功能，可以根据groups 选择性验证                                                                                                                                                                                                        |
+| 1.0.3     | 1、Constraint 接口增加  validatedByBean 方法，用来自定义注解实现 <br/>2、新增国际化支持 EnableValidatedConfig 中增加了 language方法、localeParamName方法用来实现消息内容国际化支持，目前支持中英文两种。其他语言请自行添加 <br/> 3、增加1.0.3 的validated-springboot-starter 支持                                           |
 | 2.0.0     | 1、Constraint 接口删除  validatedByBean 方法 <br/> 2、删除ConstraintValidatorBean 接口 <br/>  3、ConstraintValidator 新增  modify 方法、validObject 方法 <br/> 4、Validated 注解增加 failFast快速失败方法、增加validReturnValue 方法（验证返回值） <br/> 5、重构了以前的逻辑，相比hibernate valid 速度快1倍左右 |
-| 2.0.1     | 1、修复 @Validation.groups={AddGroup.class} 并且 注解.groups ={} 时,注解.groups ={}代表默认Groups,则不验证是否包含  @Validation.groups={AddGroup.class},代表跳过groups 验证                                                                                                   |
-| 2.0.2     | 1、优化bean注入问题 2、maven 编译修改为gradle 编译 3、代码优化                                                                                                                                                                                                        |
-| ~~2.0.3~~ | 1、优化验证逻辑实现   2、删除 ConstraintValidator接口中的 validObject 方法。   3、所有注解可实现bean 验证，不在是对基本类型的验证，所有对象都可验证                                                                                                                                                 |
-| ~~2.0.4~~ | 优化快速失败逻辑                                                                                                                                                                                                                                          |
-| ~~2.0.5~~ | 修改默认注解groups={DefaultGroup.class} @Validated(groups={DefaultGroup.class})                                                                                                                                                                         |
-| ~~2.0.6~~ | 修复2.0.3、2.0.4、2.0.5 参数带其他注解时导致参数验证失败bug                                                                                                                                                                                                           |
-| 2.0.7     | 修复自定义注解无法验证问题                                                                                                                                                                                                                                     |
-|2.0.8 | 代码优化、新增@Valid 注解，用于参数和属性的数组或List类型 如：UserReq[] userReq 、List<UserReq> userReq                                                                                                                                                                     |
+| 2.0.1     | 1、修复 @Validation.groups={AddGroup.class} 并且 注解.groups ={} 时,注解.groups ={}代表默认Groups,则不验证是否包含  @Validation.groups={AddGroup.class},代表跳过groups 验证                                                                                                    |
+| 2.0.2     | 1、优化bean注入问题  <br/> 2、maven 编译修改为gradle 编译 3、代码优化                                                                                                                                                                                                  |
+| ~~2.0.3~~ | 1、优化验证逻辑实现   <br/> 2、删除 ConstraintValidator接口中的 validObject 方法。   3、所有注解可实现bean 验证，不在是对基本类型的验证，所有对象都可验证                                                                                                                                            |
+| ~~2.0.4~~ | 优化快速失败逻辑                                                                                                                                                                                                                                           |
+| ~~2.0.5~~ | 修改默认注解groups={DefaultGroup.class} @Validated(groups={DefaultGroup.class})                                                                                                                                                                          |
+| ~~2.0.6~~ | 修复2.0.3、2.0.4、2.0.5 参数带其他注解时导致参数验证失败bug                                                                                                                                                                                                            |
+| 2.0.7     | 修复自定义注解无法验证问题                                                                                                                                                                                                                                      |
+|2.0.8 | 代码优化、新增@Valid 注解，用于参数和属性的数组或List类型 如：UserReq[] userReq 、List<UserReq> userReq                                                                                                                                                                      |
+| 2.0.9 | 1、增加自定义注解实现类中可以注入spring容器中注册的bean issue#5  <br/> 2、注解默认中取消 groups中的DefaultGroup.class,但参数上的注解默认拥有DefaultGroup.class注解 issue#6 <br/> 3、代码疯狂优化                                                                                                       |
 ### hibernate valid 最新版本  和 mars validated 2.0.1 比较 调用1000次接口时间比较,验证参数10个 速度最优还是 mars-validated
 
 
@@ -56,7 +57,7 @@ jdk1.8    及以上
 |方法| 默认值                  | 说明                       |
 |------|----------------------|--------------------------|
 |Class<?>[] validClass() default {}| {}                   | 需要校验的 class,只对填写的class验证 |
-|Class<?>[] groups() default { }| {DefaultGroup.class} | 校验组                      |
+|Class<?>[] groups() default { }| {} | 校验组                      |
 |boolean failFast() default true| true                 | true 快速失败                |
 |boolean validReturnValue() default false| false                | 验证返回值 默认false            |
 
@@ -72,12 +73,12 @@ jdk1.8    及以上
         <dependency>
                <groupId>com.github.fashionbrot</groupId>
                <artifactId>validated-springboot-starter</artifactId>
-               <version>2.0.8</version>
+               <version>2.0.9</version>
         </dependency>
 ```
 #### gradle 依赖
 ```bash
-implementation 'com.github.fashionbrot:validated-springboot-starter:2.0.8'
+implementation 'com.github.fashionbrot:validated-springboot-starter:2.0.9'
 ```
 
 ### 1.2、参数验证
@@ -104,12 +105,12 @@ public class NotEmptyController {
         <dependency>
             <groupId>com.github.fashionbrot</groupId>
             <artifactId>mars-validated</artifactId>
-            <version>2.0.8</version>
+            <version>2.0.9</version>
         </dependency>
 ```
 #### gradle 依赖
 ```bash
-implementation 'com.github.fashionbrot:mars-validated:2.0.8'
+implementation 'com.github.fashionbrot:mars-validated:2.0.9'
 ```
 
 ### 2.2、配置扫描类
@@ -178,7 +179,7 @@ public class GlobalExceptionHandler {
 |--------------------------|-------|-----------------------------------------------------------------------------------------|
 | mars.validated.file-name | valid | 代表resources下面的配置文件  valid_zh_CN.properties 的文件名                                         |
 |mars.validated.language|zh_CN| 代表resources下面配置文件 valid_zh_CN.properties   语言                                           |
-|mars.validated.locale-param-name|lang| 浏览器参数配置 lang=zh_CN`  `mars.validated.file-name=valid 则读取的配置文件为valid_zh_CN.properties语言包 |
+|mars.validated.locale-param-name|""| 浏览器参数配置 lang=zh_CN`  `mars.validated.file-name=valid 则读取的配置文件为valid_zh_CN.properties语言包 |
 
 
 #### springboot配置方式

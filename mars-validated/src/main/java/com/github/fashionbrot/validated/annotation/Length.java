@@ -1,14 +1,8 @@
 package com.github.fashionbrot.validated.annotation;
 
-import com.github.fashionbrot.validated.groups.DefaultGroup;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.*;
 
 /**
  * 验证 长度
@@ -29,15 +23,15 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  */
 @Documented
-@Target({  FIELD,PARAMETER })
-@Retention(RUNTIME)
+@Target({ElementType.FIELD,  ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Length {
 
     int min() default 0;
 
     int max() default Integer.MAX_VALUE;
 
-    String msg() default "com.mars.valid.Length.msg";
+    String msg() default "validated.Length.msg";
 
-    Class<?>[] groups() default  {DefaultGroup.class};
+    Class<?>[] groups() default  {};
 }

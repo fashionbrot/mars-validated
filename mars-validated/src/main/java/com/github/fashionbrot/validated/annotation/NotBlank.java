@@ -1,7 +1,7 @@
 package com.github.fashionbrot.validated.annotation;
 
 
-import com.github.fashionbrot.validated.groups.DefaultGroup;
+
 
 import java.lang.annotation.*;
 
@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotBlank {
 
-    String  msg() default "com.mars.valid.NotBlank.msg";
+    String  msg() default "validated.NotBlank.msg";
 
-    Class<?>[] groups() default  {DefaultGroup.class};
+    Class<?>[] groups() default  {};
 }
