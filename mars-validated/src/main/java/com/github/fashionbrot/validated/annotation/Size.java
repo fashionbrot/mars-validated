@@ -30,5 +30,9 @@ public @interface Size {
 
     String msg() default "validated.Size.msg";
 
+    /**
+     * default @see com.github.fashionbrot.validated.groups.DefaultGroup
+     * @return groups
+     */
     Class<?>[] groups() default  {};
 }

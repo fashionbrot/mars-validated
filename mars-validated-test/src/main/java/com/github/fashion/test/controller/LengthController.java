@@ -14,7 +14,7 @@ public class LengthController {
     @RequestMapping("demo1")
     @ResponseBody
     @Validated
-    public String demo1(@Length(min =1,max = 5,msg="test 长度 1~5 之间")String test){
+    public String demo1(@Length(min =1,max = 5,msg = "长度最长${max}最短${min } ")String test){
 
         return test;
     }

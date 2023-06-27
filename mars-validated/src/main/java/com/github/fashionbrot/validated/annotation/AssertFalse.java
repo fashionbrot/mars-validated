@@ -15,5 +15,9 @@ public @interface AssertFalse {
 
     String msg() default "validated.AssertFalse.msg";
 
+    /**
+     * default @see com.github.fashionbrot.validated.groups.DefaultGroup
+     * @return groups
+     */
     Class<?>[] groups() default  {};
 }

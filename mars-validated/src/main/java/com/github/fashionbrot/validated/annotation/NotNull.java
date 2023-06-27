@@ -16,5 +16,9 @@ public @interface NotNull {
 
     String  msg() default "validated.NotNull.msg";
 
+    /**
+     * default @see com.github.fashionbrot.validated.groups.DefaultGroup
+     * @return groups
+     */
     Class<?>[] groups() default  {};
 }

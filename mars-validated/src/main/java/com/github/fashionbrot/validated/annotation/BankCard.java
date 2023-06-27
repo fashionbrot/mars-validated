@@ -21,5 +21,9 @@ public @interface BankCard {
      */
     String regexp() default "^([1-9]{1})(\\d{14}|\\d{18})$";
 
+    /**
+     * default @see com.github.fashionbrot.validated.groups.DefaultGroup
+     * @return groups
+     */
     Class<?>[] groups() default  {};
 }

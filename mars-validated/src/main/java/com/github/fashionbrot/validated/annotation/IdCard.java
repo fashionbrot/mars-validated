@@ -25,6 +25,10 @@ public @interface IdCard {
 
     String below18Msg() default "validated.IdCard.below18.msg";
 
+    /**
+     * default @see com.github.fashionbrot.validated.groups.DefaultGroup
+     * @return groups
+     */
     Class<?>[] groups() default  {};
 
 }

@@ -19,5 +19,9 @@ public @interface Email {
 
     String msg() default "validated.Email.msg";
 
+    /**
+     * default @see com.github.fashionbrot.validated.groups.DefaultGroup
+     * @return groups
+     */
     Class<?>[] groups() default  {};
 }

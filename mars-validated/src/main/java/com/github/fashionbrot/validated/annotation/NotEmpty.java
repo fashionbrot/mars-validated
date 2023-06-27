@@ -16,5 +16,9 @@ public @interface NotEmpty {
 
     String msg() default  "validated.NotEmpty.msg";
 
+    /**
+     * default @see com.github.fashionbrot.validated.groups.DefaultGroup
+     * @return groups
+     */
     Class<?>[] groups() default  {};
 }

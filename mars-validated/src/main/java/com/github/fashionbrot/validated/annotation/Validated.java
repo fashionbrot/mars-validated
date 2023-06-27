@@ -19,7 +19,7 @@ public @interface Validated {
     Class<?>[] validClass() default {};
 
     /**
-     * 校验组
+     * 校验组 default @see com.github.fashionbrot.validated.groups.DefaultGroup
      * @return Class
      */
     Class<?>[] groups() default {};

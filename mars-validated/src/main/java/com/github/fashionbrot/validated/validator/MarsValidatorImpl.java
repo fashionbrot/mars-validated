@@ -303,9 +303,11 @@ public class MarsValidatorImpl implements MarsValidator , BeanFactoryAware {
                 boolean isValid = constraintValidator.isValid(annotation, value, valueType);
                 if (!isValid) {
                     if (failFast) {
-                        ValidatedException.throwMsg(paramName, ValidatorUtil.filterMsg((String) annotationAttributes.get(MSG)), annotation.annotationType().getName(), value,index);
+                        String msg  = parseMsg(annotationAttributes); //issue#8
+                        ValidatedException.throwMsg(paramName, msg, annotation.annotationType().getName(), value,index);
                     } else {
-                        addMarsViolations(value, paramName, annotation, (String) annotationAttributes.get(MSG),index);
+                        String msg  = parseMsg(annotationAttributes);//issue#8
+                        addMarsViolations(value, paramName, annotation, msg,index);
                     }
                 }
 
@@ -337,13 +339,20 @@ public class MarsValidatorImpl implements MarsValidator , BeanFactoryAware {
     }
 
 
+    private String parseMsg(Map<String, Object> annotationAttributes) {
+        if (annotationAttributes.containsKey(MSG)) {
+            String filterMsg = ValidatorUtil.filterMsg((String) annotationAttributes.get(MSG));
+            return GenericTokenUtil.parse(filterMsg, annotationAttributes);
+        }
+        return "";
+    }
 
 
     private void addMarsViolations(Object value, String paramName, Annotation annotation, String msg,Integer valueIndex) {
         ExceptionUtil.addMarsViolation(MarsViolation.builder()
                 .annotationName(annotation.annotationType().getName())
                 .fieldName(paramName)
-                .msg(ValidatorUtil.filterMsg(msg))
+                .msg(msg)
                 .value(value)
                 .valueIndex(valueIndex)
             .build());
@@ -370,11 +379,11 @@ public class MarsValidatorImpl implements MarsValidator , BeanFactoryAware {
         if (ObjectUtil.isEmpty(validatedGroupClass)) {
             return false;
         }
-        Class[] groups = (Class[]) attributes.get(GROUPS);
         //issue#6 如果注解 groups 为空，则默认 annotation 注解 groups=DefaultGroup.class
         if (checkGroup(DefaultGroup.class,validatedGroupClass)) {
             return false;
         }
+        Class[] groups = (Class[]) attributes.get(GROUPS);
         if (checkGroup(validatedGroupClass, groups)) {
             return false;
         }

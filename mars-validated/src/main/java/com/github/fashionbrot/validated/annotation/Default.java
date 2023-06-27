@@ -21,5 +21,9 @@ public @interface Default {
 
     String  value() ;
 
+    /**
+     * default @see com.github.fashionbrot.validated.groups.DefaultGroup
+     * @return groups
+     */
     Class<?>[] groups() default  {};
 }
