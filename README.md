@@ -20,7 +20,7 @@ validated 是 控制 springmvc  springboot 的验证框架。此框架基于spri
 | ~~2.0.6~~ | 修复2.0.3、2.0.4、2.0.5 参数带其他注解时导致参数验证失败bug                                                                                                                                                                                                            |
 | 2.0.7     | 修复自定义注解无法验证问题                                                                                                                                                                                                                                      |
 |2.0.8 | 代码优化、新增@Valid 注解，用于参数和属性的数组或List类型 如：UserReq[] userReq 、List<UserReq> userReq                                                                                                                                                                      |
-| 2.0.9 | 1、增加自定义注解实现类中可以注入spring容器中注册的bean issue#5  <br/> 2、注解默认中取消 groups中的DefaultGroup.class,但参数上的注解默认拥有DefaultGroup.class注解 issue#6 <br/> 3、代码疯狂优化                                                                                                       |
+| 2.0.9 | 1、增加自定义注解实现类中可以注入spring容器中注册的bean issue#5  <br/> 2、注解默认中取消 groups中的DefaultGroup.class,但参数上的注解默认拥有DefaultGroup.class注解 issue#6 <br/> 3、@NotEqualLength 注解不支持字段属性 issue#7    <br/> 4、msg 支持 ${xxx} 替换 修复issue#8 <br/>5、疯狂优化                               |
 ### hibernate valid 最新版本  和 mars validated 2.0.1 比较 调用1000次接口时间比较,验证参数10个 速度最优还是 mars-validated
 
 
